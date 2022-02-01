@@ -70,9 +70,6 @@
         <h2 class="name">
           <%- tipoDoc %> : <%- clienteNro %>
         </h2>
-        <div class="address">
-          <%- clienteDireccion %>
-        </div>
         <div class="email"><a href="mailto:<%- clienteEmail %> ">
             <%- clienteEmail %>
           </a></div>
@@ -91,13 +88,7 @@
             <h2 class="name">
               <%- formaPago %>
             </h2>
-            <% if(saldoCtaCte){ %>
-              <div class="to">Saldo en Cta. Cte.:</div>
-              <h2 class="name">
-                <%- saldoCtaCte %>
-              </h2>
-              <% } %>
-                <% } %>
+            <% } %>
       </div>
     </div>
 

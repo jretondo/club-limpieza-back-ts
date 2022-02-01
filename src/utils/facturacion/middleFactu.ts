@@ -40,25 +40,30 @@ const factuMiddel = () => {
             }
 
             let letra = "";
-            if (pvData[0].cond_iva === 1) {
-                if (body.cond_iva === 1) {
-                    if (pvData[0].fact_m === true) {
-                        body.t_fact = 51
-                        letra = "M"
+            if (body.fiscal) {
+                if (pvData[0].cond_iva === 1) {
+                    if (body.cond_iva === 1) {
+                        if (pvData[0].fact_m === true) {
+                            body.t_fact = 51
+                            letra = "M"
+                        } else {
+                            body.t_fact = 1
+                            letra = "A"
+                        }
                     } else {
-                        body.t_fact = 1
-                        letra = "A"
+                        body.t_fact = 6
+                        letra = "B"
                     }
-                } else {
+                } else if (pvData[0].cond_iva === 4) {
                     body.t_fact = 6
-                    letra = "B"
+                    letra = "6"
+                } else {
+                    body.t_fact = 11
+                    letra = "C"
                 }
-            } else if (pvData[0].cond_iva === 4) {
-                body.t_fact = 6
-                letra = "6"
             } else {
-                body.t_fact = 11
-                letra = "C"
+                body.t_fact = 0
+                letra = "X"
             }
             const newFact: IFactura = {
                 fecha: body.fecha,

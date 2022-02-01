@@ -1,3 +1,4 @@
+import ControllerInvoices from "../../api/components/invoices"
 import { NextFunction, Request, Response } from "express"
 import { INewPV } from "interfaces/Irequests"
 import { IFactura } from "interfaces/Itables"
@@ -30,6 +31,9 @@ export const fiscalMiddle = () => {
                 req.body.newFact.cbte = req.body.dataFiscal.CbteDesde
                 next()
             } else {
+                const lastInvoice = await ControllerInvoices.lastInvoice(pvData.id || 0, false, 0, false)
+                newFact.cbte
+                req.body.newFact.cbte = lastInvoice.lastInvoice + 1
                 next()
             }
         } catch (error) {

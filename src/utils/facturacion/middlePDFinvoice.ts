@@ -33,8 +33,15 @@ export const invoicePDFMiddle = () => {
                 = req.body.dataFiscal
 
             let urlQr = ""
+            function base64_encode(file: any) {
+                // read binary data
+                var bitmap: Buffer = fs.readFileSync(file);
+                // convert binary data to base64 encoded string
+                return Buffer.from(bitmap).toString('base64');
+            }
             const pvStr = zfill(newFact.pv, 5)
             const nroStr = zfill(newFact.cbte, 8)
+            const logo64 = base64_encode(path.join("public", "images", "invoices", "logo.png"))
             let encabezado = {
                 factNro: pvStr + "-" + nroStr,
                 fechaFact: moment(newFact.fecha, "YYYY-MM-DD").format("DD/MM/YYYY"),
@@ -44,7 +51,7 @@ export const invoicePDFMiddle = () => {
             let cbteAsoc = false || ""
 
             let footer = {
-                logo: "",
+                logo: 'data:image/png;base64,' + logo64,
                 logoAfip1: "",
                 logoAfip2: "",
                 codQR: "",
@@ -70,19 +77,14 @@ export const invoicePDFMiddle = () => {
                     "codAut": dataFiscal.CAE
                 }
 
-                function base64_encode(file: any) {
-                    // read binary data
-                    var bitmap: Buffer = fs.readFileSync(file);
-                    // convert binary data to base64 encoded string
-                    return Buffer.from(bitmap).toString('base64');
-                }
+
 
                 const factDataStr = JSON.stringify(factData)
                 var text = factDataStr
                 var bytes = utf8.encode(text);
                 var encoded = base64.encode(bytes);
                 const paraAfip = "https://www.afip.gob.ar/fe/qr/?p=" + encoded
-                const logo64 = base64_encode(path.join("public", "images", "invoices", "logo.png"))
+
                 const lAfip1 = base64_encode(path.join("public", "images", "invoices", "AFIP1.png"))
                 const lAfip2 = base64_encode(path.join("public", "images", "invoices", "AFIP2.png"))
 
