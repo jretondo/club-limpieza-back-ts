@@ -1,3 +1,4 @@
+import { AfipClass } from './../../../utils/facturacion/AfipClass';
 
 import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
 import { IClientes } from 'interfaces/Itables';
@@ -74,10 +75,17 @@ export = (injectedStore: typeof StoreType) => {
         return await store.get(Tables.CLIENTES, idCliente);
     }
 
+    const dataFiscalPadron = async (cuit: number, cert: string, key: string, cuitPv: number) => {
+        const afip = new AfipClass(cuitPv, cert, key, true);
+        const dataFiscal = await afip.getDataCUIT(cuit);
+        return dataFiscal
+    }
+
     return {
         list,
         upsert,
         remove,
-        get
+        get,
+        dataFiscalPadron
     }
 }

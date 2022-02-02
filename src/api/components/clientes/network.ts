@@ -86,11 +86,25 @@ const get = (
         .catch(next)
 }
 
-router.get("/", secure(EPermissions.proveedores), list);
-router.get("/:page", secure(EPermissions.proveedores), listPagination);
-router.get("/details/:id", secure(EPermissions.proveedores), get);
-router.post("/", secure(EPermissions.proveedores), upsert);
-router.put("/", secure(EPermissions.proveedores), upsert);
-router.delete("/:id", secure(EPermissions.proveedores), remove);
+const dataFiscalPadron = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.dataFiscalPadron(Number(req.query.cuit), String(req.query.cert), String(req.query.key), Number(req.query.cuitPv))
+        .then((data) => {
+            success({ req, res, message: data })
+        })
+        .catch(next)
+}
+
+router
+    .get("/dataFiscal", secure(EPermissions.proveedores), dataFiscalPadron)
+    .get("/details/:id", secure(EPermissions.proveedores), get)
+    .get("/:page", secure(EPermissions.proveedores), listPagination)
+    .delete("/:id", secure(EPermissions.proveedores), remove)
+    .get("/", secure(EPermissions.proveedores), list)
+    .post("/", secure(EPermissions.proveedores), upsert)
+    .put("/", secure(EPermissions.proveedores), upsert)
 
 export = router;

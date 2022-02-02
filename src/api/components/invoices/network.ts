@@ -97,10 +97,12 @@ const getFiscalDataInvoice = (
 };
 
 router.get("/details/:id", secure(EPermissions.proveedores), get);
-router.post("/", secure(EPermissions.proveedores), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice);
 router.get("/last", secure(EPermissions.proveedores), getLast);
-router.get("/dataFiscal", secure(EPermissions.proveedores), getFiscalDataInvoice);
+router.get("/afipData", secure(EPermissions.proveedores), getFiscalDataInvoice);
 router.get("/:page", secure(EPermissions.proveedores), list);
+
+router.post("/", secure(EPermissions.proveedores), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice);
+
 router.delete("/:id", secure(EPermissions.proveedores), remove);
 
 export = router;

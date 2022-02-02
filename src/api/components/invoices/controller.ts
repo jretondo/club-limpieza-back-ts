@@ -157,7 +157,8 @@ export = (injectedStore: typeof StoreType) => {
                 concat: EConcatWhere.and,
                 items: [
                     { column: Columns.facturas.pv, object: String(pvData[0].pv) },
-                    { column: Columns.facturas.fiscal, object: String(0) }
+                    { column: Columns.facturas.fiscal, object: String(0) },
+                    { column: Columns.facturas.cuit_origen, object: String(pvData[0].cuit) }
                 ]
             };
             filters.push(filter);
@@ -209,16 +210,6 @@ export = (injectedStore: typeof StoreType) => {
             resultInsert
         }
         return dataFact
-    }
-
-    const createFiscalInvoice = async (body: INewFactura, entorno: boolean) => {
-        const pvId = body.pv_id;
-        const pvData = await ptosVtaController.get(pvId);
-        const afip = new AfipClass(pvData[0].cuit, pvData[0].cert_file || "drop_test.key", pvData[0].key_file || "drop.key", entorno);
-    }
-
-    const sendInvoice = () => {
-
     }
 
     return {
