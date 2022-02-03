@@ -1,6 +1,7 @@
 import { IChangeStock, Ipages, IWhereParams } from 'interfaces/Ifunctions';
 import { INewStock } from 'interfaces/Irequests';
-import { IModPriceProd, IMovStock, IUser } from 'interfaces/Itables';
+import { IDetFactura, IModPriceProd, IMovStock, IUser } from 'interfaces/Itables';
+import moment from 'moment';
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
 import StoreType from '../../../store/mysql';
@@ -27,7 +28,7 @@ export = (injectedStore: typeof StoreType) => {
             concat: EConcatWhere.and,
             items: [
                 { column: Columns.stock.id_prod, object: String(idProd) },
-                { column: Columns.stock.pv, object: String(idPv) }
+                { column: Columns.stock.pv_id, object: String(idPv) }
             ]
         };
         filters.push(filter);
@@ -48,7 +49,7 @@ export = (injectedStore: typeof StoreType) => {
             concat: EConcatWhere.and,
             items: [
                 { column: Columns.stock.id_prod, object: String(idProd) },
-                { column: Columns.stock.pv, object: String(idPv) }
+                { column: Columns.stock.pv_id, object: String(idPv) }
             ]
         };
 
@@ -67,7 +68,7 @@ export = (injectedStore: typeof StoreType) => {
         const newMov: IMovStock = {
             fecha: new Date(),
             id_prod: body.idProd,
-            pv: body.pv,
+            pv_id: body.pv_id,
             cant: body.nvoStockSingle,
             venta: false,
             nro_remito: body.obs,
@@ -90,6 +91,52 @@ export = (injectedStore: typeof StoreType) => {
         return await store.insert(Tables.STOCK, newMov);
     }
 
+    const multipleInsertStock = async (prodList: Array<IDetFactura>, userId: number, pvId: number, factId: number) => {
+
+        const headers: Array<string> = [
+            Columns.stock.fecha,
+            Columns.stock.id_prod,
+            Columns.stock.pv_id,
+            Columns.stock.cant,
+            Columns.stock.venta,
+            Columns.stock.nro_remito,
+            Columns.stock.costo,
+            Columns.stock.iva,
+            Columns.stock.id_user,
+            Columns.stock.id_fact
+
+        ]
+        const rows: Promise<Array<Array<any>>> = new Promise((resolve, reject) => {
+            const rowsvalues: Array<Array<any>> = []
+            prodList.map((item, key) => {
+                const values = []
+                values.push(moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
+                values.push(item.id_prod)
+                values.push(pvId)
+                values.push(- item.cant_prod)
+                values.push(1)
+                values.push("Venta Stock")
+                values.push(0)
+                values.push(item.alicuota_id)
+                values.push(userId)
+                values.push(factId)
+                rowsvalues.push(values)
+                if (key === prodList.length - 1) {
+                    resolve(rowsvalues)
+                }
+            })
+        })
+        try {
+            const resultinsert = store.mInsert(Tables.STOCK, { headers: headers, rows: await rows })
+            return {
+                status: 200,
+                msg: resultinsert
+            }
+        } catch (error) {
+            throw new Error(String(error))
+        }
+    }
+
     const remove = async (id: number) => {
         await store.remove(Tables.STOCK, { id: id })
     }
@@ -99,7 +146,6 @@ export = (injectedStore: typeof StoreType) => {
     }
 
     const moverStock = async (body: IChangeStock, user: IUser) => {
-        console.log(`body`, body)
         const destino: INewStock = body.destino
         const origen: INewStock = body.origen
         const result1 = await upsert(origen, user)
@@ -116,6 +162,7 @@ export = (injectedStore: typeof StoreType) => {
         remove,
         get,
         ultimosMovStock,
-        moverStock
+        moverStock,
+        multipleInsertStock
     }
 }

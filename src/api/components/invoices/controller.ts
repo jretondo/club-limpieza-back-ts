@@ -10,10 +10,9 @@ import {
 import ptosVtaController from '../ptosVta';
 import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
 import { IDetFactura, IFactura, IUser } from 'interfaces/Itables';
-import { INewFactura, INewPV } from 'interfaces/Irequests';
+import { INewPV } from 'interfaces/Irequests';
+import ControllerStock from '../stock';
 import fs from 'fs';
-import { multipleInsert } from '../../../store/mysql/functions';
-import moment from 'moment';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
@@ -70,6 +69,7 @@ export = (injectedStore: typeof StoreType) => {
     }
 
     const insertFact = async (
+        pvId: number,
         newFact: IFactura,
         newDetFact: Array<IDetFactura>,
         factFiscal: FactInscriptoProd |
@@ -123,14 +123,18 @@ export = (injectedStore: typeof StoreType) => {
                     }
                 })
             })
-            const resultinsert = store.mInsert(Tables.DET_FACTURAS, { headers: headers, rows: await rows })
+            const resultinsert = await store.mInsert(Tables.DET_FACTURAS, { headers: headers, rows: await rows })
+            const resultInsertStock = await ControllerStock.multipleInsertStock(newDetFact, newFact.user_id, pvId, factId)
             return {
                 status: 200,
-                msg: resultinsert
+                msg: {
+                    resultinsert,
+                    resultInsertStock
+                }
             }
         } else {
             return {
-                status: 200,
+                status: 500,
                 msg: "Hubo un error al querer insertar"
             }
         }
@@ -183,6 +187,7 @@ export = (injectedStore: typeof StoreType) => {
     }
 
     const newInvoice = async (
+        pvData: INewPV,
         newFact: IFactura,
         factFiscal: FactInscriptoProd |
             FactInscriptoProdNC |
@@ -198,7 +203,7 @@ export = (injectedStore: typeof StoreType) => {
         filePath: string,
     ) => {
 
-        const resultInsert = insertFact(newFact, productsList, factFiscal)
+        const resultInsert = insertFact(pvData.id || 0, newFact, productsList, factFiscal)
 
         setTimeout(() => {
             fs.unlinkSync(filePath)

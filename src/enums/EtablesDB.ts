@@ -102,13 +102,14 @@ enum Stock {
     id = "id",
     fecha = "fecha",
     id_prod = "id_prod",
-    pv = "pv",
+    pv_id = "pv_id",
     cant = "cant",
     venta = "venta",
     nro_remito = "nro_remito",
     costo = "costo",
     iva = "iva",
-    id_user = "id_user"
+    id_user = "id_user",
+    id_fact = "id_fact"
 }
 
 enum Facturas {

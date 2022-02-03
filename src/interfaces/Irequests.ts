@@ -55,7 +55,7 @@ export interface INewProduct {
 export interface INewStock {
     arrayBool: boolean,
     nvoStockSingle: number,
-    pv: number,
+    pv_id: number,
     idProd: number,
     obs: string,
     costo: number,
@@ -65,7 +65,8 @@ export interface INewStock {
     porc_minor: number,
     round: number,
     vta_price: number,
-    vta_fija: boolean
+    vta_fija: boolean,
+    fact_id?: number
 }
 export interface INewFactura {
     fecha: Date,
