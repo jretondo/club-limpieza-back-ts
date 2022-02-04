@@ -243,7 +243,7 @@ export = (injectedStore: typeof StoreType) => {
         return await store.list(Tables.PRODUCTS_PRINCIPAL, [Columns.prodPrincipal.subcategory], undefined, groupBy, undefined, undefined);
     }
 
-    const varCost = async (aumento: boolean, porc: number, round: Boolean, item?: string) => {
+    const varCost = async (aumento: boolean, porc: number, round: number, roundBool: boolean, item?: string) => {
         let filter: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
         if (item) {
@@ -266,19 +266,19 @@ export = (injectedStore: typeof StoreType) => {
             aumentoFinal = (- porc);
         }
 
-        let roundNumb: number = 2;
-        if (round) {
-            roundNumb = 0;
+        let roundNumber = 2
+        if (!roundBool) {
+            roundNumber = round
         }
 
         const updateCol: Array<IWhere> = [
             {
                 column: Columns.prodPrincipal.precio_compra,
-                object: `(${Columns.prodPrincipal.precio_compra} + ROUND((${Columns.prodPrincipal.precio_compra} * ${aumentoFinal}), ${roundNumb}))`
+                object: `(${Columns.prodPrincipal.precio_compra} + ROUND((${Columns.prodPrincipal.precio_compra} * ${aumentoFinal}), ${roundNumber}))`
             },
             {
                 column: Columns.prodPrincipal.vta_price,
-                object: `(${Columns.prodPrincipal.vta_price} + ROUND((${Columns.prodPrincipal.vta_price} * ${aumentoFinal}), ${roundNumb}))`
+                object: `(${Columns.prodPrincipal.vta_price} + ROUND((${Columns.prodPrincipal.vta_price} * ${aumentoFinal}), ${roundNumber}))`
             },
         ];
 

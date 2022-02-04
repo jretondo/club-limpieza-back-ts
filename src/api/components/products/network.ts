@@ -36,7 +36,8 @@ const varCost = (
     Controller.varCost(
         Boolean(req.body.aumento),
         Number(req.body.porc),
-        Boolean(req.body.round),
+        Number(req.body.round),
+        Boolean(req.body.roundBool),
         String(req.query.query)
     )
         .then(() => {
