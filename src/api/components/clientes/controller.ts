@@ -76,7 +76,14 @@ export = (injectedStore: typeof StoreType) => {
     }
 
     const dataFiscalPadron = async (cuit: number, cert: string, key: string, cuitPv: number) => {
-        const afip = new AfipClass(cuitPv, cert, key, true);
+        let certDir = "drop.crt"
+        let keyDir = "drop.key"
+        if (process.env.ENTORNO === "PROD") {
+            certDir = cert
+            keyDir = key
+        }
+        console.log('object :>> ', cuitPv, certDir, keyDir);
+        const afip = new AfipClass(cuitPv, certDir, keyDir, true);
         const dataFiscal = await afip.getDataCUIT(cuit);
         return dataFiscal
     }

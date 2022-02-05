@@ -59,37 +59,45 @@
   <main>
 
     <div id="details" class="clearfix">
-      <div id="client">
-        <div class="to">CLIENTE:</div>
-        <h2 class="name">
-          <%- clienteName %>
-        </h2>
-        <h2 class="name">
-          <%- condIvaCliente %>
-        </h2>
-        <h2 class="name">
-          <%- tipoDoc %> : <%- clienteNro %>
-        </h2>
-        <div class="email"><a href="mailto:<%- clienteEmail %> ">
-            <%- clienteEmail %>
-          </a></div>
-      </div>
-
-      <div id="invoice">
-        <% if(cbteAsoc){ %>
-          <br />
-          <div class="to">COMPROBANTE ASOCIADO:</div>
-          <h2 class="name">FACTURA Nº: </h2>
-          <h2 class="name">
-            <%- cbteAsoc %>
-          </h2>
-          <% }else{ %>
-            <div class="to">Forma de Pago:</div>
+      <% if(clienteNro===99999999){ %>
+        <div id="client">
+          <div class="to">Consumidor Final</div>
+          <div class="email"><a href="mailto:<%- clienteEmail %> ">
+              <%- clienteEmail %>
+            </a></div>
+        </div>
+        <% }else { %>
+          <div id="client">
+            <div class="to">CLIENTE:</div>
             <h2 class="name">
-              <%- formaPago %>
+              <%- clienteName %>
             </h2>
-            <% } %>
-      </div>
+            <h2 class="name">
+              <%- condIvaCliente %>
+            </h2>
+            <h2 class="name">
+              <%- tipoDoc %> : <%- clienteNro %>
+            </h2>
+            <div class="email"><a href="mailto:<%- clienteEmail %> ">
+                <%- clienteEmail %>
+              </a></div>
+          </div>
+          <% } %>
+            <div id="invoice">
+              <% if(cbteAsoc){ %>
+                <br />
+                <div class="to">COMPROBANTE ASOCIADO:</div>
+                <h2 class="name">FACTURA Nº: </h2>
+                <h2 class="name">
+                  <%- cbteAsoc %>
+                </h2>
+                <% }else{ %>
+                  <div class="to">Forma de Pago:</div>
+                  <h2 class="name">
+                    <%- formaPago %>
+                  </h2>
+                  <% } %>
+            </div>
     </div>
 
     <table border="0" cellspacing="0" cellpadding="0">
@@ -115,7 +123,7 @@
     <table border="0" cellspacing="0" cellpadding="0">
       <thead>
         <tr>
-          <th style="border: 1px solid white;" class="total">SUB-TOTAL: $<%- subTotal %>
+          <th style="border: 1px solid white;" class="total">SUB-TOTAL: $<%- totalFact %>
           </th>
           <th style="border: 1px solid white;" class="total">
             DESC.: $<%- totalDesc %>

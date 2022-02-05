@@ -9,9 +9,11 @@ import {
 } from '../../../utils/facturacion/AfipClass'
 import ptosVtaController from '../ptosVta';
 import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
-import { IDetFactura, IFactura, IUser } from 'interfaces/Itables';
+import { IClientes, IDetFactura, IFactura, IUser } from 'interfaces/Itables';
 import { INewPV } from 'interfaces/Irequests';
 import ControllerStock from '../stock';
+import ControllerClientes from '../clientes';
+
 import fs from 'fs';
 
 export = (injectedStore: typeof StoreType) => {
@@ -142,8 +144,19 @@ export = (injectedStore: typeof StoreType) => {
 
     const lastInvoice = async (pvId: number, fiscal: boolean, tipo: CbteTipos, entorno: boolean): Promise<{ lastInvoice: number }> => {
         const pvData: Array<INewPV> = await ptosVtaController.get(pvId);
+        console.log('pvData :>> ', pvData);
+        console.log('tipo :>> ', tipo);
         if (fiscal) {
-            const afip = new AfipClass(pvData[0].cuit, pvData[0].cert_file || "drop_test.key", pvData[0].key_file || "drop.key", entorno);
+            let certDir = "drop_test.crt"
+            let keyDir = "drop.key"
+            let entornoAlt = false
+            if (process.env.ENTORNO === "PROD") {
+                certDir = pvData[0].cert_file || "drop_test.crt"
+                keyDir = pvData[0].key_file || "drop.key"
+                entornoAlt = true
+            }
+
+            const afip = new AfipClass(pvData[0].cuit, certDir, keyDir, entornoAlt);
             const lastfact = await afip.lastFact(pvData[0].pv, tipo);
             if (lastfact.status === 200) {
                 return {
@@ -181,7 +194,17 @@ export = (injectedStore: typeof StoreType) => {
 
     const getFiscalDataInvoice = async (ncbte: number, pvId: number, fiscal: boolean, tipo: CbteTipos, entorno: boolean) => {
         const pvData: Array<INewPV> = await ptosVtaController.get(pvId);
-        const afip = new AfipClass(pvData[0].cuit, pvData[0].cert_file || "drop_test.key", pvData[0].key_file || "drop.key", entorno);
+
+        let certDir = "drop_test.crt"
+        let keyDir = "drop.key"
+        let entornoAlt = false
+        if (process.env.ENTORNO === "PROD") {
+            certDir = pvData[0].cert_file || "drop_test.crt"
+            keyDir = pvData[0].key_file || "drop.key"
+            entornoAlt = true
+        }
+
+        const afip = new AfipClass(pvData[0].cuit, certDir, keyDir, entornoAlt);
         const dataInvoice = await afip.getInvoiceInfo(ncbte, pvData[0].pv, tipo);
         return dataInvoice.data
     }
@@ -204,6 +227,21 @@ export = (injectedStore: typeof StoreType) => {
     ) => {
 
         const resultInsert = insertFact(pvData.id || 0, newFact, productsList, factFiscal)
+        if (String(newFact.n_doc_cliente).length < 12 || String(newFact.n_doc_cliente).length > 6) {
+            let esDni = false
+            if (String(newFact.n_doc_cliente).length < 10) {
+                esDni = true
+            }
+            const newClient: IClientes = {
+                cuit: esDni,
+                ndoc: String(newFact.n_doc_cliente),
+                razsoc: newFact.raz_soc_cliente,
+                telefono: "",
+                email: newFact.email_cliente,
+                cond_iva: newFact.cond_iva_cliente
+            }
+            ControllerClientes.upsert(newClient)
+        }
 
         setTimeout(() => {
             fs.unlinkSync(filePath)

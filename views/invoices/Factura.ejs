@@ -59,7 +59,7 @@
   <main>
 
     <div id="details" class="clearfix">
-      <% if(clienteNro===99999999){ %>
+      <% if(clienteNro===0){ %>
         <div id="client">
           <div class="to">Consumidor Final:</div>
           <div class="email"><a href="mailto:<%- clienteEmail %> ">
@@ -106,7 +106,7 @@
           <th class="no">CANT.</th>
           <th class="desc">DESCRIPCION</th>
           <th class="unit">% IVA</th>
-          <th class="qty">PRECIO UNIT.</th>
+          <th class="qty">$ UN. C/IVA</th>
           <th class="total">TOTAL</th>
         </tr>
       </thead>

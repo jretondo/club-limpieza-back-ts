@@ -24,7 +24,17 @@ export const fiscalMiddle = () => {
                 any = req.body.dataFiscal
 
             if (newFact.fiscal) {
-                const afip = new AfipClass(newFact.cuit_origen, pvData.cert_file || "drop_test.crt", pvData.key_file || "drop_test.key", req.body.entorno);
+                let certDir = "drop_test.crt"
+                let keyDir = "drop.key"
+                let entornoAlt = false
+
+                if (process.env.ENTORNO === "PROD") {
+                    certDir = pvData.cert_file || "drop_test.crt"
+                    keyDir = pvData.key_file || "drop.key"
+                    entornoAlt = true
+                }
+
+                const afip = new AfipClass(newFact.cuit_origen, certDir, keyDir, entornoAlt);
                 const newDataFiscal = await afip.newFact(dataFiscal);
                 req.body.dataFiscal = newDataFiscal.data
                 req.body.dataFiscal.CbteTipo = newFact.t_fact

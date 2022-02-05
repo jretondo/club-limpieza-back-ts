@@ -13,6 +13,7 @@ import {
     perIvaAlicuotas
 } from './AfipClass';
 import moment from 'moment';
+import errorSend from '../error';
 
 const factuMiddel = () => {
     const middleware = async (
@@ -29,13 +30,13 @@ const factuMiddel = () => {
 
             let cliente = {
                 cliente_tdoc: 99,
-                cliente_ndoc: 99999999
+                cliente_ndoc: 0
             }
 
             if (body.cliente_bool) {
                 cliente = {
                     cliente_tdoc: body.cliente_tdoc || 99,
-                    cliente_ndoc: body.cliente_ndoc || 99999999
+                    cliente_ndoc: body.cliente_ndoc || 0
                 }
             }
 
@@ -65,6 +66,11 @@ const factuMiddel = () => {
                 body.t_fact = 0
                 letra = "X"
             }
+
+            if (body.t_fact === 6 && productsList.totalFact < 10000 && body.cliente_tdoc === 99) {
+                body.cliente_ndoc = 0
+            }
+
             const newFact: IFactura = {
                 fecha: body.fecha,
                 pv: pvData[0].pv,
@@ -78,7 +84,7 @@ const factuMiddel = () => {
                 raz_soc_origen: pvData[0].raz_soc,
                 cond_iva_origen: pvData[0].cond_iva,
                 tipo_doc_cliente: body.cliente_tdoc || 99,
-                n_doc_cliente: body.cliente_ndoc || 99999999,
+                n_doc_cliente: body.cliente_ndoc || 0,
                 cond_iva_cliente: body.cond_iva,
                 email_cliente: body.cliente_email || "",
                 nota_cred: false,
@@ -129,7 +135,7 @@ const factuMiddel = () => {
             next();
         } catch (error) {
             console.error(error)
-            next(new Error("Faltan datos o hay datos erroneos, controlelo!"))
+            next(errorSend("Faltan datos o hay datos erroneos, controlelo!"))
         }
     }
     return middleware
@@ -156,7 +162,6 @@ const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCa
             }
             idAnt = prod.id_prod
             dataAnt = dataProd
-
             const totalCosto = (Math.round(((dataProd[0].precio_compra * prod.cant_prod)) * 100)) / 100;
             const totalProd = (Math.round(((dataProd[0].vta_price * prod.cant_prod)) * 100)) / 100;
             const totalNeto = (Math.round((totalProd / (1 + (dataProd[0].iva / 100))) * 100)) / 100;

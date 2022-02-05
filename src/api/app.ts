@@ -39,7 +39,9 @@ export class App {
     }
 
     private middlewares() {
-        this.app.use(cors());
+        this.app.use(cors({
+            exposedHeaders: ['Content-Disposition']
+        }));
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
     }
