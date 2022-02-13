@@ -30,6 +30,30 @@ const list = (
         .catch(next)
 };
 
+const cajaList = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.cajaList(
+        Number(req.query.userId),
+        Number(req.query.ptoVta),
+        String(req.query.desde),
+        String(req.query.hasta),
+        Number(req.params.page),
+        Number(req.query.cantPerPage)
+    )
+        .then((lista: any) => {
+            success({
+                req,
+                res,
+                status: 200,
+                message: lista
+            });
+        })
+        .catch(next)
+};
+
 const remove = (
     req: Request,
     res: Response,
@@ -96,13 +120,14 @@ const getFiscalDataInvoice = (
         .catch(next)
 };
 
-router.get("/details/:id", secure(EPermissions.proveedores), get);
-router.get("/last", secure(EPermissions.proveedores), getLast);
-router.get("/afipData", secure(EPermissions.proveedores), getFiscalDataInvoice);
-router.get("/:page", secure(EPermissions.proveedores), list);
+router.get("/details/:id", secure(EPermissions.ventas), get);
+router.get("/cajaList/:page", secure(EPermissions.ventas), cajaList)
+router.get("/last", secure(EPermissions.ventas), getLast);
+router.get("/afipData", secure(EPermissions.ventas), getFiscalDataInvoice);
+router.get("/:page", secure(EPermissions.ventas), list);
 
-router.post("/", secure(EPermissions.proveedores), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice);
+router.post("/", secure(EPermissions.ventas), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice);
 
-router.delete("/:id", secure(EPermissions.proveedores), remove);
+router.delete("/:id", secure(EPermissions.ventas), remove);
 
 export = router;

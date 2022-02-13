@@ -130,7 +130,7 @@ export const selectContructor = (
                         }
                     }
                 });
-            } else {
+            } else if (whereParams.mode === EModeWhere.dif) {
                 whereParams.items.map((item, key) => {
                     if (whereParams.items.length === 1) {
                         query = query + ` ${initWord} (${item.column} != '${item.object}') `;
@@ -141,6 +141,62 @@ export const selectContructor = (
                             query = query + ` ${concat} ${item.column} != '${item.object}') `;
                         } else {
                             query = query + ` ${concat} ${item.column} != '${item.object}' `;
+                        }
+                    }
+                });
+            } else if (whereParams.mode === EModeWhere.higher) {
+                whereParams.items.map((item, key) => {
+                    if (whereParams.items.length === 1) {
+                        query = query + ` ${initWord} (${item.column} > '${item.object}') `;
+                    } else {
+                        if (key === 0) {
+                            query = query + ` ${initWord} (${item.column} > '${item.object}' `;
+                        } else if (key === whereParams.items.length - 1) {
+                            query = query + ` ${concat} ${item.column} > '${item.object}') `;
+                        } else {
+                            query = query + ` ${concat} ${item.column} > '${item.object}' `;
+                        }
+                    }
+                });
+            } else if (whereParams.mode === EModeWhere.higherEqual) {
+                whereParams.items.map((item, key) => {
+                    if (whereParams.items.length === 1) {
+                        query = query + ` ${initWord} (${item.column} >= '${item.object}') `;
+                    } else {
+                        if (key === 0) {
+                            query = query + ` ${initWord} (${item.column} >= '${item.object}' `;
+                        } else if (key === whereParams.items.length - 1) {
+                            query = query + ` ${concat} ${item.column} >= '${item.object}') `;
+                        } else {
+                            query = query + ` ${concat} ${item.column} >= '${item.object}' `;
+                        }
+                    }
+                });
+            } else if (whereParams.mode === EModeWhere.less) {
+                whereParams.items.map((item, key) => {
+                    if (whereParams.items.length === 1) {
+                        query = query + ` ${initWord} (${item.column} < '${item.object}') `;
+                    } else {
+                        if (key === 0) {
+                            query = query + ` ${initWord} (${item.column} < '${item.object}' `;
+                        } else if (key === whereParams.items.length - 1) {
+                            query = query + ` ${concat} ${item.column} < '${item.object}') `;
+                        } else {
+                            query = query + ` ${concat} ${item.column} < '${item.object}' `;
+                        }
+                    }
+                });
+            } else if (whereParams.mode === EModeWhere.lessEqual) {
+                whereParams.items.map((item, key) => {
+                    if (whereParams.items.length === 1) {
+                        query = query + ` ${initWord} (${item.column} <= '${item.object}') `;
+                    } else {
+                        if (key === 0) {
+                            query = query + ` ${initWord} (${item.column} <= '${item.object}' `;
+                        } else if (key === whereParams.items.length - 1) {
+                            query = query + ` ${concat} ${item.column} <= '${item.object}') `;
+                        } else {
+                            query = query + ` ${concat} ${item.column} <= '${item.object}' `;
                         }
                     }
                 });

@@ -95,10 +95,10 @@ const remove = (
         .catch(next)
 }
 
-router.get("/", secure(EPermissions.stock), list);
-router.get("/ultMov/", secure(EPermissions.stock), ultMov);
-router.post("/", secure(EPermissions.stock), upsert);
-router.post("/moverStock", secure(EPermissions.stock), moverStock);
-router.delete("/:id", secure(EPermissions.stock), remove);
+router.get("/", secure(EPermissions.ventas), list);
+router.get("/ultMov/", secure(EPermissions.ventas), ultMov);
+router.post("/", secure(EPermissions.ventas), upsert);
+router.post("/moverStock", secure(EPermissions.ventas), moverStock);
+router.delete("/:id", secure(EPermissions.ventas), remove);
 
 export = router;

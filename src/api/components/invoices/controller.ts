@@ -62,6 +62,60 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
+    const cajaList = async (userId: number, ptoVta: number, desde: string, hasta: string, page?: number, cantPerPage?: number) => {
+
+        const filters: Array<IWhereParams> = [{
+            mode: EModeWhere.strict,
+            concat: EConcatWhere.and,
+            items: [
+                { column: Columns.facturas.user_id, object: String(userId) },
+                { column: Columns.facturas.pv, object: String(ptoVta) }
+            ]
+        }];
+
+        const filter1: IWhereParams = {
+            mode: EModeWhere.higherEqual,
+            concat: EConcatWhere.none,
+            items: [
+                { column: Columns.facturas.fecha, object: String(desde) }
+            ]
+        };
+
+        const filter2: IWhereParams = {
+            mode: EModeWhere.lessEqual,
+            concat: EConcatWhere.none,
+            items: [
+                { column: Columns.facturas.fecha, object: String(hasta) }
+            ]
+        };
+
+        filters.push(filter1, filter2)
+
+        let pages: Ipages;
+        if (page) {
+            pages = {
+                currentPage: page,
+                cantPerPage: cantPerPage || 10,
+                order: Columns.facturas.id,
+                asc: true
+            };
+            const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined);
+            const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, pages, undefined, { columns: [Columns.facturas.fecha], asc: true });
+            const cant = await store.list(Tables.FACTURAS, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters, undefined, undefined);
+            const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
+            return {
+                data,
+                pagesObj,
+                totales
+            };
+        } else {
+            const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, undefined);
+            return {
+                data
+            };
+        }
+    }
+
     const get = async (id: number) => {
         return await store.get(Tables.FACTURAS, id);
     }
@@ -144,8 +198,6 @@ export = (injectedStore: typeof StoreType) => {
 
     const lastInvoice = async (pvId: number, fiscal: boolean, tipo: CbteTipos, entorno: boolean): Promise<{ lastInvoice: number }> => {
         const pvData: Array<INewPV> = await ptosVtaController.get(pvId);
-        console.log('pvData :>> ', pvData);
-        console.log('tipo :>> ', tipo);
         if (fiscal) {
             let certDir = "drop_test.crt"
             let keyDir = "drop.key"
@@ -232,6 +284,7 @@ export = (injectedStore: typeof StoreType) => {
             if (String(newFact.n_doc_cliente).length < 10) {
                 esDni = true
             }
+            console.log('pasa :>> ');
             const newClient: IClientes = {
                 cuit: esDni,
                 ndoc: String(newFact.n_doc_cliente),
@@ -261,6 +314,7 @@ export = (injectedStore: typeof StoreType) => {
         remove,
         get,
         newInvoice,
-        getFiscalDataInvoice
+        getFiscalDataInvoice,
+        cajaList
     }
 }

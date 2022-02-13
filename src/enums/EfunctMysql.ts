@@ -1,7 +1,11 @@
 export enum EModeWhere {
     strict,
     like,
-    dif
+    dif,
+    higher,
+    higherEqual,
+    less,
+    lessEqual
 }
 
 export enum EConcatWhere {
@@ -21,7 +25,7 @@ export enum ESelectFunct {
 export enum EPermissions {
     ptosVta = 1,
     productos = 2,
-    stock = 3,
+    ventas = 3,
     proveedores = 4,
     clientes = 5,
     revendedores = 6,

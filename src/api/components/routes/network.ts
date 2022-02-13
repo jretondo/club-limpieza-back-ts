@@ -16,7 +16,7 @@ router.get("/productos", secure(EPermissions.productos), responseSuccess);
 router.get("/proveedores", secure(EPermissions.proveedores), responseSuccess);
 router.get("/ptosVta", secure(EPermissions.ptosVta), responseSuccess);
 router.get("/revendedores", secure(EPermissions.revendedores), responseSuccess);
-router.get("/stock", secure(EPermissions.stock), responseSuccess);
+router.get("/stock", secure(EPermissions.ventas), responseSuccess);
 router.get("/transportistas", secure(EPermissions.transportistas), responseSuccess);
 router.get("/userAdmin", secure(EPermissions.userAdmin), responseSuccess);
 

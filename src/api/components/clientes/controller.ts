@@ -1,7 +1,7 @@
 import { AfipClass } from './../../../utils/facturacion/AfipClass';
 
 import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
-import { IClientes } from 'interfaces/Itables';
+import { IClientes, IUser } from 'interfaces/Itables';
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
 import StoreType from '../../../store/mysql';

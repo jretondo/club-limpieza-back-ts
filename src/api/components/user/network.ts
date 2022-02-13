@@ -87,7 +87,20 @@ const get = (
         .catch(next)
 }
 
+const myDataUser = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.getUser(req.body.user.id)
+        .then((data) => {
+            success({ req, res, message: data });
+        })
+        .catch(next)
+}
+
 router.get("/details/:id", secure(EPermissions.userAdmin), get);
+router.get("/mydata", secure(), myDataUser)
 router.get("/:page", secure(EPermissions.userAdmin), listPagination);
 router.get("/", secure(EPermissions.userAdmin), list);
 router.post("/", upsert);
