@@ -14,6 +14,8 @@ import moment from 'moment';
 import { file } from '../../../network/response';
 import ejs from 'ejs';
 import pdf from 'html-pdf';
+import JsReport from 'jsreport';
+import { promisify } from 'util';
 
 const router = Router();
 
@@ -466,9 +468,386 @@ const vistaEmailFact = (
     res.render('emails/Templates/FactEmail.ejs', datos2);
 }
 
-router.get("/newUser", newUser)
-router.get("/newFact", newFact)
-router.get("/downloadFact", downloadFact)
-router.get("/emailfact", vistaEmailFact)
+const listadoCajaView = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    function base64_encode(file: any) {
+        // read binary data
+        var bitmap: Buffer = fs.readFileSync(file);
+        // convert binary data to base64 encoded string
+        return Buffer.from(bitmap).toString('base64');
+    }
+
+    const estilo = fs.readFileSync(path.join("views", "reports", "cajaList", "styles.css"), 'utf8')
+    const logo = base64_encode(path.join("public", "images", "invoices", "logo.png"))
+
+    const datos = {
+        logo: 'data:image/png;base64,' + logo,
+        style: "<style>" + estilo + "</style>",
+        ptoVtaStr: "(P.V.: 3) OBISPO TREJO 902 - BARRIO : NUEVA CORDOBA",
+        usuarioStr: "Javier Retondo (jretondo)",
+        desdeStr: "25/01/2022",
+        hastaStr: "20/02/2022",
+        totaleslista: [
+            {
+                tipoStr: "Efectivo",
+                totalStr: "2.520,36"
+            },
+            {
+                tipoStr: "Débito",
+                totalStr: "25.520,36"
+            }
+        ],
+        listaVtas: [
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            }
+        ]
+    }
+    res.render('reports/cajaList/index.ejs', datos);
+}
+
+const cajaListPDF = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    function base64_encode(file: any) {
+        // read binary data
+        var bitmap: Buffer = fs.readFileSync(file);
+        // convert binary data to base64 encoded string
+        return Buffer.from(bitmap).toString('base64');
+    }
+
+    const estilo = fs.readFileSync(path.join("views", "reports", "cajaList", "styles.css"), 'utf8')
+    const logo = base64_encode(path.join("public", "images", "invoices", "logo.png"))
+
+    const datos = {
+        logo: 'data:image/png;base64,' + logo,
+        style: "<style>" + estilo + "</style>",
+        ptoVtaStr: "(P.V.: 3) OBISPO TREJO 902 - BARRIO : NUEVA CORDOBA",
+        usuarioStr: "Javier Retondo (jretondo)",
+        desdeStr: "25/01/2022",
+        hastaStr: "20/02/2022",
+        totaleslista: [
+            {
+                tipoStr: "Efectivo",
+                totalStr: "2.520,36"
+            },
+            {
+                tipoStr: "Débito",
+                totalStr: "25.520,36"
+            }
+        ],
+        listaVtas: [
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Consumidor Final",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            },
+            {
+                fecha: "20/05/2022",
+                cliente: "Retondo Javier (CUIT: 20350925148)",
+                factura: "X 00004 - 00000015",
+                formaPago: "Efectivo",
+                totalStr: "3.650,65"
+            }
+        ]
+    }
+
+    const jsreport = JsReport({
+        extensions: {
+            "chrome-pdf": {
+                "launchOptions": {
+                    "args": ["--no-sandbox"]
+                }
+            }
+        }
+    })
+    const writeFileAsync = promisify(fs.writeFile)
+
+    ejs.renderFile(path.join("views", "reports", "cajaList", "index.ejs"), datos, async (err, data) => {
+        if (err) {
+            console.log('err', err);
+            throw new Error("Algo salio mal")
+        }
+
+        await jsreport.init()
+        jsreport.render({
+            template: {
+                content: data,
+                name: 'lista',
+                engine: 'none',
+                recipe: 'chrome-pdf',
+                chrome: {
+                    "landscape": true,
+                    "format": "Legal",
+                    "scale": 0.8,
+                    displayHeaderFooter: true,
+                    marginBottom: "2cm",
+                    footerTemplate: "<div style='font-size: 14px;text-align: center;widht: 100%;'>Página&nbsp;<span class='pageNumber'></span>&nbsp;de&nbsp;<span class='totalPages'></span></div>",
+                    marginTop: "0.5cm",
+                    headerTemplate: ""
+                },
+
+            },
+        })
+            .then(async (out) => {
+                await writeFileAsync('out.pdf', out.content)
+                await jsreport.close()
+                res.send("ya esta")
+            })
+            .catch((e) => {
+                res.end(e.message);
+            });
+    })
+}
+
+router
+    .get("/newUser", newUser)
+    .get("/newFact", newFact)
+    .get("/downloadFact", downloadFact)
+    .get("/emailfact", vistaEmailFact)
+    .get("/cajaListView", listadoCajaView)
+    .get("/cajaListPDF", cajaListPDF)
 
 export = router;

@@ -1,0 +1,47 @@
+{
+    "shortid": "rkJTnK2ce",
+    "recipe": "chrome-pdf",
+    "engine": "handlebars",
+    "data": {
+        "shortid": "Sy5S19ncg"
+    },
+    "name": "invoice-main",
+    "chrome": {
+        "printBackground": true,
+        "marginTop": "2cm",
+        "marginRight": "1cm",
+        "marginBottom": "2cm",
+        "marginLeft": "1cm",
+        "format": ""
+    },
+    "creationDate": {
+        "$$date": 1644792281059
+    },
+    "modificationDate": {
+        "$$date": 1644798178172
+    },
+    "_id": "oAWJtMrpj7RLDevX",
+    "$entitySet": "templates",
+    "pdfMeta": {
+        "language": "jretondo"
+    },
+    "pdfPassword": {
+        "password": "genioIQ140"
+    },
+    "scripts": [
+        {
+            "shortid": "BJX1Jw82ce"
+        }
+    ],
+    "pdfOperations": [
+        {
+            "type": "merge",
+            "mergeWholeDocument": true
+        },
+        {
+            "type": "merge",
+            "templateShortid": "j1uSTv3",
+            "mergeWholeDocument": true
+        }
+    ]
+}
