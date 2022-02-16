@@ -4797,3 +4797,132 @@ Error: Extension "chrome-pdf" is not compatible with "core" extension. Missing "
 2022-02-16T03:07:06.040Z - info: Rendering request 1 finished in 1310 ms rootId=q0gpcrhspt9w2g5, id=q0gpcrhspt9w2g5
 2022-02-16T03:07:06.045Z - info: Closing jsreport instance
 2022-02-16T03:07:06.100Z - info: jsreport instance has been closed
+2022-02-16T03:37:01.482Z - info: Initializing jsreport (version: 3.4.0, configuration file: none, nodejs: 16.14.0)
+2022-02-16T03:37:01.485Z - info: Searching for available extensions in /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/
+2022-02-16T03:37:01.491Z - info: Extensions location cache contains up to date information, skipping crawling in /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/
+2022-02-16T03:37:01.722Z - info: Found 70 extension(s)
+2022-02-16T03:37:01.760Z - debug: Writing extension locations cache to /tmp/jsreport/core/locations.json
+2022-02-16T03:37:01.761Z - debug: Discovered 70 extensions
+2022-02-16T03:37:01.762Z - warn: Filtering out duplicated extension "authentication" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-authentication, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-authentication
+2022-02-16T03:37:01.763Z - warn: Filtering out duplicated extension "base" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-base, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-base
+2022-02-16T03:37:01.763Z - warn: Filtering out duplicated extension "child-templates" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-child-templates, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-child-templates
+2022-02-16T03:37:01.763Z - warn: Filtering out duplicated extension "cli" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-cli, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-cli
+2022-02-16T03:37:01.763Z - warn: Filtering out duplicated extension "components" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-components, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-components
+2022-02-16T03:37:01.764Z - warn: Filtering out duplicated extension "data" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-data, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-data
+2022-02-16T03:37:01.764Z - warn: Filtering out duplicated extension "express" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-express, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-express
+2022-02-16T03:37:01.764Z - warn: Filtering out duplicated extension "freeze" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-freeze, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-freeze
+2022-02-16T03:37:01.764Z - warn: Filtering out duplicated extension "fs-store" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-fs-store, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-fs-store
+2022-02-16T03:37:01.765Z - warn: Filtering out duplicated extension "handlebars" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-handlebars, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-handlebars
+2022-02-16T03:37:01.765Z - warn: Filtering out duplicated extension "import-export" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-import-export, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-import-export
+2022-02-16T03:37:01.765Z - warn: Filtering out duplicated extension "jsrender" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-jsrender, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-jsrender
+2022-02-16T03:37:01.765Z - warn: Filtering out duplicated extension "licensing" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-licensing, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-licensing
+2022-02-16T03:37:01.765Z - warn: Filtering out duplicated extension "localization" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-localization, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-localization
+2022-02-16T03:37:01.765Z - warn: Filtering out duplicated extension "npm" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-npm, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-npm
+2022-02-16T03:37:01.766Z - warn: Filtering out duplicated extension "pdf-utils" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-pdf-utils, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-pdf-utils
+2022-02-16T03:37:01.766Z - warn: Filtering out duplicated extension "reports" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-reports, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-reports
+2022-02-16T03:37:01.766Z - warn: Filtering out duplicated extension "tags" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-tags, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-tags
+2022-02-16T03:37:01.766Z - warn: Filtering out duplicated extension "text" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-text, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-text
+2022-02-16T03:37:01.766Z - warn: Filtering out duplicated extension "version-control" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-version-control, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-version-control
+2022-02-16T03:37:01.766Z - warn: Filtering out duplicated extension "chrome-pdf" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/jsreport-chrome-pdf, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-chrome-pdf
+2022-02-16T03:37:01.766Z - warn: Filtering out duplicated extension "assets" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-assets, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-assets
+2022-02-16T03:37:01.767Z - warn: Filtering out duplicated extension "authorization" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-authorization, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-authorization
+2022-02-16T03:37:01.767Z - warn: Filtering out duplicated extension "browser-client" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-browser-client, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-browser-client
+2022-02-16T03:37:01.767Z - warn: Filtering out duplicated extension "docx" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-docx, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-docx
+2022-02-16T03:37:01.767Z - warn: Filtering out duplicated extension "html-to-xlsx" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-html-to-xlsx, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-html-to-xlsx
+2022-02-16T03:37:01.767Z - warn: Filtering out duplicated extension "pptx" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-pptx, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-pptx
+2022-02-16T03:37:01.767Z - warn: Filtering out duplicated extension "scheduling" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-scheduling, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-scheduling
+2022-02-16T03:37:01.767Z - warn: Filtering out duplicated extension "scripts" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-scripts, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-scripts
+2022-02-16T03:37:01.768Z - warn: Filtering out duplicated extension "static-pdf" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-static-pdf, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-static-pdf
+2022-02-16T03:37:01.768Z - warn: Filtering out duplicated extension "studio" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-studio, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-studio
+2022-02-16T03:37:01.768Z - warn: Filtering out duplicated extension "xlsx" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-xlsx, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-xlsx
+2022-02-16T03:37:01.768Z - warn: Filtering out duplicated extension "public-templates" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-public-templates, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-public-templates
+2022-02-16T03:37:01.768Z - warn: Filtering out duplicated extension "sample-template" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-sample-template, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-sample-template
+2022-02-16T03:37:01.768Z - warn: Filtering out duplicated extension "studio-theme-dark" from /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-studio-theme-dark, using /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/jsreportapp/node_modules/@jsreport/jsreport-studio-theme-dark
+2022-02-16T03:37:01.847Z - info: Using extension authentication@3.2.0
+2022-02-16T03:37:02.000Z - debug: Extension authentication@3.2.0 was disabled
+2022-02-16T03:37:02.001Z - info: Using extension base@3.0.0
+2022-02-16T03:37:02.005Z - info: Using extension child-templates@3.0.1
+2022-02-16T03:37:02.007Z - info: Using extension cli@3.1.0
+2022-02-16T03:37:02.009Z - info: Using extension components@3.2.0
+2022-02-16T03:37:02.011Z - info: Using extension data@3.0.1
+2022-02-16T03:37:02.012Z - info: Using extension express@3.3.1
+2022-02-16T03:37:02.227Z - info: Using extension freeze@3.0.1
+2022-02-16T03:37:02.229Z - info: Using extension fs-store@3.1.0
+2022-02-16T03:37:02.300Z - debug: Extension fs-store@3.1.0 was disabled
+2022-02-16T03:37:02.300Z - info: Using extension handlebars@3.0.0
+2022-02-16T03:37:02.302Z - info: Using extension import-export@3.1.1
+2022-02-16T03:37:02.310Z - info: Using extension jsrender@3.0.0
+2022-02-16T03:37:02.311Z - info: Using extension licensing@3.0.2
+2022-02-16T03:37:02.374Z - info: Using extension localization@3.2.0
+2022-02-16T03:37:02.378Z - info: Using extension npm@3.1.1
+2022-02-16T03:37:02.386Z - info: Using extension pdf-utils@3.3.0
+2022-02-16T03:37:02.389Z - info: Using extension reports@3.0.3
+2022-02-16T03:37:02.392Z - info: Using extension tags@3.1.0
+2022-02-16T03:37:02.394Z - info: Using extension text@3.0.0
+2022-02-16T03:37:02.395Z - info: Using extension version-control@3.1.0
+2022-02-16T03:37:02.407Z - info: Using extension assets@3.3.0
+2022-02-16T03:37:02.417Z - info: Using extension authorization@3.2.0
+2022-02-16T03:37:02.420Z - debug: Extension authorization@3.2.0 was disabled
+2022-02-16T03:37:02.420Z - info: Using extension browser-client@3.1.0
+2022-02-16T03:37:02.422Z - info: Using extension chrome-pdf@3.1.0
+2022-02-16T03:37:02.444Z - debug: Chrome strategy is chrome-pool, numberOfWorkers: 1
+2022-02-16T03:37:02.444Z - debug: Chrome custom launch options are args=--no-sandbox
+2022-02-16T03:37:02.445Z - info: Using extension docx@3.2.0
+2022-02-16T03:37:02.449Z - info: Using extension html-to-xlsx@3.2.0
+2022-02-16T03:37:02.499Z - info: html-to-xlsx detected chrome as available html engine
+2022-02-16T03:37:02.499Z - info: html-to-xlsx detected phantom as available html engine
+2022-02-16T03:37:02.499Z - info: Using extension pptx@3.1.0
+2022-02-16T03:37:02.502Z - info: Using extension scheduling@3.0.1
+2022-02-16T03:37:02.536Z - info: Using extension scripts@3.2.0
+2022-02-16T03:37:02.537Z - info: Using extension static-pdf@3.0.0
+2022-02-16T03:37:02.538Z - info: Using extension studio@3.4.0
+2022-02-16T03:37:02.622Z - info: Using extension xlsx@3.1.0
+2022-02-16T03:37:02.644Z - info: Using extension public-templates@3.0.0
+2022-02-16T03:37:02.652Z - debug: Extension public-templates@3.0.0 was disabled
+2022-02-16T03:37:02.652Z - info: Using extension sample-template@3.1.0
+2022-02-16T03:37:02.654Z - info: Using extension studio-theme-dark@3.0.1
+2022-02-16T03:37:02.656Z - info: Using general timeout for rendering (reportTimeout: 60000)
+2022-02-16T03:37:02.656Z - info: Using memory provider for template store. The saved templates will be lost after restart
+2022-02-16T03:37:02.678Z - debug: studio default theme is: light
+2022-02-16T03:37:02.692Z - info: Creating default express app.
+2022-02-16T03:37:02.711Z - info: jsreport server successfully started on http port: 3007
+2022-02-16T03:37:02.716Z - info: Verifying license key free
+2022-02-16T03:37:02.717Z - info: Using free license
+2022-02-16T03:37:02.723Z - info: Migrating templates chrome settings (waitForNetworkIddle -> waitForNetworkIdle)
+2022-02-16T03:37:02.723Z - info: Migration successful
+2022-02-16T03:37:02.724Z - debug: Creating samples is disabled
+2022-02-16T03:37:02.725Z - info: Initializing worker threads
+2022-02-16T03:37:02.725Z - debug: Extensions in workers: base, child-templates, components, data, express, handlebars, jsrender, localization, npm, pdf-utils, reports, text, version-control, assets, browser-client, chrome-pdf, docx, html-to-xlsx, pptx, scripts, static-pdf, studio, xlsx
+2022-02-16T03:37:02.951Z - info: 2 worker threads initialized in 226ms
+2022-02-16T03:37:02.952Z - info: Starting temp files cleanup with 180000ms threshold
+2022-02-16T03:37:02.953Z - info: reporter initialized
+2022-02-16T03:37:02.990Z - info: Starting rendering request 1 (user: null) rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:02.991Z - info: Rendering template { name: lista, recipe: chrome-pdf, engine: none, preview: false } rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:02.991Z - debug: Data item not defined for this template. rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:02.992Z - debug: Base url not specified, skipping its injection. rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:02.992Z - debug: Rendering engine none rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.504Z - debug: Executing recipe chrome-pdf rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.505Z - debug: Starting child request to render pdf footer rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.505Z - info: Starting rendering request 2 (user: null) rootId=iwovu4cj135d9yw, id=u078gsf4pc0b4kw
+2022-02-16T03:37:03.505Z - info: Rendering anonymous template { recipe: html, engine: none } rootId=iwovu4cj135d9yw, id=u078gsf4pc0b4kw
+2022-02-16T03:37:03.505Z - debug: Data item not defined for this template. rootId=iwovu4cj135d9yw, id=u078gsf4pc0b4kw
+2022-02-16T03:37:03.505Z - debug: Base url not specified, skipping its injection. rootId=iwovu4cj135d9yw, id=u078gsf4pc0b4kw
+2022-02-16T03:37:03.506Z - debug: Rendering engine none rootId=iwovu4cj135d9yw, id=u078gsf4pc0b4kw
+2022-02-16T03:37:03.605Z - debug: Executing recipe html rootId=iwovu4cj135d9yw, id=u078gsf4pc0b4kw
+2022-02-16T03:37:03.605Z - debug: Skipping storing report. rootId=iwovu4cj135d9yw, id=u078gsf4pc0b4kw
+2022-02-16T03:37:03.605Z - info: Rendering request 2 finished in 22 ms rootId=iwovu4cj135d9yw, id=u078gsf4pc0b4kw
+2022-02-16T03:37:03.706Z - debug: Converting with chrome HeadlessChrome/98.0.4758.0 using chrome-pool strategy rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.806Z - debug: Page request: GET (document) file:///tmp/jsreport/autocleanup/575c5ec6-2066-4b4c-bb4a-c09011e0435e-chrome-pdf.html rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.807Z - debug: Page request: GET (stylesheet) file:///tmp/jsreport/autocleanup/styles.css rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.807Z - debug: Page request: GET (stylesheet) https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.807Z - warn: Page request failed: GET (stylesheet) file:///tmp/jsreport/autocleanup/styles.css, failure: net::ERR_ACCESS_DENIED rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.807Z - debug: Failed to load resource: net::ERR_ACCESS_DENIED rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.807Z - debug: Page request finished: GET (document) file:///tmp/jsreport/autocleanup/575c5ec6-2066-4b4c-bb4a-c09011e0435e-chrome-pdf.html rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.906Z - debug: Page request: GET (image) data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABMYAAAPJCAYAAAD5/CSXAAAgAElEQVR4nOzdB3ib5dn28VNbsry3nc... rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:03.907Z - debug: Page request finished: GET (image) 200 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABMYAAAPJCAYAAAD5/CSXAAAgAElEQVR4nOzdB3ib5dn28VNbsry3nc... rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:04.006Z - debug: Page request finished: GET (stylesheet) 200 https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:04.006Z - debug: Running chrome with params {"landscape":true,"format":"Legal","scale":0.8,"displayHeaderFooter":true,"marginBottom":"2cm","footerTemplate":"...","marginTop":"0.5cm","timeout":60000,"margin":{"top":"0.5cm","bottom":"2cm"},"printBackground":true} rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:04.284Z - debug: Skipping storing report. rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:04.285Z - info: Rendering request 1 finished in 1307 ms rootId=iwovu4cj135d9yw, id=iwovu4cj135d9yw
+2022-02-16T03:37:04.317Z - info: Closing jsreport instance
+2022-02-16T03:37:04.390Z - info: jsreport instance has been closed

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Error } from 'tinify/lib/tinify/Error';
 import ejs from 'ejs';
-import JsReport from 'jsreport';
+import JsReport from 'jsreport-core';
 import { promisify } from 'util';
 import { IFactura } from 'interfaces/Itables';
 import ControllerPtoVta from '../../../api/components/ptosVta';
@@ -155,6 +155,9 @@ export const createListSellsPDF = async (
                 }
             }
         })
+
+        jsreport.use(require('jsreport-chrome-pdf')())
+
         const writeFileAsync = promisify(fs.writeFile)
 
         await ejs.renderFile(path.join("views", "reports", "cajaList", "index.ejs"), datos, async (err, data) => {
