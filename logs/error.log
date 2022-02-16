@@ -262,3 +262,40 @@ Error: Extension "chrome-pdf" is not compatible with "core" extension. Missing "
     at async /home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/worker/reporter.js:177:19
     at async Domain.<anonymous> (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/advanced-workers/lib/workerHandler.js:141:19) rootId=sfyvwz6j0lmjvsg, id=sfyvwz6j0lmjvsg
 2022-02-13T23:06:44.615Z - error: Rendering request 1 finished with error in 337 ms rootId=sfyvwz6j0lmjvsg, id=sfyvwz6j0lmjvsg
+2022-02-16T02:41:52.492Z - error: Error occurred during reporter init: Error: Error when loading extension chrome-pdf@1.10.0
+Error: Extension "chrome-pdf" is not compatible with "core" extension. Missing ".requires" information in "chrome-pdf" definition
+    at validateMinimalVersion (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/validateMinimalVersion.js:24:11)
+    at Object._useOne (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:158:9)
+    at Object._useMany (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:99:38)
+    at async MainReporter.init (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/reporter.js:199:7)
+    at Object._useOne (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:248:15)
+    at Object._useMany (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:99:38)
+    at async MainReporter.init (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/reporter.js:199:7)
+2022-02-16T02:41:52.509Z - error: uncaughtException: Error when loading extension chrome-pdf@1.10.0
+Error: Extension "chrome-pdf" is not compatible with "core" extension. Missing ".requires" information in "chrome-pdf" definition
+    at validateMinimalVersion (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/validateMinimalVersion.js:24:11)
+    at Object._useOne (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:158:9)
+    at Object._useMany (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:99:38)
+    at async MainReporter.init (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/reporter.js:199:7)
+Error: Error when loading extension chrome-pdf@1.10.0
+Error: Extension "chrome-pdf" is not compatible with "core" extension. Missing ".requires" information in "chrome-pdf" definition
+    at validateMinimalVersion (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/validateMinimalVersion.js:24:11)
+    at Object._useOne (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:158:9)
+    at Object._useMany (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:99:38)
+    at async MainReporter.init (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/reporter.js:199:7)
+    at Object._useOne (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:248:15)
+    at Object._useMany (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:99:38)
+    at async MainReporter.init (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/reporter.js:199:7) error=Error: Error when loading extension chrome-pdf@1.10.0
+Error: Extension "chrome-pdf" is not compatible with "core" extension. Missing ".requires" information in "chrome-pdf" definition
+    at validateMinimalVersion (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/validateMinimalVersion.js:24:11)
+    at Object._useOne (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:158:9)
+    at Object._useMany (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:99:38)
+    at async MainReporter.init (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/reporter.js:199:7), stack=Error: Error when loading extension chrome-pdf@1.10.0
+Error: Extension "chrome-pdf" is not compatible with "core" extension. Missing ".requires" information in "chrome-pdf" definition
+    at validateMinimalVersion (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/validateMinimalVersion.js:24:11)
+    at Object._useOne (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:158:9)
+    at Object._useMany (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:99:38)
+    at async MainReporter.init (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/reporter.js:199:7)
+    at Object._useOne (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:248:15)
+    at Object._useMany (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/extensions/extensionsManager.js:99:38)
+    at async MainReporter.init (/home/kuroneko/Documentos/Proyectos/NodeJS/club-limpieza-back-ts/node_modules/@jsreport/jsreport-core/lib/main/reporter.js:199:7), exception=true, date=Tue Feb 15 2022 23:41:52 GMT-0300 (hora estándar de Argentina), process=[object Object], os=[object Object], trace=[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]

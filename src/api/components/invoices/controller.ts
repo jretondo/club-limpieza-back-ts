@@ -1,3 +1,4 @@
+import { createListSellsPDF } from './../../../utils/facturacion/lists/createListSellsPDF';
 
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
@@ -62,14 +63,14 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
-    const cajaList = async (userId: number, ptoVta: number, desde: string, hasta: string, page?: number, cantPerPage?: number) => {
+    const cajaList = async (pdf: boolean, userId: number, ptoVtaId: number, desde: string, hasta: string, page?: number, cantPerPage?: number): Promise<any> => {
 
         const filters: Array<IWhereParams> = [{
             mode: EModeWhere.strict,
             concat: EConcatWhere.and,
             items: [
                 { column: Columns.facturas.user_id, object: String(userId) },
-                { column: Columns.facturas.pv, object: String(ptoVta) }
+                { column: Columns.facturas.pv_id, object: String(ptoVtaId) }
             ]
         }];
 
@@ -92,6 +93,7 @@ export = (injectedStore: typeof StoreType) => {
         filters.push(filter1, filter2)
 
         let pages: Ipages;
+
         if (page) {
             pages = {
                 currentPage: page,
@@ -109,10 +111,24 @@ export = (injectedStore: typeof StoreType) => {
                 totales
             };
         } else {
+            const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined);
             const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, undefined);
-            return {
-                data
-            };
+
+            const dataFact = {
+                filePath: "",
+                fileName: ""
+            }
+
+            if (pdf) {
+                const cajaList = await createListSellsPDF(userId, ptoVtaId, desde, hasta, totales, data)
+                console.log('cajaList :>> ', cajaList);
+                return cajaList
+            } else {
+                return {
+                    data,
+                    totales
+                };
+            }
         }
     }
 

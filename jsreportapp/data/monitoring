@@ -125,3 +125,4 @@
 {"cpu":2,"freemem":10711,"timestamp":{"$$date":1644801013433},"hostname":"neko-mint","creationDate":{"$$date":1644801013433},"modificationDate":{"$$date":1644801013433},"shortid":"UhmdWv-","_id":"7nA3DnSsprSad9Pg","$entitySet":"monitoring"}
 {"cpu":2,"freemem":10709,"timestamp":{"$$date":1644801073433},"hostname":"neko-mint","creationDate":{"$$date":1644801073433},"modificationDate":{"$$date":1644801073433},"shortid":"nBcUV2H","_id":"xrXC2kyXhhxorVFd","$entitySet":"monitoring"}
 {"cpu":2,"freemem":10705,"timestamp":{"$$date":1644801133433},"hostname":"neko-mint","creationDate":{"$$date":1644801133434},"modificationDate":{"$$date":1644801133434},"shortid":"_9efT7C","_id":"PdsuYRo03hFiizdj","$entitySet":"monitoring"}
+{"cpu":13,"freemem":11160,"timestamp":{"$$date":1644801193433},"hostname":"neko-mint","creationDate":{"$$date":1644801193433},"modificationDate":{"$$date":1644801193433},"shortid":"3zc3YZE","_id":"wFJNL33uUaRFTBES","$entitySet":"monitoring"}

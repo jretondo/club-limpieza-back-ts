@@ -99,7 +99,7 @@ export = (injectedStore: typeof StoreType) => {
             })
     }
 
-    const get = async (id: number) => {
+    const get = async (id: number): Promise<Array<INewPV>> => {
         return await store.get(Tables.PUNTOS_VENTA, id)
     }
 

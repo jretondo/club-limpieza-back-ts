@@ -95,7 +95,8 @@ export interface IFactura {
     total_iva: number,
     total_neto: number,
     total_compra: number,
-    forma_pago: number
+    forma_pago: number,
+    pv_id: number
 }
 
 export interface IDetFactura {

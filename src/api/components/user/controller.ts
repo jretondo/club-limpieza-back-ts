@@ -93,7 +93,7 @@ export = (injectedStore: typeof StoreType) => {
             })
     }
 
-    const getUser = async (idUser: number) => {
+    const getUser = async (idUser: number): Promise<Array<IUser>> => {
         return await store.get(Tables.ADMIN, idUser);
     }
 
