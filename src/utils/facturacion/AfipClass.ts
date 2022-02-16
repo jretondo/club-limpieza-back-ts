@@ -155,7 +155,7 @@ export class AfipClass {
         | FactInscriptoServ
         | FactInscriptoProdNC
         | FactInscriptoServNC
-        | string
+        | any
     }> {
         try {
             const dataFact = await this.afip.ElectronicBilling.getVoucherInfo(ncbte, pv, tipo);

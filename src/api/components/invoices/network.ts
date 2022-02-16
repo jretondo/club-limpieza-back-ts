@@ -8,6 +8,7 @@ import factuMiddel from '../../../utils/facturacion/middleFactu';
 import { fiscalMiddle } from '../../../utils/facturacion/middleFiscal';
 import { invoicePDFMiddle } from '../../../utils/facturacion/middlePDFinvoice';
 import { sendFactMiddle } from '../../../utils/facturacion/middleSendFact';
+import dataFactMiddle from '../../../utils/facturacion/middleDataFact';
 
 const list = (
     req: Request,
@@ -78,6 +79,22 @@ const newInvoice = (
         .catch(next)
 };
 
+const getDataFactPDF = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    if (req.query.sendEmail) {
+        success({ req, res })
+    } else {
+        Controller.getDataFact(req.body.fileName, req.body.filePath)
+            .then(dataFact => {
+                file(req, res, dataFact.filePath, 'application/pdf', dataFact.fileName, dataFact);
+            })
+            .catch(next)
+    }
+};
+
 const getFiscalDataInvoice = (
     req: Request,
     res: Response,
@@ -139,15 +156,14 @@ const cajaListPDF = (
         .catch(next)
 };
 
-router.get("/details/:id", secure(EPermissions.ventas), get);
-router.get("/cajaList/:page", secure(EPermissions.ventas), cajaList)
-router.get("/cajaListPDF", secure(EPermissions.ventas), cajaListPDF)
-router.get("/last", secure(EPermissions.ventas), getLast);
-router.get("/afipData", secure(EPermissions.ventas), getFiscalDataInvoice);
-router.get("/:page", secure(EPermissions.ventas), list);
-
-router.post("/", secure(EPermissions.ventas), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice);
-
-router.delete("/:id", secure(EPermissions.ventas), remove);
+router.get("/details/:id", secure(EPermissions.ventas), get)
+    .get("/cajaList/:page", secure(EPermissions.ventas), cajaList)
+    .get("/cajaListPDF", secure(EPermissions.ventas), cajaListPDF)
+    .get("/factDataPDF/:id", secure(EPermissions.ventas), dataFactMiddle(), invoicePDFMiddle(), sendFactMiddle(), getDataFactPDF)
+    .get("/last", secure(EPermissions.ventas), getLast)
+    .get("/afipData", secure(EPermissions.ventas), getFiscalDataInvoice)
+    .get("/:page", secure(EPermissions.ventas), list)
+    .post("/", secure(EPermissions.ventas), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)
+    .delete("/:id", secure(EPermissions.ventas), remove)
 
 export = router;

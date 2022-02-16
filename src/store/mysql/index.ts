@@ -139,6 +139,17 @@ const get = async (table: Tables, id: number): Promise<any> => {
         })
     })
 }
+const getAnyCol = async (table: Tables, data: object): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        connection.query(` SELECT * FROM ${table} WHERE ? `, [data], (err: Error, data: any) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(data)
+            }
+        })
+    })
+}
 
 const list = (
     table: Tables,
@@ -186,5 +197,6 @@ export = {
     get,
     mInsert,
     list,
-    updateWhere
+    updateWhere,
+    getAnyCol
 }

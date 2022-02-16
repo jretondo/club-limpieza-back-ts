@@ -260,7 +260,10 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
-    const getFiscalDataInvoice = async (ncbte: number, pvId: number, fiscal: boolean, tipo: CbteTipos, entorno: boolean) => {
+    const getFiscalDataInvoice = async (ncbte: number, pvId: number, fiscal: boolean, tipo: CbteTipos, entorno: boolean): Promise<FactInscriptoProd |
+        FactInscriptoServ |
+        FactMonotribProd |
+        FactMonotribServ> => {
         const pvData: Array<INewPV> = await ptosVtaController.get(pvId);
 
         let certDir = "drop_test.crt"
@@ -300,7 +303,6 @@ export = (injectedStore: typeof StoreType) => {
             if (String(newFact.n_doc_cliente).length < 10) {
                 esDni = true
             }
-            console.log('pasa :>> ');
             const newClient: IClientes = {
                 cuit: esDni,
                 ndoc: String(newFact.n_doc_cliente),
@@ -324,6 +326,21 @@ export = (injectedStore: typeof StoreType) => {
         return dataFact
     }
 
+    const getDetails = async (fact_id: number): Promise<Array<IDetFactura>> => {
+        return await store.getAnyCol(Tables.DET_FACTURAS, { fact_id })
+    }
+
+    const getDataFact = async (
+        fileName: string,
+        filePath: string,
+    ) => {
+        const dataFact = {
+            fileName,
+            filePath
+        }
+        return dataFact
+    }
+
     return {
         lastInvoice,
         list,
@@ -331,6 +348,8 @@ export = (injectedStore: typeof StoreType) => {
         get,
         newInvoice,
         getFiscalDataInvoice,
-        cajaList
+        cajaList,
+        getDetails,
+        getDataFact
     }
 }

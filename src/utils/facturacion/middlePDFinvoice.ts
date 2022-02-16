@@ -55,9 +55,9 @@ export const invoicePDFMiddle = () => {
                 logoAfip1: "",
                 logoAfip2: "",
                 codQR: "",
-                caeNro: dataFiscal.CAE,
+                caeNro: "",
                 caeVto: "",
-                vendedor: newFact.seller_name
+                vendedor: newFact.seller_name || ""
             }
 
             if (newFact.fiscal) {
@@ -114,7 +114,7 @@ export const invoicePDFMiddle = () => {
                     logoAfip1: 'data:image/png;base64,' + lAfip1,
                     logoAfip2: 'data:image/png;base64,' + lAfip2,
                     codQR: urlQr,
-                    caeNro: dataFiscal.CAE,
+                    caeNro: dataFiscal.CAE || "",
                     caeVto: moment(dataFiscal.CAEFchVto, "YYYY-MM-DD").format("DD/MM/YYYY"),
                     vendedor: newFact.seller_name
                 }
