@@ -28,8 +28,7 @@ export enum EPermissions {
     ventas = 3,
     proveedores = 4,
     clientes = 5,
-    revendedores = 6,
-    transportistas = 7,
+    anularFact = 6,
     userAdmin = 8
 }
 

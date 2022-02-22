@@ -9,13 +9,14 @@ import {
     CbteTipos
 } from '../../../utils/facturacion/AfipClass'
 import ptosVtaController from '../ptosVta';
-import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
+import { Iorder, Ipages, IWhereParams } from 'interfaces/Ifunctions';
 import { IClientes, IDetFactura, IFactura, IUser } from 'interfaces/Itables';
 import { INewPV } from 'interfaces/Irequests';
 import ControllerStock from '../stock';
 import ControllerClientes from '../clientes';
 
 import fs from 'fs';
+import { NextFunction } from 'express';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
@@ -102,7 +103,7 @@ export = (injectedStore: typeof StoreType) => {
                 asc: true
             };
             const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined);
-            const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, pages, undefined, { columns: [Columns.facturas.fecha], asc: true });
+            const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, pages, undefined, { columns: [Columns.facturas.fecha], asc: false });
             const cant = await store.list(Tables.FACTURAS, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters, undefined, undefined);
             const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
             return {
@@ -295,6 +296,7 @@ export = (injectedStore: typeof StoreType) => {
         productsList: Array<IDetFactura>,
         fileName: string,
         filePath: string,
+        next: NextFunction
     ) => {
 
         const resultInsert = insertFact(pvData.id || 0, newFact, productsList, factFiscal)
@@ -311,7 +313,11 @@ export = (injectedStore: typeof StoreType) => {
                 email: newFact.email_cliente,
                 cond_iva: newFact.cond_iva_cliente
             }
-            ControllerClientes.upsert(newClient)
+            try {
+                ControllerClientes.upsert(newClient, next)
+            } catch (error) {
+
+            }
         }
 
         setTimeout(() => {

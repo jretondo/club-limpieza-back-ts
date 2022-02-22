@@ -9,6 +9,7 @@ import { fiscalMiddle } from '../../../utils/facturacion/middleFiscal';
 import { invoicePDFMiddle } from '../../../utils/facturacion/middlePDFinvoice';
 import { sendFactMiddle } from '../../../utils/facturacion/middleSendFact';
 import dataFactMiddle from '../../../utils/facturacion/middleDataFact';
+import devFactMiddle from '../../../utils/facturacion/middleDevFact';
 
 const list = (
     req: Request,
@@ -72,7 +73,7 @@ const newInvoice = (
     res: Response,
     next: NextFunction
 ) => {
-    Controller.newInvoice(req.body.pvData, req.body.newFact, req.body.dataFiscal, req.body.productsList, req.body.fileName, req.body.filePath)
+    Controller.newInvoice(req.body.pvData, req.body.newFact, req.body.dataFiscal, req.body.productsList, req.body.fileName, req.body.filePath, next)
         .then((dataFact) => {
             file(req, res, dataFact.filePath, 'application/pdf', dataFact.fileName, dataFact);
         })
@@ -163,6 +164,7 @@ router.get("/details/:id", secure(EPermissions.ventas), get)
     .get("/last", secure(EPermissions.ventas), getLast)
     .get("/afipData", secure(EPermissions.ventas), getFiscalDataInvoice)
     .get("/:page", secure(EPermissions.ventas), list)
+    .post("/notaCred", secure(EPermissions.ventas), devFactMiddle(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)
     .post("/", secure(EPermissions.ventas), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)
     .delete("/:id", secure(EPermissions.ventas), remove)
 

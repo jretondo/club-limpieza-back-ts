@@ -32,6 +32,8 @@ export const invoicePDFMiddle = () => {
                 FactMonotribServ
                 = req.body.dataFiscal
 
+            console.log('dataFiscal :>> ', dataFiscal);
+
             let urlQr = ""
             function base64_encode(file: any) {
                 // read binary data
@@ -104,7 +106,7 @@ export const invoicePDFMiddle = () => {
                 }
                 if (dataFiscal.CbteTipo === CbteTipos["Nota de Crédito A"] || dataFiscal.CbteTipo === CbteTipos["Nota de Crédito B"] || dataFiscal.CbteTipo === CbteTipos["Nota de Crédito C"] || dataFiscal.CbteTipo === CbteTipos["Nota de Crédito M"]) {
                     const cbteAsocObj = dataFiscal.CbtesAsoc || [{ PtoVta: 0 }, { Nro: 0 }]
-
+                    console.log('dataFiscal :>> ', dataFiscal);
                     cbteAsoc = `${zfill(cbteAsocObj[0].PtoVta || 0, 5)} - ${zfill(cbteAsocObj[0].Nro || 0, 8)}` || ""
                 }
 
@@ -120,9 +122,8 @@ export const invoicePDFMiddle = () => {
                 }
             }
 
-            const myCss = {
-                style: fs.readFileSync(path.join("public", "css", "style.css"), 'utf8')
-            };
+            const myCss = fs.readFileSync(path.join("public", "css", "style.css"), 'utf8')
+
 
             let condIvaStr = ""
             let condIvaStrCliente = ""
@@ -195,7 +196,7 @@ export const invoicePDFMiddle = () => {
             const listaItems = productsList
 
             const datos2 = {
-                myCss,
+                myCss: `<style>${myCss}</style>`,
                 listaItems,
                 cbteAsoc,
                 ...encabezado,

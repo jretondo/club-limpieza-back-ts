@@ -97,7 +97,8 @@ const factuMiddel = () => {
                 total_neto: productsList.totalNeto,
                 total_compra: productsList.totalCosto,
                 forma_pago: body.forma_pago,
-                pv_id: body.pv_id
+                pv_id: body.pv_id,
+                id_fact_asoc: 0
             }
 
             let ivaList: Array<IIvaItem> = [];

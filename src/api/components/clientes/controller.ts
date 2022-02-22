@@ -6,6 +6,7 @@ import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMys
 import { Tables, Columns } from '../../../enums/EtablesDB';
 import StoreType from '../../../store/mysql';
 import getPages from '../../../utils/getPages';
+import { NextFunction } from 'express';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
@@ -50,7 +51,7 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
-    const upsert = async (body: IClientes) => {
+    const upsert = async (body: IClientes, next: NextFunction) => {
         const cliente: IClientes = {
             cuit: body.cuit,
             ndoc: body.ndoc,
@@ -60,10 +61,14 @@ export = (injectedStore: typeof StoreType) => {
             cond_iva: body.cond_iva
         }
 
-        if (body.id) {
-            return await store.update(Tables.CLIENTES, cliente, body.id);
-        } else {
-            return await store.insert(Tables.CLIENTES, cliente);
+        try {
+            if (body.id) {
+                return await store.update(Tables.CLIENTES, cliente, body.id);
+            } else {
+                return await store.insert(Tables.CLIENTES, cliente);
+            }
+        } catch (error) {
+            next(error)
         }
     }
 

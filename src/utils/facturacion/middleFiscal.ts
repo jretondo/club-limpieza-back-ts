@@ -11,6 +11,7 @@ export const fiscalMiddle = () => {
         next: NextFunction
     ) => {
         try {
+            let asociado = null
             const pvData: INewPV = req.body.pvData
             const newFact: IFactura = req.body.newFact
             const dataFiscal: FactInscriptoProd |
@@ -22,7 +23,9 @@ export const fiscalMiddle = () => {
                 FactMonotribServ |
                 FactMonotribServNC |
                 any = req.body.dataFiscal
-
+            if (dataFiscal.CbtesAsoc) {
+                asociado = dataFiscal.CbtesAsoc
+            }
             if (newFact.fiscal) {
                 let certDir = "drop_test.crt"
                 let keyDir = "drop.key"
@@ -39,6 +42,10 @@ export const fiscalMiddle = () => {
                 req.body.dataFiscal = newDataFiscal.data
                 req.body.dataFiscal.CbteTipo = newFact.t_fact
                 req.body.newFact.cbte = req.body.dataFiscal.CbteDesde
+                if (asociado) {
+                    req.body.dataFiscal.CbtesAsoc = asociado
+                }
+
                 next()
             } else {
                 const lastInvoice = await ControllerInvoices.lastInvoice(pvData.id || 0, false, 0, false)

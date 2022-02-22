@@ -9,16 +9,13 @@ const responseSuccess = (req: Request, res: Response, next: NextFunction) => {
 }
 
 //Routes
-router.get("/dashboard", secure(), responseSuccess);
-router.get("/changePass", secure(), responseSuccess);
-router.get("/clientes", secure(EPermissions.clientes), responseSuccess);
-router.get("/productos", secure(EPermissions.productos), responseSuccess);
-router.get("/proveedores", secure(EPermissions.proveedores), responseSuccess);
-router.get("/ptosVta", secure(EPermissions.ptosVta), responseSuccess);
-router.get("/revendedores", secure(EPermissions.revendedores), responseSuccess);
-router.get("/stock", secure(EPermissions.ventas), responseSuccess);
-router.get("/transportistas", secure(EPermissions.transportistas), responseSuccess);
-router.get("/userAdmin", secure(EPermissions.userAdmin), responseSuccess);
-
+router.get("/dashboard", secure(), responseSuccess)
+    .get("/changePass", secure(), responseSuccess)
+    .get("/clientes", secure(EPermissions.clientes), responseSuccess)
+    .get("/productos", secure(EPermissions.productos), responseSuccess)
+    .get("/proveedores", secure(EPermissions.proveedores), responseSuccess)
+    .get("/ptosVta", secure(EPermissions.ptosVta), responseSuccess)
+    .get("/stock", secure(EPermissions.ventas), responseSuccess)
+    .get("/userAdmin", secure(EPermissions.userAdmin), responseSuccess)
 
 export = router;

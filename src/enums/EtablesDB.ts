@@ -141,7 +141,8 @@ enum Facturas {
     total_neto = "total_neto",
     total_compra = "total_compra",
     forma_pago = "forma_pago",
-    pv_id = "pv_id"
+    pv_id = "pv_id",
+    id_fact_asoc = "id_fact_asoc"
 }
 
 enum DetalleFact {
