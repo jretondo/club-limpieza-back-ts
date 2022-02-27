@@ -17,6 +17,9 @@ const list = (
     next: NextFunction
 ) => {
     Controller.list(
+        Number(req.query.pvId),
+        Number(req.query.fiscal),
+        Number(req.query.cbte),
         Number(req.params.page),
         String(req.query.search),
         Number(req.query.cantPerPage)

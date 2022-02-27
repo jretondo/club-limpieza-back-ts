@@ -1,5 +1,4 @@
 import { createListSellsPDF } from './../../../utils/facturacion/lists/createListSellsPDF';
-
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
 import StoreType from '../../../store/mysql';
@@ -9,36 +8,55 @@ import {
     CbteTipos
 } from '../../../utils/facturacion/AfipClass'
 import ptosVtaController from '../ptosVta';
-import { Iorder, Ipages, IWhereParams } from 'interfaces/Ifunctions';
-import { IClientes, IDetFactura, IFactura, IUser } from 'interfaces/Itables';
+import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
+import { IClientes, IDetFactura, IFactura } from 'interfaces/Itables';
 import { INewPV } from 'interfaces/Irequests';
 import ControllerStock from '../stock';
 import ControllerClientes from '../clientes';
-
 import fs from 'fs';
 import { NextFunction } from 'express';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
 
-    const list = async (page?: number, item?: string, cantPerPage?: number) => {
+    const list = async (pvId: number, fiscal: number, cbte?: number, page?: number, item?: string, cantPerPage?: number) => {
 
-        let filter: IWhereParams | undefined = undefined;
+        let filter0: IWhereParams | undefined = undefined;
+        let filter1: IWhereParams | undefined = undefined;
+        let filter2: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
+        filter0 = {
+            mode: EModeWhere.strict,
+            concat: EConcatWhere.and,
+            items: [
+                { column: Columns.facturas.pv_id, object: String(pvId) },
+                { column: Columns.facturas.fiscal, object: String(fiscal) },
+            ]
+        }
+        filters.push(filter0);
         if (item) {
-            filter = {
+            filter1 = {
                 mode: EModeWhere.like,
                 concat: EConcatWhere.or,
                 items: [
                     { column: Columns.facturas.cae, object: String(item) },
                     { column: Columns.facturas.n_doc_cliente, object: String(item) },
                     { column: Columns.facturas.fecha, object: String(item) },
-                    { column: Columns.facturas.cbte, object: String(item) },
-                    { column: Columns.facturas.pv, object: String(item) },
                     { column: Columns.facturas.raz_soc_cliente, object: String(item) }
                 ]
             };
-            filters.push(filter);
+            filters.push(filter1);
+        }
+
+        if (cbte) {
+            filter2 = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.none,
+                items: [
+                    { column: Columns.facturas.cbte, object: String(cbte) },
+                ]
+            }
+            filters.push(filter2);
         }
 
         let pages: Ipages;
