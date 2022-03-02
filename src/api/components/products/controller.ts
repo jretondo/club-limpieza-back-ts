@@ -324,6 +324,12 @@ export = (injectedStore: typeof StoreType) => {
         await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
     };
 
+    const asignarCodBarra = async (id: number, codBarras: string) => {
+        console.log('id :>> ', id);
+        console.log('codBarras :>> ', codBarras);
+        return await store.update(Tables.PRODUCTS_PRINCIPAL, { cod_barra: codBarras }, id)
+    }
+
     return {
         list,
         upsert,
@@ -333,6 +339,7 @@ export = (injectedStore: typeof StoreType) => {
         getSubCategory,
         varCost,
         aplicatePorcGan,
-        getPrincipal
+        getPrincipal,
+        asignarCodBarra
     }
 }

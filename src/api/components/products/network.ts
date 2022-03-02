@@ -134,6 +134,18 @@ const getSubCategorys = (
         .catch(next);
 }
 
+const updateCodBarras = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.asignarCodBarra(Number(req.params.id), req.body.codBarras)
+        .then(data => {
+            success({ req, res, message: data });
+        })
+        .catch(next);
+}
+
 router.get("/details/:id", secure(EPermissions.productos), get);
 router.get("/getCat", secure(EPermissions.productos), getCategorys);
 router.get("/getGetSubCat", secure(EPermissions.productos), getSubCategorys);
@@ -143,5 +155,6 @@ router.post("/changePorc", secure(EPermissions.productos), aplicatePorcGan);
 router.post("/", secure(EPermissions.productos), uploadFile(staticFolders.products, ["product"]), upsert);
 router.put("/", secure(EPermissions.productos), uploadFile(staticFolders.products, ["product"]), upsert);
 router.delete("/:id", secure(EPermissions.productos), remove);
+router.put("/codBarra/:id", secure(EPermissions.productos), updateCodBarras)
 
 export = router;

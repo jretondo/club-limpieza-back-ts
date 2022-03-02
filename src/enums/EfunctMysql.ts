@@ -29,7 +29,8 @@ export enum EPermissions {
     proveedores = 4,
     clientes = 5,
     anularFact = 6,
-    userAdmin = 8
+    userAdmin = 8,
+    stock = 9
 }
 
 export enum ETypesJoin {
