@@ -50,7 +50,7 @@ const upsert = (
     res: Response,
     next: NextFunction
 ) => {
-    Controller.upsert(req.body, req.body.user)
+    Controller.upsert(req.body, req.body.user, true)
         .then(response => {
             if (response) {
                 success({
@@ -95,8 +95,32 @@ const remove = (
         .catch(next)
 }
 
+const ultStockList = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.ultStockList(
+        String(req.query.desde),
+        String(req.query.hasta),
+        Number(req.query.prodId),
+        Number(req.query.tipoMov),
+        Number(req.query.pvId),
+        Number(req.query.userId),
+        String(req.query.cat),
+        String(req.query.subcat),
+        Number(req.params.page),
+        Number(req.query.cantPerPage)
+    )
+        .then(data => {
+            success({ req, res, message: data });
+        })
+        .catch(next);
+}
+
 router.get("/", secure(EPermissions.ventas), list);
 router.get("/ultMov/", secure(EPermissions.ventas), ultMov);
+router.get("/ultStockList/:page", secure(EPermissions.stock), ultStockList)
 router.post("/", secure(EPermissions.ventas), upsert);
 router.post("/moverStock", secure(EPermissions.ventas), moverStock);
 router.delete("/:id", secure(EPermissions.ventas), remove);

@@ -66,6 +66,10 @@ export interface INewStock {
     round: number,
     vta_price: number,
     vta_fija: boolean,
+    prod_name: string,
+    pv_descr: string,
+    category: string,
+    sub_category: string,
     fact_id?: number
 }
 export interface INewFactura {

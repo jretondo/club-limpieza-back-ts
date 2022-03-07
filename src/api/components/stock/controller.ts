@@ -1,7 +1,8 @@
 import { IChangeStock, Ipages, IWhereParams } from 'interfaces/Ifunctions';
-import { INewStock } from 'interfaces/Irequests';
+import { INewProduct, INewPV, INewStock } from 'interfaces/Irequests';
 import { IDetFactura, IModPriceProd, IMovStock, IUser } from 'interfaces/Itables';
 import moment from 'moment';
+import getPages from '../../../utils/getPages';
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
 import StoreType from '../../../store/mysql';
@@ -64,7 +65,10 @@ export = (injectedStore: typeof StoreType) => {
         return await store.list(Tables.STOCK, [ESelectFunct.all], filters, undefined, orderBy, undefined);
     }
 
-    const upsert = async (body: INewStock, user: IUser) => {
+    const upsert = async (body: INewStock, user: IUser, act: Boolean) => {
+
+        const prodData: Array<INewProduct> = await store.get(Tables.PRODUCTS_PRINCIPAL, body.idProd)
+        const pvData: Array<INewPV> = await store.get(Tables.PUNTOS_VENTA, body.pv_id)
         const newMov: IMovStock = {
             fecha: new Date(),
             id_prod: body.idProd,
@@ -74,19 +78,24 @@ export = (injectedStore: typeof StoreType) => {
             nro_remito: body.obs,
             costo: (body.costo) * (body.nvoStockSingle),
             iva: body.iva,
-            id_user: user.id
+            id_user: user.id,
+            prod_name: prodData[0].name,
+            pv_descr: `${body.pv_id === 0 ? "Deposito" : pvData[0].direccion + ` (PV: ${pvData[0].pv})`}`,
+            category: prodData[0].category,
+            sub_category: prodData[0].subcategory
         };
 
-        const NewPriceProd: IModPriceProd = {
-            id: body.idProd,
-            vta_fija: body.vta_fija,
-            vta_price: body.vta_price,
-            round: body.round,
-            porc_minor: body.porc_minor,
-            precio_compra: body.precio_compra
-        };
-
-        await store.update(Tables.PRODUCTS_PRINCIPAL, NewPriceProd, body.idProd);
+        if (act) {
+            const NewPriceProd: IModPriceProd = {
+                id: body.idProd,
+                vta_fija: body.vta_fija,
+                vta_price: body.vta_price,
+                round: body.round,
+                porc_minor: body.porc_minor,
+                precio_compra: body.precio_compra
+            };
+            await store.update(Tables.PRODUCTS_PRINCIPAL, NewPriceProd, body.idProd);
+        }
 
         return await store.insert(Tables.STOCK, newMov);
     }
@@ -103,12 +112,18 @@ export = (injectedStore: typeof StoreType) => {
             Columns.stock.costo,
             Columns.stock.iva,
             Columns.stock.id_user,
-            Columns.stock.id_fact
-
+            Columns.stock.id_fact,
+            Columns.stock.prod_name,
+            Columns.stock.pv_descr,
+            Columns.stock.category,
+            Columns.stock.sub_category
         ]
+
         const rows: Promise<Array<Array<any>>> = new Promise((resolve, reject) => {
             const rowsvalues: Array<Array<any>> = []
-            prodList.map((item, key) => {
+            prodList.map(async (item, key) => {
+                const prodData: Array<INewProduct> = await store.get(Tables.PRODUCTS_PRINCIPAL, item.id_prod)
+                const pvData: Array<INewPV> = await store.get(Tables.PUNTOS_VENTA, pvId)
                 const values = []
                 values.push(moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
                 values.push(item.id_prod)
@@ -120,6 +135,10 @@ export = (injectedStore: typeof StoreType) => {
                 values.push(item.alicuota_id)
                 values.push(userId)
                 values.push(factId)
+                values.push(prodData[0].name)
+                values.push(`${pvData[0].direccion} (PV: ${pvData[0].pv})`)
+                values.push(prodData[0].category)
+                values.push(prodData[0].subcategory)
                 rowsvalues.push(values)
                 if (key === prodList.length - 1) {
                     resolve(rowsvalues)
@@ -148,11 +167,137 @@ export = (injectedStore: typeof StoreType) => {
     const moverStock = async (body: IChangeStock, user: IUser) => {
         const destino: INewStock = body.destino
         const origen: INewStock = body.origen
-        const result1 = await upsert(origen, user)
-        const result2 = await upsert(destino, user)
+        const result1 = await upsert(origen, user, false)
+        const result2 = await upsert(destino, user, false)
         return {
             result1,
             result2
+        }
+    }
+
+    const ultStockList = async (desde?: string, hasta?: string, prodId?: number, tipoMov?: number, pvId?: number, userId?: number, cat?: string, subCat?: string, page?: number, cantPerPage?: number) => {
+        let data: Array<IMovStock>;
+        let pages: Ipages;
+        let filters: Array<IWhereParams> = [];
+        if (desde) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.higherEqual,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.fecha, object: String(desde) }
+                ]
+            };
+            filters.push(filter)
+        }
+        if (hasta) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.lessEqual,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.fecha, object: String(hasta) }
+                ]
+            };
+            filters.push(filter)
+        }
+        if (prodId) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.id_prod, object: String(prodId) }
+                ]
+            };
+            filters.push(filter)
+        }
+        if (tipoMov) {
+            if (tipoMov === 1) {
+                const filter: IWhereParams = {
+                    mode: EModeWhere.higher,
+                    concat: EConcatWhere.and,
+                    items: [
+                        { column: Columns.stock.cant, object: String(0) }
+                    ]
+                };
+                filters.push(filter)
+            } else {
+                const filter: IWhereParams = {
+                    mode: EModeWhere.less,
+                    concat: EConcatWhere.and,
+                    items: [
+                        { column: Columns.stock.cant, object: String(0) }
+                    ]
+                };
+                filters.push(filter)
+            }
+        }
+        if (pvId) {
+            if (pvId === -1) {
+                const filter: IWhereParams = {
+                    mode: EModeWhere.strict,
+                    concat: EConcatWhere.and,
+                    items: [
+                        { column: Columns.stock.pv_id, object: String(0) }
+                    ]
+                };
+                filters.push(filter)
+            } else {
+                const filter: IWhereParams = {
+                    mode: EModeWhere.strict,
+                    concat: EConcatWhere.and,
+                    items: [
+                        { column: Columns.stock.pv_id, object: String(pvId) }
+                    ]
+                };
+                filters.push(filter)
+            }
+        }
+
+        if (userId) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.id_user, object: String(userId) }
+                ]
+            };
+            filters.push(filter)
+        }
+        if (cat) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.category, object: String(cat) }
+                ]
+            };
+            filters.push(filter)
+        }
+        if (subCat) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.sub_category, object: String(subCat) }
+                ]
+            };
+            filters.push(filter)
+        }
+        if (page) {
+            pages = {
+                currentPage: page,
+                cantPerPage: cantPerPage || 10,
+                order: Columns.prodImg.id_prod,
+                asc: true
+            };
+            data = await store.list(Tables.STOCK, [ESelectFunct.all], filters, undefined, pages);
+            const cant = await store.list(Tables.STOCK, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters);
+            const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
+            return {
+                data,
+                pagesObj
+            };
+        } else {
+            return await store.list(Tables.STOCK, [ESelectFunct.all], filters);
         }
     }
 
@@ -163,6 +308,7 @@ export = (injectedStore: typeof StoreType) => {
         get,
         ultimosMovStock,
         moverStock,
-        multipleInsertStock
+        multipleInsertStock,
+        ultStockList
     }
 }

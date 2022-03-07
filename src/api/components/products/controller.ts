@@ -7,8 +7,8 @@ import fs from 'fs';
 import { staticFolders } from '../../../enums/EStaticFiles';
 import OptimizeImg from '../../../utils/optimeImg';
 import { IJoin, Ipages, IWhere, IWhereParams } from 'interfaces/Ifunctions';
-import { INewProduct } from 'interfaces/Irequests';
-import { IImgProd } from 'interfaces/Itables';
+import { INewProduct, INewPV } from 'interfaces/Irequests';
+import { IImgProd, IMovStock } from 'interfaces/Itables';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
@@ -330,6 +330,10 @@ export = (injectedStore: typeof StoreType) => {
         return await store.update(Tables.PRODUCTS_PRINCIPAL, { cod_barra: codBarras }, id)
     }
 
+    const updateCost = async (idProd: number, cost: number) => {
+        return await store.update(Tables.PRODUCTS_PRINCIPAL, { precio_compra: cost }, idProd)
+    }
+
     return {
         list,
         upsert,
@@ -340,6 +344,7 @@ export = (injectedStore: typeof StoreType) => {
         varCost,
         aplicatePorcGan,
         getPrincipal,
-        asignarCodBarra
+        asignarCodBarra,
+        updateCost
     }
 }

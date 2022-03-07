@@ -54,6 +54,10 @@ export interface IMovStock {
     nro_remito: string,
     costo: number,
     iva: number,
+    prod_name: string,
+    pv_descr: string,
+    category: string,
+    sub_category: string,
     id_user?: number
 }
 

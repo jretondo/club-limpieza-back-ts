@@ -109,7 +109,11 @@ enum Stock {
     costo = "costo",
     iva = "iva",
     id_user = "id_user",
-    id_fact = "id_fact"
+    id_fact = "id_fact",
+    prod_name = "prod_name",
+    pv_descr = "pv_descr",
+    category = "category",
+    sub_category = "sub_category"
 }
 
 enum Facturas {

@@ -146,12 +146,25 @@ const updateCodBarras = (
         .catch(next);
 }
 
+const updateCost = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.updateCost(Number(req.params.id), req.body.cost)
+        .then(data => {
+            success({ req, res, message: data });
+        })
+        .catch(next);
+}
+
 router.get("/details/:id", secure(EPermissions.productos), get);
 router.get("/getCat", secure(EPermissions.productos), getCategorys);
 router.get("/getGetSubCat", secure(EPermissions.productos), getSubCategorys);
 router.get("/:page", secure(EPermissions.productos), list);
 router.post("/varCost", secure(EPermissions.productos), varCost);
 router.post("/changePorc", secure(EPermissions.productos), aplicatePorcGan);
+router.put("/cost/:id", secure(EPermissions.productos), updateCost);
 router.post("/", secure(EPermissions.productos), uploadFile(staticFolders.products, ["product"]), upsert);
 router.put("/", secure(EPermissions.productos), uploadFile(staticFolders.products, ["product"]), upsert);
 router.delete("/:id", secure(EPermissions.productos), remove);
