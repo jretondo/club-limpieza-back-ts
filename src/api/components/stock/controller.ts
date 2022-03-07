@@ -301,6 +301,12 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
+    const listaStock = async (order: string, prodId?: number, pvId?: number, cat?: string, subCat?: string, group?: number, page?: number, cantPerPage?: number) => {
+        const arrayOrden = JSON.parse(order)
+        console.log('arrayOrden :>> ', arrayOrden);
+        return ""
+    }
+
     return {
         list,
         upsert,
@@ -309,6 +315,7 @@ export = (injectedStore: typeof StoreType) => {
         ultimosMovStock,
         moverStock,
         multipleInsertStock,
-        ultStockList
+        ultStockList,
+        listaStock
     }
 }

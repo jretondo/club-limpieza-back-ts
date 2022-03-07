@@ -118,9 +118,31 @@ const ultStockList = (
         .catch(next);
 }
 
+const listaStock = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.listaStock(
+        String(req.query.order),
+        Number(req.query.prodId),
+        Number(req.query.pvId),
+        String(req.query.cat),
+        String(req.query.subcat),
+        Number(req.query.group),
+        Number(req.params.page),
+        Number(req.query.cantPerPage)
+    )
+        .then(data => {
+            success({ req, res, message: data });
+        })
+        .catch(next);
+}
+
 router.get("/", secure(EPermissions.ventas), list);
 router.get("/ultMov/", secure(EPermissions.ventas), ultMov);
 router.get("/ultStockList/:page", secure(EPermissions.stock), ultStockList)
+router.get("/listaStock/:page", secure(EPermissions.stock), listaStock)
 router.post("/", secure(EPermissions.ventas), upsert);
 router.post("/moverStock", secure(EPermissions.ventas), moverStock);
 router.delete("/:id", secure(EPermissions.ventas), remove);
