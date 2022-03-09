@@ -220,15 +220,15 @@ export const selectContructor = (
     }
     let strOrder = ""
     if (order) {
+        const desStr = order.asc ? "ASC" : "DESC"
         order.columns.map((item, key) => {
             if (key === order.columns.length - 1) {
-                strOrder = strOrder + item
+                strOrder = strOrder + item + " " + desStr
             } else {
-                strOrder = strOrder + ", "
+                strOrder = strOrder + item + " " + desStr + ", "
             }
         })
-
-        strOrder = ` ORDER BY ${strOrder} ${order.asc ? "ASC" : "DESC"} `
+        strOrder = ` ORDER BY ${strOrder} `
     }
 
     if (pages) {

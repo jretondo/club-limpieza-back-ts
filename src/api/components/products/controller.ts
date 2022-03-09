@@ -49,7 +49,7 @@ export = (injectedStore: typeof StoreType) => {
                 asc: true
             };
             const data = await store.list(Tables.PRODUCTS_PRINCIPAL, [ESelectFunct.all], filters, groupBy, pages, joinQuery);
-            const cant = await store.list(Tables.PRODUCTS_PRINCIPAL, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters, groupBy, undefined, joinQuery);
+            const cant = await store.list(Tables.PRODUCTS_PRINCIPAL, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters);
             const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
             return {
                 data,
@@ -325,8 +325,6 @@ export = (injectedStore: typeof StoreType) => {
     };
 
     const asignarCodBarra = async (id: number, codBarras: string) => {
-        console.log('id :>> ', id);
-        console.log('codBarras :>> ', codBarras);
         return await store.update(Tables.PRODUCTS_PRINCIPAL, { cod_barra: codBarras }, id)
     }
 

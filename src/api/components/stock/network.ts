@@ -124,6 +124,7 @@ const listaStock = (
     next: NextFunction
 ) => {
     Controller.listaStock(
+        Boolean(req.query.desc),
         String(req.query.order),
         Number(req.query.prodId),
         Number(req.query.pvId),

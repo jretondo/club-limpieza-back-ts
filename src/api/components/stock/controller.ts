@@ -1,4 +1,4 @@
-import { IChangeStock, Ipages, IWhereParams } from 'interfaces/Ifunctions';
+import { IChangeStock, Iorder, Ipages, IWhereParams } from 'interfaces/Ifunctions';
 import { INewProduct, INewPV, INewStock } from 'interfaces/Irequests';
 import { IDetFactura, IModPriceProd, IMovStock, IUser } from 'interfaces/Itables';
 import moment from 'moment';
@@ -301,10 +301,112 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
-    const listaStock = async (order: string, prodId?: number, pvId?: number, cat?: string, subCat?: string, group?: number, page?: number, cantPerPage?: number) => {
-        const arrayOrden = JSON.parse(order)
-        console.log('arrayOrden :>> ', arrayOrden);
-        return ""
+    const listaStock = async (desc: boolean, order: string, prodId?: number, pvId?: number, cat?: string, subCat?: string, group?: number, page?: number, cantPerPage?: number) => {
+        let data: Array<IMovStock>;
+        let pages: Ipages;
+        let filters: Array<IWhereParams> = [];
+        if (prodId) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.id_prod, object: String(prodId) }
+                ]
+            };
+            filters.push(filter)
+        }
+        if (pvId) {
+            if (pvId === -1) {
+                const filter: IWhereParams = {
+                    mode: EModeWhere.strict,
+                    concat: EConcatWhere.and,
+                    items: [
+                        { column: Columns.stock.pv_id, object: String(0) }
+                    ]
+                };
+                filters.push(filter)
+            } else {
+                const filter: IWhereParams = {
+                    mode: EModeWhere.strict,
+                    concat: EConcatWhere.and,
+                    items: [
+                        { column: Columns.stock.pv_id, object: String(pvId) }
+                    ]
+                };
+                filters.push(filter)
+            }
+        }
+        if (cat) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.category, object: String(cat) }
+                ]
+            };
+            filters.push(filter)
+        }
+        if (subCat) {
+            const filter: IWhereParams = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.stock.sub_category, object: String(subCat) }
+                ]
+            };
+            filters.push(filter)
+        }
+
+        let groupBy: Array<string> = [Columns.stock.id_prod];
+        if (group === 1) {
+            groupBy = [Columns.stock.sub_category];
+        } else if (group === 2) {
+            groupBy = [Columns.stock.category];
+        }
+        let arrayOrden: Array<{
+            orden: number,
+            title: string
+        }> = JSON.parse(order)
+        arrayOrden = arrayOrden.sort((a, b) => a.orden - b.orden)
+        let ordenArray: Array<string> = []
+        let orden: Iorder = {
+            columns: ordenArray,
+            asc: desc
+        }
+        arrayOrden.map((item, key) => {
+            if (item.title === "Nombre de Productos") {
+                ordenArray.push(Columns.stock.prod_name)
+            } else if (item.title === "Importe") {
+                ordenArray.push('costoTotal')
+            } else if (item.title === "Marca") {
+                ordenArray.push(Columns.stock.sub_category)
+            } else if (item.title === "Proveedor") {
+                ordenArray.push(Columns.stock.category)
+            }
+            if (key === arrayOrden.length - 1) {
+                orden = {
+                    columns: ordenArray,
+                    asc: desc
+                }
+            }
+        })
+        if (page) {
+            pages = {
+                currentPage: page,
+                cantPerPage: cantPerPage || 10,
+                order: Columns.prodImg.id_prod,
+                asc: true
+            };
+            data = await store.list(Tables.STOCK, [ESelectFunct.all, `SUM(${Columns.stock.cant}) as total`, `SUM(${Columns.stock.costo}) as costoTotal`], filters, groupBy, pages, undefined, orden);
+            const cant = await store.list(Tables.STOCK, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters, groupBy);
+            const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
+            return {
+                data,
+                pagesObj
+            };
+        } else {
+            return await store.list(Tables.STOCK, [ESelectFunct.all], filters);
+        }
     }
 
     return {
