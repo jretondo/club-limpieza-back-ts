@@ -26,6 +26,7 @@ export const fiscalMiddle = () => {
             if (dataFiscal.CbtesAsoc) {
                 asociado = dataFiscal.CbtesAsoc
             }
+            console.log('dataFiscal :>> ', dataFiscal);
             if (newFact.fiscal) {
                 let certDir = "drop_test.crt"
                 let keyDir = "drop.key"
@@ -39,9 +40,7 @@ export const fiscalMiddle = () => {
 
                 const afip = new AfipClass(newFact.cuit_origen, certDir, keyDir, entornoAlt);
                 const newDataFiscal = await afip.newFact(dataFiscal);
-                console.log('newDataFiscal :>> ', newDataFiscal.data);
                 req.body.dataFiscal = newDataFiscal.data
-                console.log('newFact.t_fact :>> ', newFact.t_fact);
                 req.body.dataFiscal.CbteTipo = String(newFact.t_fact)
                 req.body.newFact.cbte = req.body.dataFiscal.CbteDesde
                 if (asociado) {
