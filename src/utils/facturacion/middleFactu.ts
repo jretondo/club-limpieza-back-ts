@@ -27,7 +27,7 @@ const factuMiddel = () => {
             const pvId = body.pv_id;
             const pvData: Array<INewPV> = await ptosVtaController.get(pvId);
             const productsList: IfactCalc = await calcProdLista(body.lista_prod);
-            const fiscalBool = req.body.newFact.fiscal
+            const fiscalBool = req.body.fiscal
             if (parseInt(fiscalBool) === 0) {
                 req.body.fiscal = false
             }
