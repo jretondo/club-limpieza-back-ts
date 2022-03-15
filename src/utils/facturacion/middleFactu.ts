@@ -29,7 +29,7 @@ const factuMiddel = () => {
             const productsList: IfactCalc = await calcProdLista(body.lista_prod);
             const fiscalBool = req.body.newFact.fiscal
             if (parseInt(fiscalBool) === 0) {
-                req.body.newFact.fiscal = false
+                req.body.fiscal = false
             }
             let cliente = {
                 cliente_tdoc: 99,
