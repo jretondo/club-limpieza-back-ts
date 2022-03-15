@@ -10,51 +10,54 @@ export const fiscalMiddle = () => {
         res: Response,
         next: NextFunction
     ) => {
-
-        let asociado = null
-        const pvData: INewPV = req.body.pvData
-        const newFact: IFactura = req.body.newFact
-        const dataFiscal: FactInscriptoProd |
-            FactInscriptoProdNC |
-            FactInscriptoServ |
-            FactInscriptoServNC |
-            FactMonotribProd |
-            FactMonotribProdNC |
-            FactMonotribServ |
-            FactMonotribServNC |
-            any = req.body.dataFiscal
-        if (dataFiscal.CbtesAsoc) {
-            asociado = dataFiscal.CbtesAsoc
-        }
-        if (newFact.fiscal) {
-            let certDir = "drop_test.crt"
-            let keyDir = "drop.key"
-            let entornoAlt = false
-
-            if (process.env.ENTORNO === "PROD") {
-                certDir = pvData.cert_file || "drop_test.crt"
-                keyDir = pvData.key_file || "drop.key"
-                entornoAlt = true
+        try {
+            let asociado = null
+            const pvData: INewPV = req.body.pvData
+            const newFact: IFactura = req.body.newFact
+            const dataFiscal: FactInscriptoProd |
+                FactInscriptoProdNC |
+                FactInscriptoServ |
+                FactInscriptoServNC |
+                FactMonotribProd |
+                FactMonotribProdNC |
+                FactMonotribServ |
+                FactMonotribServNC |
+                any = req.body.dataFiscal
+            if (dataFiscal.CbtesAsoc) {
+                asociado = dataFiscal.CbtesAsoc
             }
+            if (newFact.fiscal) {
+                let certDir = "drop_test.crt"
+                let keyDir = "drop.key"
+                let entornoAlt = false
 
-            const afip = new AfipClass(newFact.cuit_origen, certDir, keyDir, entornoAlt);
-            const newDataFiscal = await afip.newFact(dataFiscal);
-            req.body.dataFiscal = newDataFiscal.data
-            console.log('newFact.t_fact :>> ', newFact.t_fact);
-            req.body.dataFiscal.CbteTipo = newFact.t_fact
-            req.body.newFact.cbte = req.body.dataFiscal.CbteDesde
-            if (asociado) {
-                req.body.dataFiscal.CbtesAsoc = asociado
+                if (process.env.ENTORNO === "PROD") {
+                    certDir = pvData.cert_file || "drop_test.crt"
+                    keyDir = pvData.key_file || "drop.key"
+                    entornoAlt = true
+                }
+
+                const afip = new AfipClass(newFact.cuit_origen, certDir, keyDir, entornoAlt);
+                const newDataFiscal = await afip.newFact(dataFiscal);
+                req.body.dataFiscal = newDataFiscal.data
+                console.log('newFact.t_fact :>> ', newFact.t_fact);
+                req.body.dataFiscal.CbteTipo = String(newFact.t_fact)
+                req.body.newFact.cbte = req.body.dataFiscal.CbteDesde
+                if (asociado) {
+                    req.body.dataFiscal.CbtesAsoc = asociado
+                }
+
+                next()
+            } else {
+                const lastInvoice = await ControllerInvoices.lastInvoice(pvData.id || 0, false, 0, false)
+                newFact.cbte
+                req.body.newFact.cbte = lastInvoice.lastInvoice + 1
+                next()
             }
-
-            next()
-        } else {
-            const lastInvoice = await ControllerInvoices.lastInvoice(pvData.id || 0, false, 0, false)
-            newFact.cbte
-            req.body.newFact.cbte = lastInvoice.lastInvoice + 1
-            next()
+        } catch (error) {
+            console.error(error)
+            next(new Error("Faltan datos o hay datos erroneos, controlelo!"))
         }
-
     }
     return middleware
 }
