@@ -358,6 +358,7 @@ export = (injectedStore: typeof StoreType) => {
         }
 
         let groupBy: Array<string> = [Columns.stock.id_prod];
+
         if (group === 1) {
             groupBy = [Columns.stock.sub_category];
         } else if (group === 2) {
@@ -399,7 +400,7 @@ export = (injectedStore: typeof StoreType) => {
             };
             data = await store.list(Tables.STOCK, [ESelectFunct.all, `SUM(${Columns.stock.cant}) as total`, `SUM(${Columns.stock.costo}) as costoTotal`], filters, groupBy, pages, undefined, orden);
             const cant = await store.list(Tables.STOCK, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters, groupBy);
-            const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
+            const pagesObj = await getPages(cant.length, 10, Number(page));
             return {
                 data,
                 pagesObj
