@@ -318,7 +318,7 @@ export = (injectedStore: typeof StoreType) => {
     ) => {
 
         const resultInsert = insertFact(pvData.id || 0, newFact, productsList, factFiscal)
-        if (String(newFact.n_doc_cliente).length < 12 || String(newFact.n_doc_cliente).length > 6) {
+        if (String(newFact.n_doc_cliente).length < 12 && String(newFact.n_doc_cliente).length > 6) {
             let esDni = false
             if (String(newFact.n_doc_cliente).length < 10) {
                 esDni = true
