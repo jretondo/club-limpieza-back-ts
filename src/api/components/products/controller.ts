@@ -7,7 +7,7 @@ import fs from 'fs';
 import { staticFolders } from '../../../enums/EStaticFiles';
 import OptimizeImg from '../../../utils/optimeImg';
 import { IJoin, Ipages, IWhere, IWhereParams } from 'interfaces/Ifunctions';
-import { INewProduct, INewPV } from 'interfaces/Irequests';
+import { INewPriceProduct, INewProduct, INewPV } from 'interfaces/Irequests';
 import { IImgProd, IMovStock } from 'interfaces/Itables';
 
 export = (injectedStore: typeof StoreType) => {
@@ -63,26 +63,38 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
+    const upsertPrices = async (prices: Array<INewPriceProduct>, update: boolean, idProd?: number) => {
+        if (prices.length > 0) {
+            if (update) {
+                await store.remove(Tables.PRODUCTS_PRICES, { products_prices: idProd })
+                prices.map(async (price) => {
+                    await store.insert(Tables.PRODUCTS_PRICES, price)
+                })
+            } else {
+                prices.map(async (price) => {
+                    await store.insert(Tables.PRODUCTS_PRICES, price)
+                })
+            }
+        }
+    }
+
     const upsert = async (body: INewProduct, listImgDelete?: Array<string>) => {
         const product: INewProduct = {
             name: body.name,
             short_descr: body.short_descr,
             category: body.category,
             subcategory: body.subcategory,
-            precio_compra: body.precio_compra,
             unidad: body.unidad,
-            porc_minor: body.porc_minor,
             cod_barra: body.cod_barra,
-            round: body.round,
-            iva: body.iva,
-            id_prov: body.id_prov,
-            vta_price: body.vta_price,
-            vta_fija: Boolean(body.vta_fija)
+            prices: body.prices
         }
 
         if (body.id) {
             const result = await store.update(Tables.PRODUCTS_PRINCIPAL, product, body.id);
             if (result.affectedRows > 0) {
+
+                await upsertPrices(product.prices, true, body.id)
+
                 if (listImgDelete) {
                     try {
                         listImgDelete.map(async img => {
@@ -131,7 +143,7 @@ export = (injectedStore: typeof StoreType) => {
         } else {
             const result = await store.insert(Tables.PRODUCTS_PRINCIPAL, product);
             if (result.affectedRows > 0) {
-
+                await upsertPrices(product.prices, false)
                 if (body.filesName) {
                     try {
                         body.filesName.map(async file => {
@@ -273,55 +285,16 @@ export = (injectedStore: typeof StoreType) => {
 
         const updateCol: Array<IWhere> = [
             {
-                column: Columns.prodPrincipal.precio_compra,
-                object: `(${Columns.prodPrincipal.precio_compra} + ROUND((${Columns.prodPrincipal.precio_compra} * ${aumentoFinal}), ${roundNumber}))`
+                column: Columns.productsPrices.buy_price,
+                object: `(${Columns.productsPrices.buy_price} + ROUND((${Columns.productsPrices.buy_price} * ${aumentoFinal}), ${roundNumber}))`
             },
             {
-                column: Columns.prodPrincipal.vta_price,
-                object: `(${Columns.prodPrincipal.vta_price} + ROUND((${Columns.prodPrincipal.vta_price} * ${aumentoFinal}), ${roundNumber}))`
+                column: Columns.productsPrices.sell_price,
+                object: `(${Columns.productsPrices.sell_price} + ROUND((${Columns.productsPrices.sell_price} * ${aumentoFinal}), ${roundNumber}))`
             },
         ];
 
-        await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
-    };
-
-    const aplicatePorcGan = async (porc: number, item?: string) => {
-        let filter: IWhereParams | undefined = undefined;
-        let filters: Array<IWhereParams> = [];
-        if (item) {
-            filter = {
-                mode: EModeWhere.like,
-                concat: EConcatWhere.or,
-                items: [
-                    { column: Columns.prodPrincipal.name, object: String(item) },
-                    { column: Columns.prodPrincipal.subcategory, object: String(item) },
-                    { column: Columns.prodPrincipal.category, object: String(item) },
-                    { column: Columns.prodPrincipal.short_decr, object: String(item) },
-                    { column: Columns.prodPrincipal.cod_barra, object: String(item) }
-                ]
-            };
-            filters.push(filter);
-        }
-
-        const updateCol: Array<IWhere> = [{
-            column: Columns.prodPrincipal.porc_minor,
-            object: String(porc)
-        }];
-
-        const updateCol2: Array<IWhere> = [
-            {
-                column: Columns.prodPrincipal.vta_price,
-                object: `ROUND((${Columns.prodPrincipal.precio_compra} * (1 + (${Columns.prodPrincipal.iva}/100)) * ${(porc / 100) + 1}), 2)`
-            },
-            {
-                column: Columns.prodPrincipal.round,
-                object: `0`
-            }
-        ];
-
-        await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol2, filters);
-
-        await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
+        await store.updateWhereJoin(Tables.PRODUCTS_PRINCIPAL, Tables.PRODUCTS_PRICES, Columns.productsPrices.id_prod, Columns.prodPrincipal.id, updateCol, filters,);
     };
 
     const asignarCodBarra = async (id: number, codBarras: string) => {
@@ -332,6 +305,10 @@ export = (injectedStore: typeof StoreType) => {
         return await store.update(Tables.PRODUCTS_PRINCIPAL, { precio_compra: cost }, idProd)
     }
 
+    const getPrices = async (idPrice: number) => {
+        return await store.get(Tables.PRODUCTS_PRICES, idPrice)
+    }
+
     return {
         list,
         upsert,
@@ -340,9 +317,9 @@ export = (injectedStore: typeof StoreType) => {
         getCategory,
         getSubCategory,
         varCost,
-        aplicatePorcGan,
         getPrincipal,
         asignarCodBarra,
-        updateCost
+        updateCost,
+        getPrices
     }
 }

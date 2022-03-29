@@ -1,7 +1,7 @@
 import mysql from 'mysql';
-import { Tables } from '../../enums/EtablesDB';
+import { Columns, Tables } from '../../enums/EtablesDB';
 import { config } from '../../config';
-import { multipleInsert, selectContructor, updateConstructor } from './functions';
+import { multipleInsert, selectContructor, updateConstructor, updateConstructorJoin } from './functions';
 import { IJoin, IJoinMysql, IMultipleInsert, Iorder, Ipages, IWhere, IWhereParams } from 'interfaces/Ifunctions';
 
 const dbConf = {
@@ -189,6 +189,26 @@ const updateWhere = (
     })
 }
 
+const updateWhereJoin = (
+    tableWhere: Tables,
+    tableSet: Tables,
+    colSet: string,
+    colWhere: string,
+    colUpdate: Array<IWhere>,
+    whereParamsArray?: Array<IWhereParams>
+): Promise<any> => {
+    const query = updateConstructorJoin(tableWhere, tableSet, colSet, colWhere, colUpdate, whereParamsArray);
+    return new Promise((resolve, reject) => {
+        connection.query(query, (err: Error, data: any) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(data)
+            }
+        })
+    })
+}
+
 export = {
     insert,
     update,
@@ -198,5 +218,6 @@ export = {
     mInsert,
     list,
     updateWhere,
-    getAnyCol
+    getAnyCol,
+    updateWhereJoin
 }

@@ -42,15 +42,21 @@ export interface INewProduct {
     category: string,
     subcategory: string,
     unidad: number,
-    precio_compra: number,
-    porc_minor: number,
     cod_barra: string,
-    round: number,
-    iva: number,
-    id_prov: number,
-    vta_price: number,
-    vta_fija: boolean,
+    id_group?: number,
+    prices: Array<INewPriceProduct>,
     filesName?: Array<IObjectFiles>
+}
+export interface INewPriceProduct {
+    id?: number,
+    id_prod: number,
+    buy_price: number,
+    percentage_sell: number,
+    iva: number,
+    sell_price: number,
+    round: number,
+    type_price_name: string,
+    min: number
 }
 export interface INewStock {
     arrayBool: boolean,
@@ -82,7 +88,8 @@ export interface INewFactura {
     enviar_email: boolean,
     lista_prod: Array<{
         id_prod: number,
-        cant_prod: number
+        cant_prod: number,
+        type_price_id: number,
     }>,
     cliente_bool: boolean,
     cliente_tdoc?: number,

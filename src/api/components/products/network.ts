@@ -49,24 +49,6 @@ const varCost = (
         .catch(next)
 };
 
-const aplicatePorcGan = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    Controller.aplicatePorcGan(
-        Number(req.body.porc),
-        String(req.query.query)
-    )
-        .then(() => {
-            success({
-                req,
-                res
-            });
-        })
-        .catch(next)
-};
-
 const upsert = (
     req: Request,
     res: Response,
@@ -163,7 +145,6 @@ router.get("/getCat", secure(EPermissions.productos), getCategorys);
 router.get("/getGetSubCat", secure(EPermissions.productos), getSubCategorys);
 router.get("/:page", secure(EPermissions.productos), list);
 router.post("/varCost", secure(EPermissions.productos), varCost);
-router.post("/changePorc", secure(EPermissions.productos), aplicatePorcGan);
 router.put("/cost/:id", secure(EPermissions.productos), updateCost);
 router.post("/", secure(EPermissions.productos), uploadFile(staticFolders.products, ["product"]), upsert);
 router.put("/", secure(EPermissions.productos), uploadFile(staticFolders.products, ["product"]), upsert);

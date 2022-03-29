@@ -48,14 +48,19 @@ enum ProductosPrincipal {
     category = "category",
     subcategory = "subcategory",
     unidad = "unidad",
-    precio_compra = "precio_compra",
-    porc_minor = "porc_minor",
+    id_group = "id_group"
+}
+
+enum ProductsPrices {
+    id = "id",
+    id_prod = "id_prod",
+    buy_price = "buy_price",
+    percentage_sell = "percentage_sell",
     discount = "discount",
-    round = "round",
     iva = "iva",
-    id_prov = "id_prov",
-    vta_price = "vta_price",
-    vta_fija = "vta_fija"
+    sell_price = "sell_price",
+    round = "round",
+    type_price_name = "type_price_name"
 }
 
 enum ProductsImg {
@@ -178,7 +183,8 @@ export enum Tables {
     PERMISSIONS = "permissions",
     STOCK = "stock",
     FACTURAS = "facturas",
-    DET_FACTURAS = "detalle_fact"
+    DET_FACTURAS = "detalle_fact",
+    PRODUCTS_PRICES = "products_prices"
 }
 
 export const Columns = {
@@ -194,5 +200,6 @@ export const Columns = {
     permissions: Permissions,
     stock: Stock,
     facturas: Facturas,
-    detallesFact: DetalleFact
+    detallesFact: DetalleFact,
+    productsPrices: ProductsPrices
 }

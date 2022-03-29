@@ -50,7 +50,7 @@ const upsert = (
     res: Response,
     next: NextFunction
 ) => {
-    Controller.upsert(req.body, req.body.user, true)
+    Controller.upsert(req.body, req.body.user)
         .then(response => {
             if (response) {
                 success({
