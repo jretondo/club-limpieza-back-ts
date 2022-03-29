@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { INewFactura, INewPriceProduct, INewProduct, INewPV } from 'interfaces/Irequests';
+import { INewFactura, INewProduct, INewPV } from 'interfaces/Irequests';
 import { IDetFactura, IFactura, IUser } from 'interfaces/Itables';
 import ptosVtaController from '../../api/components/ptosVta';
 import prodController from '../../api/components/products';
@@ -147,7 +147,7 @@ const factuMiddel = () => {
 }
 
 const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCalc> => {
-    let dataAnt: Array<INewPriceProduct> = [];
+    let dataAnt: Array<INewProduct> = [];
     let idAnt: number = 0;
     productsList.sort((a, b) => { return a.id_prod - b.id_prod })
     return new Promise((resolve, reject) => {
@@ -159,31 +159,30 @@ const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCa
             totalCosto: 0
         }
         productsList.map(async (prod, key) => {
-            let dataProd: Array<INewPriceProduct> = [];
-            if (prod.type_price_id === idAnt) {
+            let dataProd: Array<INewProduct> = [];
+            if (prod.id_prod === idAnt) {
                 dataProd = dataAnt
             } else {
-                dataProd = await prodController.getPrices(prod.id_prod)
+                dataProd = await (await prodController.getPrincipal(prod.id_prod)).productGral
             }
-            const pricdataProd: Array<INewProduct> = await (await prodController.getPrincipal(prod.id_prod)).productGral
-            idAnt = prod.type_price_id
+            idAnt = prod.id_prod
             dataAnt = dataProd
-            const totalCosto = (Math.round(((dataProd[0].buy_price * prod.cant_prod)) * 100)) / 100;
-            const totalProd = (Math.round(((dataProd[0].sell_price * prod.cant_prod)) * 100)) / 100;
+            const totalCosto = (Math.round(((dataProd[0].precio_compra * prod.cant_prod)) * 100)) / 100;
+            const totalProd = (Math.round(((dataProd[0].vta_price * prod.cant_prod)) * 100)) / 100;
             const totalNeto = (Math.round((totalProd / (1 + (dataProd[0].iva / 100))) * 100)) / 100;
             const totalIva = (Math.round((totalNeto * (dataProd[0].iva / 100)) * 100)) / 100;
 
             const newProdFact: IDetFactura = {
-                nombre_prod: pricdataProd[0].name,
+                nombre_prod: dataProd[0].name,
                 cant_prod: prod.cant_prod,
-                unidad_tipo_prod: pricdataProd[0].unidad,
+                unidad_tipo_prod: dataProd[0].unidad,
                 id_prod: prod.id_prod,
                 total_prod: totalProd,
                 total_iva: totalIva,
                 alicuota_id: dataProd[0].iva,
                 total_costo: totalCosto,
                 total_neto: totalNeto,
-                precio_ind: dataProd[0].sell_price
+                precio_ind: dataProd[0].vta_price
             }
 
             factura.listaProd.push(newProdFact);

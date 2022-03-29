@@ -64,13 +64,11 @@ export interface IMovStock {
 
 export interface IModPriceProd {
     id: number,
-    buy_price: number,
-    percentage_sell: number,
-    iva: number,
-    sell_price: number,
+    precio_compra: number,
+    porc_minor: number,
     round: number,
-    type_price_name: string,
-    min: number
+    vta_price: number,
+    vta_fija: boolean
 }
 export interface IFactura {
     id?: number,

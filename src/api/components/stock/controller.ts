@@ -65,7 +65,7 @@ export = (injectedStore: typeof StoreType) => {
         return await store.list(Tables.STOCK, [ESelectFunct.all], filters, undefined, orderBy, undefined);
     }
 
-    const upsert = async (body: INewStock, user: IUser) => {
+    const upsert = async (body: INewStock, user: IUser, act: Boolean) => {
 
         const prodData: Array<INewProduct> = await store.get(Tables.PRODUCTS_PRINCIPAL, body.idProd)
         const pvData: Array<INewPV> = await store.get(Tables.PUNTOS_VENTA, body.pv_id)
@@ -84,6 +84,18 @@ export = (injectedStore: typeof StoreType) => {
             category: prodData[0].category,
             sub_category: prodData[0].subcategory
         };
+
+        if (act) {
+            const NewPriceProd: IModPriceProd = {
+                id: body.idProd,
+                vta_fija: body.vta_fija,
+                vta_price: body.vta_price,
+                round: body.round,
+                porc_minor: body.porc_minor,
+                precio_compra: body.precio_compra
+            };
+            await store.update(Tables.PRODUCTS_PRINCIPAL, NewPriceProd, body.idProd);
+        }
 
         return await store.insert(Tables.STOCK, newMov);
     }
@@ -155,8 +167,8 @@ export = (injectedStore: typeof StoreType) => {
     const moverStock = async (body: IChangeStock, user: IUser) => {
         const destino: INewStock = body.destino
         const origen: INewStock = body.origen
-        const result1 = await upsert(origen, user)
-        const result2 = await upsert(destino, user)
+        const result1 = await upsert(origen, user, false)
+        const result2 = await upsert(destino, user, false)
         return {
             result1,
             result2
