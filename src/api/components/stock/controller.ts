@@ -410,6 +410,24 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
+    const getStockProd = async (idProd: number, pvId: number) => {
+        let filters: Array<IWhereParams> = [];
+        const filter: IWhereParams = {
+            mode: EModeWhere.strict,
+            concat: EConcatWhere.and,
+            items: [
+                { column: Columns.stock.pv_id, object: String(pvId < 0 ? 0 : pvId) }, { column: Columns.stock.id_prod, object: String(idProd) }
+            ]
+        };
+        filters.push(filter)
+        const response = await store.list(Tables.STOCK, [`SUM(${Columns.stock.cant}) as cant`], filters);
+        try {
+            return response[0].cant
+        } catch (error) {
+            return 0
+        }
+    }
+
     return {
         list,
         upsert,
@@ -419,6 +437,7 @@ export = (injectedStore: typeof StoreType) => {
         moverStock,
         multipleInsertStock,
         ultStockList,
-        listaStock
+        listaStock,
+        getStockProd
     }
 }
