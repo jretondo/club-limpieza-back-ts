@@ -55,7 +55,8 @@ const upsert = (
             if (response) {
                 success({
                     req,
-                    res
+                    res,
+                    message: response
                 });
             } else {
                 next(response);

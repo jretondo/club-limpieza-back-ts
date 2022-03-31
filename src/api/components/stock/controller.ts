@@ -76,8 +76,8 @@ export = (injectedStore: typeof StoreType) => {
             cant: body.nvoStockSingle,
             venta: false,
             nro_remito: body.obs,
-            costo: (body.costo) * (body.nvoStockSingle),
-            iva: body.iva,
+            costo: (prodData[0].precio_compra) * (body.nvoStockSingle),
+            iva: prodData[0].iva,
             id_user: user.id,
             prod_name: prodData[0].name,
             pv_descr: `${body.pv_id === 0 ? "Deposito" : pvData[0].direccion + ` (PV: ${pvData[0].pv})`}`,
@@ -96,8 +96,8 @@ export = (injectedStore: typeof StoreType) => {
             };
             await store.update(Tables.PRODUCTS_PRINCIPAL, NewPriceProd, body.idProd);
         }
-
-        return await store.insert(Tables.STOCK, newMov);
+        const response = await store.insert(Tables.STOCK, newMov);
+        return response
     }
 
     const multipleInsertStock = async (prodList: Array<IDetFactura>, userId: number, pvId: number, factId: number) => {
@@ -286,8 +286,8 @@ export = (injectedStore: typeof StoreType) => {
             pages = {
                 currentPage: page,
                 cantPerPage: cantPerPage || 10,
-                order: Columns.prodImg.id_prod,
-                asc: true
+                order: Columns.stock.fecha,
+                asc: false
             };
             data = await store.list(Tables.STOCK, [ESelectFunct.all], filters, undefined, pages);
             const cant = await store.list(Tables.STOCK, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters);
