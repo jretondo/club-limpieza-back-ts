@@ -17,18 +17,24 @@ export = (injectedStore: typeof StoreType) => {
         let filter: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
         if (item) {
-            filter = {
-                mode: EModeWhere.like,
-                concat: EConcatWhere.or,
-                items: [
-                    { column: Columns.prodPrincipal.name, object: String(item) },
-                    { column: Columns.prodPrincipal.subcategory, object: String(item) },
-                    { column: Columns.prodPrincipal.category, object: String(item) },
-                    { column: Columns.prodPrincipal.short_decr, object: String(item) },
-                    { column: Columns.prodPrincipal.cod_barra, object: String(item) }
-                ]
-            };
-            filters.push(filter);
+
+
+            const arrayStr = item.split(" ")
+
+            arrayStr.map(subItem => {
+                filter = {
+                    mode: EModeWhere.like,
+                    concat: EConcatWhere.or,
+                    items: [
+                        { column: Columns.prodPrincipal.name, object: String(subItem) },
+                        { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                        { column: Columns.prodPrincipal.category, object: String(subItem) },
+                        { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                        { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                    ]
+                };
+                filters.push(filter);
+            })
         }
 
         const groupBy: Array<string> = [Columns.prodImg.id_prod];
