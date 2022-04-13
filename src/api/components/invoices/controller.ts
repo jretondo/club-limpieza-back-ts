@@ -1,3 +1,4 @@
+import { IMovCtaCte } from './../../../interfaces/Itables';
 import { createListSellsPDF } from './../../../utils/facturacion/lists/createListSellsPDF';
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
@@ -15,6 +16,7 @@ import ControllerStock from '../stock';
 import ControllerClientes from '../clientes';
 import fs from 'fs';
 import { NextFunction } from 'express';
+import controller from '../clientes';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
@@ -170,7 +172,7 @@ export = (injectedStore: typeof StoreType) => {
             FactMonotribProd |
             FactMonotribProdNC |
             FactMonotribServ |
-            FactMonotribServNC) => {
+            FactMonotribServNC): Promise<any> => {
 
         if (newFact.fiscal) {
             newFact.cae = factFiscal.CAE
@@ -180,6 +182,7 @@ export = (injectedStore: typeof StoreType) => {
         const result = await store.insert(Tables.FACTURAS, newFact);
         if (result.affectedRows > 0) {
             const factId = result.insertId
+
             const headers: Array<string> = [
                 Columns.detallesFact.fact_id,
                 Columns.detallesFact.id_prod,
@@ -220,7 +223,8 @@ export = (injectedStore: typeof StoreType) => {
                 status: 200,
                 msg: {
                     resultinsert,
-                    resultInsertStock
+                    resultInsertStock,
+                    factId
                 }
             }
         } else {
@@ -317,25 +321,44 @@ export = (injectedStore: typeof StoreType) => {
         next: NextFunction
     ) => {
 
-        const resultInsert = insertFact(pvData.id || 0, newFact, productsList, factFiscal)
-        if (String(newFact.n_doc_cliente).length < 12 && String(newFact.n_doc_cliente).length > 6) {
-            let esDni = false
-            if (String(newFact.n_doc_cliente).length < 10) {
-                esDni = true
-            }
-            const newClient: IClientes = {
-                cuit: esDni,
-                ndoc: String(newFact.n_doc_cliente),
-                razsoc: newFact.raz_soc_cliente,
-                telefono: "",
-                email: newFact.email_cliente,
-                cond_iva: newFact.cond_iva_cliente
-            }
-            try {
-                ControllerClientes.upsert(newClient, next)
-            } catch (error) {
+        const resultInsert = await insertFact(pvData.id || 0, newFact, productsList, factFiscal)
+        const clienteArray: { data: Array<IClientes> } = await controller.list(undefined, String(newFact.n_doc_cliente), undefined)
 
+        if (clienteArray.data.length === 0) {
+            if (String(newFact.n_doc_cliente).length < 12 && String(newFact.n_doc_cliente).length > 6) {
+                let esDni = false
+                if (String(newFact.n_doc_cliente).length < 10) {
+                    esDni = true
+                }
+                const newClient: IClientes = {
+                    cuit: esDni,
+                    ndoc: String(newFact.n_doc_cliente),
+                    razsoc: newFact.raz_soc_cliente,
+                    telefono: "",
+                    email: newFact.email_cliente,
+                    cond_iva: newFact.cond_iva_cliente
+                }
+                try {
+                    await ControllerClientes.upsert(newClient, next)
+                } catch (error) {
+                    console.log('error :>> ', error);
+                }
             }
+        }
+
+        if (Number(newFact.forma_pago) === 4) {
+            const clienteArray2: { data: Array<IClientes> } = await controller.list(undefined, String(newFact.n_doc_cliente), undefined)
+            const idCliente = clienteArray2.data[0].id
+            const resNewCta = await newMovCtaCte({
+                id_cliente: idCliente || 0,
+                id_factura: resultInsert.msg.factId,
+                id_recibo: 0,
+                forma_pago: 4,
+                importe: - (newFact.total_fact),
+                detalle: "Compra de productos"
+            })
+
+            console.log('resNewCta :>> ', resNewCta);
         }
 
         setTimeout(() => {
@@ -364,6 +387,11 @@ export = (injectedStore: typeof StoreType) => {
         }
         return dataFact
     }
+
+    const newMovCtaCte = async (body: IMovCtaCte) => {
+        return await store.insert(Tables.CTA_CTE, body)
+    }
+
 
     return {
         lastInvoice,

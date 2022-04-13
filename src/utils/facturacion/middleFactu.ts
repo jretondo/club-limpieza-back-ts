@@ -22,6 +22,7 @@ const factuMiddel = () => {
         next: NextFunction
     ) => {
         try {
+
             const body: INewFactura = req.body.dataFact
             const user: IUser = req.body.user
             const pvId = body.pv_id;
@@ -29,7 +30,7 @@ const factuMiddel = () => {
             const productsList: IfactCalc = await calcProdLista(body.lista_prod);
             const fiscalBool = req.body.fiscal
             if (parseInt(fiscalBool) === 0) {
-                req.body.fiscal = false
+                body.fiscal = false
             }
             let cliente = {
                 cliente_tdoc: 99,

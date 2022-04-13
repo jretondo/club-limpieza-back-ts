@@ -132,7 +132,6 @@ const devFactMiddle = () => {
         }
         req.body.newFact = newFact
         req.body.dataFiscal = dataFiscal
-        console.log('dataFiscal.CbtesAsoc :>> ', req.body.dataFiscal.CbtesAsoc);
         req.body.pvData = pvData[0]
         req.body.productsList = newDet
 

@@ -68,8 +68,8 @@ const remove = (
     next: NextFunction
 ) => {
     Controller.remove(Number(req.params.id))
-        .then(() => {
-            success({ req, res });
+        .then((status) => {
+            success({ req, res, status: status });
         })
         .catch(next)
 }
@@ -98,8 +98,28 @@ const dataFiscalPadron = (
         .catch(next)
 }
 
+const listCtaCteClient = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.listCtaCteClient(
+        Number(req.query.idCliente),
+        Boolean(req.query.debit),
+        Boolean(req.query.credit),
+        Number(req.params.page)).then((lista) => {
+            success({
+                req,
+                res,
+                status: 200,
+                message: lista
+            });
+        }).catch(next)
+};
+
 router
     .get("/dataFiscal", secure(EPermissions.proveedores), dataFiscalPadron)
+    .get("/ctaCte/:page", secure(EPermissions.clientes), listCtaCteClient)
     .get("/details/:id", secure(EPermissions.proveedores), get)
     .get("/:page", secure(EPermissions.proveedores), listPagination)
     .delete("/:id", secure(EPermissions.proveedores), remove)

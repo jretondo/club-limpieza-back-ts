@@ -119,3 +119,14 @@ export interface IDetFactura {
     alicuota_id: number,
     precio_ind: number
 }
+
+export interface IMovCtaCte {
+    id?: number,
+    fecha?: Date,
+    id_cliente: number,
+    id_factura: number,
+    id_recibo: number,
+    forma_pago: number,
+    importe: number,
+    detalle: string
+}

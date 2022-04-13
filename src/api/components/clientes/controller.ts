@@ -1,3 +1,4 @@
+import { IMovCtaCte } from './../../../interfaces/Itables';
 import { AfipClass } from './../../../utils/facturacion/AfipClass';
 
 import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
@@ -73,7 +74,22 @@ export = (injectedStore: typeof StoreType) => {
     }
 
     const remove = async (idCliente: number) => {
-        return await store.remove(Tables.CLIENTES, { id: idCliente });
+        const listCtaCte: {
+            data: Array<IMovCtaCte>
+        } = await listCtaCteClient(idCliente, false, false)
+        console.log('listCtaCte :>> ', listCtaCte);
+        const cant = listCtaCte.data.length
+        if (cant > 0) {
+            return 403
+        } else {
+            const result: any = await store.remove(Tables.CLIENTES, { id: idCliente });
+            console.log('result :>> ', result);
+            if (result.affectedRows > 0) {
+                return 200
+            } else {
+                return 500
+            }
+        }
     }
 
     const get = async (idCliente: number) => {
@@ -87,10 +103,89 @@ export = (injectedStore: typeof StoreType) => {
             certDir = cert
             keyDir = key
         }
-        console.log('object :>> ', cuitPv, certDir, keyDir);
         const afip = new AfipClass(cuitPv, certDir, keyDir, true);
         const dataFiscal = await afip.getDataCUIT(cuit);
         return dataFiscal
+    }
+
+    const listCtaCteClient = async (idCliente: number, debit: boolean, credit: boolean, page?: number, cantPerPage?: number) => {
+
+        console.log('idCliente :>> ', idCliente);
+        let filter: IWhereParams | undefined = undefined;
+        let filters: Array<IWhereParams> = [];
+
+        if (!debit && !credit) {
+            filter = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.none,
+                items: [
+                    { column: Columns.ctaCte.id_cliente, object: String(idCliente) }
+                ]
+            };
+            filters.push(filter);
+        } else if (debit) {
+            filter = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.ctaCte.id_cliente, object: String(idCliente) },
+                ]
+            };
+            filters.push(filter);
+
+            filter = {
+                mode: EModeWhere.less,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.ctaCte.importe, object: String(0) },
+                ]
+            };
+            filters.push(filter);
+        } else if (credit) {
+            filter = {
+                mode: EModeWhere.strict,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.ctaCte.id_cliente, object: String(idCliente) },
+                ]
+            };
+            filters.push(filter);
+
+            filter = {
+                mode: EModeWhere.higher,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.ctaCte.importe, object: String(0) },
+                ]
+            };
+            filters.push(filter);
+        }
+
+        let pages: Ipages;
+        if (page) {
+            pages = {
+                currentPage: page,
+                cantPerPage: cantPerPage || 10,
+                order: Columns.clientes.id,
+                asc: true
+            };
+            const data = await store.list(Tables.CTA_CTE, [ESelectFunct.all], filters, undefined, pages);
+            const cant = await store.list(Tables.CTA_CTE, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters);
+            const suma = await store.list(Tables.CTA_CTE, [`SUM(${Columns.ctaCte.importe}) as SUMA`], filters);
+            const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
+            return {
+                data,
+                pagesObj,
+                suma
+            };
+        } else {
+            const data = await store.list(Tables.CTA_CTE, [ESelectFunct.all], filters, undefined, undefined);
+            const suma = await store.list(Tables.CTA_CTE, [`SUM(${Columns.ctaCte.importe}) as SUMA`], filters);
+            return {
+                data,
+                suma
+            };
+        }
     }
 
     return {
@@ -98,6 +193,7 @@ export = (injectedStore: typeof StoreType) => {
         upsert,
         remove,
         get,
-        dataFiscalPadron
+        dataFiscalPadron,
+        listCtaCteClient
     }
 }
