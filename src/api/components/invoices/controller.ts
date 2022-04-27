@@ -99,7 +99,7 @@ export = (injectedStore: typeof StoreType) => {
             mode: EModeWhere.higherEqual,
             concat: EConcatWhere.none,
             items: [
-                { column: Columns.facturas.fecha, object: String(desde) }
+                { column: Columns.facturas.create_time, object: String(desde) }
             ]
         };
 
@@ -107,7 +107,7 @@ export = (injectedStore: typeof StoreType) => {
             mode: EModeWhere.lessEqual,
             concat: EConcatWhere.none,
             items: [
-                { column: Columns.facturas.fecha, object: String(hasta) }
+                { column: Columns.facturas.create_time, object: String(hasta) }
             ]
         };
 
@@ -132,8 +132,10 @@ export = (injectedStore: typeof StoreType) => {
                 totales
             };
         } else {
+
+
             const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined);
-            const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, undefined);
+            const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, undefined, undefined, { columns: [Columns.facturas.fecha], asc: false });
 
             const dataFact = {
                 filePath: "",
@@ -142,7 +144,6 @@ export = (injectedStore: typeof StoreType) => {
 
             if (pdf) {
                 const cajaList = await createListSellsPDF(userId, ptoVtaId, desde, hasta, totales, data)
-                console.log('cajaList :>> ', cajaList);
                 return cajaList
             } else {
                 return {
@@ -357,8 +358,6 @@ export = (injectedStore: typeof StoreType) => {
                 importe: - (newFact.total_fact),
                 detalle: "Compra de productos"
             })
-
-            console.log('resNewCta :>> ', resNewCta);
         }
 
         setTimeout(() => {

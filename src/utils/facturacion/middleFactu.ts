@@ -75,6 +75,15 @@ const factuMiddel = () => {
                 body.cliente_ndoc = 0
             }
 
+            const descuento: number = body.descuentoPerc
+            let descuentoNumber: number = 0
+            if (descuento > 0) {
+                descuentoNumber = Math.round(((productsList.totalFact * (descuento / 100)) * 100)) / 100
+                productsList.totalFact = (productsList.totalFact) - (productsList.totalFact * (descuento / 100))
+                productsList.totalIva = (productsList.totalIva) - (productsList.totalIva * (descuento / 100))
+                productsList.totalNeto = (productsList.totalNeto) - (productsList.totalNeto * (descuento / 100))
+            }
+
             const newFact: IFactura = {
                 fecha: body.fecha,
                 pv: pvData[0].pv,
@@ -102,7 +111,8 @@ const factuMiddel = () => {
                 total_compra: productsList.totalCosto,
                 forma_pago: body.forma_pago,
                 pv_id: body.pv_id,
-                id_fact_asoc: 0
+                id_fact_asoc: 0,
+                descuento: descuentoNumber
             }
 
             let ivaList: Array<IIvaItem> = [];

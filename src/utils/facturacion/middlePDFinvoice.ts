@@ -161,10 +161,11 @@ export const invoicePDFMiddle = () => {
                 condIvaCliente: condIvaStrCliente
             }
             const totales = {
-                subTotal: formatMoney(newFact.total_neto),
+                subTotal: formatMoney(newFact.total_neto + newFact.descuento),
+                subTotalNoFiscal: formatMoney(newFact.total_neto + newFact.total_iva + newFact.descuento),
                 totalIva: formatMoney(newFact.total_iva),
                 totalFact: formatMoney(newFact.total_fact),
-                totalDesc: "0,00"
+                totalDesc: formatMoney(newFact.descuento),
             }
 
             let formapagoStr = ""

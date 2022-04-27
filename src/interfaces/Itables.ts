@@ -101,7 +101,8 @@ export interface IFactura {
     total_compra: number,
     forma_pago: number,
     pv_id: number,
-    id_fact_asoc: number
+    id_fact_asoc: number,
+    descuento: number
 }
 
 export interface IDetFactura {

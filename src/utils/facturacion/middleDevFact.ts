@@ -76,7 +76,8 @@ const devFactMiddle = () => {
             total_compra: - dataFact[0].total_compra,
             forma_pago: dataFact[0].forma_pago,
             pv_id: dataFact[0].pv_id,
-            id_fact_asoc: dataFact[0].id || 0
+            id_fact_asoc: dataFact[0].id || 0,
+            descuento: dataFact[0].descuento
         }
 
         let newDet: Array<IDetFactura> = []

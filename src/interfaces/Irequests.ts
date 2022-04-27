@@ -80,6 +80,7 @@ export interface INewFactura {
     cond_iva: number,
     forma_pago: number,
     enviar_email: boolean,
+    descuentoPerc: number,
     lista_prod: Array<{
         id_prod: number,
         cant_prod: number
