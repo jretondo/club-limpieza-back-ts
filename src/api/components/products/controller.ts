@@ -19,58 +19,69 @@ export = (injectedStore: typeof StoreType) => {
         let conID = false
         let idProd = 0
         if (item) {
-            const arrayStr = item.split(" ")
-            arrayStr.map(subItem => {
-                filter = {
-                    mode: EModeWhere.like,
-                    concat: EConcatWhere.or,
-                    items: [
-                        { column: Columns.prodPrincipal.name, object: String(subItem) },
-                        { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
-                        { column: Columns.prodPrincipal.category, object: String(subItem) },
-                        { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
-                        { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
-                    ]
-                };
-                filters.push(filter);
-            })
+            if (item.includes("id:")) {
+                const arrayStr = item.split(" ")
+                arrayStr.map(subItem => {
+                    filter = {
+                        mode: EModeWhere.like,
+                        concat: EConcatWhere.or,
+                        items: [
+                            { column: Columns.prodPrincipal.name, object: String(subItem) },
+                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                            { column: Columns.prodPrincipal.category, object: String(subItem) },
+                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                        ]
+                    };
+                    filters.push(filter);
+                })
+            } else {
+                const arrayStr = item.split(" ")
+                arrayStr.map(subItem => {
+                    filter = {
+                        mode: EModeWhere.like,
+                        concat: EConcatWhere.or,
+                        items: [
+                            { column: Columns.prodPrincipal.name, object: String(subItem) },
+                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                            { column: Columns.prodPrincipal.category, object: String(subItem) },
+                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                        ]
+                    };
+                    filters.push(filter);
+                })
+            }
         }
-        if (conID) {
-            const data = await store.get(Tables.PRODUCTS_PRINCIPAL, idProd)
+        const groupBy: Array<string> = [Columns.prodImg.id_prod];
+
+        const joinQuery: IJoin = {
+            table: Tables.PRODUCTS_IMG,
+            colJoin: Columns.prodImg.id_prod,
+            colOrigin: Columns.prodPrincipal.id,
+            type: ETypesJoin.left
+        };
+
+        let pages: Ipages;
+        if (page) {
+            pages = {
+                currentPage: page,
+                cantPerPage: cantPerPage || 10,
+                order: Columns.prodImg.id_prod,
+                asc: true
+            };
+            const data = await store.list(Tables.PRODUCTS_PRINCIPAL, [ESelectFunct.all], filters, groupBy, pages, joinQuery);
+            const cant = await store.list(Tables.PRODUCTS_PRINCIPAL, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters);
+            const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
+            return {
+                data,
+                pagesObj
+            };
+        } else {
+            const data = await store.list(Tables.PRODUCTS_PRINCIPAL, [ESelectFunct.all], filters, undefined, undefined, joinQuery);
             return {
                 data
-            }
-        } else {
-            const groupBy: Array<string> = [Columns.prodImg.id_prod];
-
-            const joinQuery: IJoin = {
-                table: Tables.PRODUCTS_IMG,
-                colJoin: Columns.prodImg.id_prod,
-                colOrigin: Columns.prodPrincipal.id,
-                type: ETypesJoin.left
             };
-
-            let pages: Ipages;
-            if (page) {
-                pages = {
-                    currentPage: page,
-                    cantPerPage: cantPerPage || 10,
-                    order: Columns.prodImg.id_prod,
-                    asc: true
-                };
-                const data = await store.list(Tables.PRODUCTS_PRINCIPAL, [ESelectFunct.all], filters, groupBy, pages, joinQuery);
-                const cant = await store.list(Tables.PRODUCTS_PRINCIPAL, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters);
-                const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
-                return {
-                    data,
-                    pagesObj
-                };
-            } else {
-                const data = await store.list(Tables.PRODUCTS_PRINCIPAL, [ESelectFunct.all], filters, undefined, undefined, joinQuery);
-                return {
-                    data
-                };
-            }
         }
     }
 
