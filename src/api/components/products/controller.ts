@@ -20,6 +20,7 @@ export = (injectedStore: typeof StoreType) => {
         let idProd = 0
         if (item) {
             if (item.includes("id:")) {
+                item = item.replace("id:", "")
                 const arrayStr = item.split(" ")
                 arrayStr.map(subItem => {
                     filter = {
