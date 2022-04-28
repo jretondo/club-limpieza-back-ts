@@ -19,26 +19,21 @@ export = (injectedStore: typeof StoreType) => {
         let conID = false
         let idProd = 0
         if (item) {
-            if (item.includes("id:")) {
-                conID = true
-                idProd = Number(item.replace("id:", ""))
-            } else {
-                const arrayStr = item.split(" ")
-                arrayStr.map(subItem => {
-                    filter = {
-                        mode: EModeWhere.like,
-                        concat: EConcatWhere.or,
-                        items: [
-                            { column: Columns.prodPrincipal.name, object: String(subItem) },
-                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
-                            { column: Columns.prodPrincipal.category, object: String(subItem) },
-                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
-                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
-                        ]
-                    };
-                    filters.push(filter);
-                })
-            }
+            const arrayStr = item.split(" ")
+            arrayStr.map(subItem => {
+                filter = {
+                    mode: EModeWhere.like,
+                    concat: EConcatWhere.or,
+                    items: [
+                        { column: Columns.prodPrincipal.name, object: String(subItem) },
+                        { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                        { column: Columns.prodPrincipal.category, object: String(subItem) },
+                        { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                        { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                    ]
+                };
+                filters.push(filter);
+            })
         }
         if (conID) {
             const data = await store.get(Tables.PRODUCTS_PRINCIPAL, idProd)
