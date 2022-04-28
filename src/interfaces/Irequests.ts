@@ -73,7 +73,6 @@ export interface INewStock {
     fact_id?: number
 }
 export interface INewFactura {
-    id?: number,
     fecha: Date,
     pv_id: number,
     t_fact: CbteTipos,
@@ -83,12 +82,14 @@ export interface INewFactura {
     enviar_email: boolean,
     descuentoPerc: number,
     lista_prod: Array<{
+        id?: number,
         id_prod: number,
-        cant_prod: number
+        cant_prod: number,
+
     }>,
     cliente_bool: boolean,
     cliente_tdoc?: number,
     cliente_ndoc?: number,
     cliente_email?: string,
-    cliente_name?: string
+    cliente_name?: string,
 }

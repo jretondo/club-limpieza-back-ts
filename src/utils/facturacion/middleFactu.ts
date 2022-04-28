@@ -160,7 +160,7 @@ const factuMiddel = () => {
 const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCalc> => {
     let dataAnt: Array<INewProduct> = [];
     let idAnt: number = 0;
-    productsList.sort((a, b) => { return a.id_prod - b.id_prod })
+    productsList.sort((a, b) => { return a.id - b.id })
     return new Promise((resolve, reject) => {
         let factura: IfactCalc = {
             listaProd: [],
@@ -176,7 +176,7 @@ const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCa
             if (prod.id_prod === idAnt) {
                 dataProd = dataAnt
             } else {
-                dataProd = await (await prodController.getPrincipal(prod.id_prod)).productGral
+                dataProd = await (await prodController.getPrincipal(prod.id)).productGral
             }
             idAnt = prod.id_prod
             dataAnt = dataProd
