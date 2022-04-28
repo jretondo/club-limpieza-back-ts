@@ -73,6 +73,7 @@ export interface INewStock {
     fact_id?: number
 }
 export interface INewFactura {
+    id?: number,
     fecha: Date,
     pv_id: number,
     t_fact: CbteTipos,
