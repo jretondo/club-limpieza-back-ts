@@ -20,8 +20,9 @@ export = (injectedStore: typeof StoreType) => {
         let idProd = 0
         if (item) {
             if (item.includes("id:")) {
-                item = item.replace("id:", "")
-                const arrayStr = item.split(" ")
+                const item2 = item.replace("id:", "")
+                console.log('item :>> ', item2);
+                const arrayStr = item2.split(" ")
                 arrayStr.map(subItem => {
                     filter = {
                         mode: EModeWhere.like,
