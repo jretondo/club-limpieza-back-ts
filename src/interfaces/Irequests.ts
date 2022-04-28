@@ -82,7 +82,7 @@ export interface INewFactura {
     enviar_email: boolean,
     descuentoPerc: number,
     lista_prod: Array<{
-        id?: number,
+        id: number,
         id_prod: number,
         cant_prod: number,
 
