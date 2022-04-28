@@ -178,6 +178,8 @@ const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCa
             }
             idAnt = prod.id_prod
             dataAnt = dataProd
+
+            console.log('dataProd :>> ', dataProd);
             const totalCosto = (Math.round(((dataProd[0].precio_compra * prod.cant_prod)) * 100)) / 100;
             const totalProd = (Math.round(((dataProd[0].vta_price * prod.cant_prod)) * 100)) / 100;
             const totalNeto = (Math.round((totalProd / (1 + (dataProd[0].iva / 100))) * 100)) / 100;
