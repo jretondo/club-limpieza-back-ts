@@ -169,8 +169,10 @@ const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCa
             totalNeto: 0,
             totalCosto: 0
         }
+        console.log('productsList :>> ', productsList);
         productsList.map(async (prod, key) => {
             let dataProd: Array<INewProduct> = [];
+            console.log('prod :>> ', prod);
             if (prod.id_prod === idAnt) {
                 dataProd = dataAnt
             } else {
