@@ -16,40 +16,22 @@ export = (injectedStore: typeof StoreType) => {
     const list = async (page?: number, item?: string, cantPerPage?: number) => {
         let filter: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
-        let conID = false
-        let idProd = 0
         if (item) {
-            if (item.includes("id:")) {
-                const item2 = item.replace("id:", "")
-                console.log('item :>> ', item2);
-                const arrayStr = item2.split(" ")
-                arrayStr.map(subItem => {
-                    filter = {
-                        mode: EModeWhere.strict,
-                        concat: EConcatWhere.none,
-                        items: [
-                            { column: Columns.prodImg.id_prod, object: String(subItem) }
-                        ]
-                    };
-                    filters.push(filter);
-                })
-            } else {
-                const arrayStr = item.split(" ")
-                arrayStr.map(subItem => {
-                    filter = {
-                        mode: EModeWhere.like,
-                        concat: EConcatWhere.or,
-                        items: [
-                            { column: Columns.prodPrincipal.name, object: String(subItem) },
-                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
-                            { column: Columns.prodPrincipal.category, object: String(subItem) },
-                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
-                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
-                        ]
-                    };
-                    filters.push(filter);
-                })
-            }
+            const arrayStr = item.split(" ")
+            arrayStr.map(subItem => {
+                filter = {
+                    mode: EModeWhere.like,
+                    concat: EConcatWhere.or,
+                    items: [
+                        { column: Columns.prodPrincipal.name, object: String(subItem) },
+                        { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                        { column: Columns.prodPrincipal.category, object: String(subItem) },
+                        { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                        { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                    ]
+                };
+                filters.push(filter);
+            })
         }
         const groupBy: Array<string> = [Columns.prodImg.id_prod];
 
