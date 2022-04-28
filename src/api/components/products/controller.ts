@@ -25,14 +25,10 @@ export = (injectedStore: typeof StoreType) => {
                 const arrayStr = item2.split(" ")
                 arrayStr.map(subItem => {
                     filter = {
-                        mode: EModeWhere.like,
-                        concat: EConcatWhere.or,
+                        mode: EModeWhere.strict,
+                        concat: EConcatWhere.none,
                         items: [
-                            { column: Columns.prodPrincipal.name, object: String(subItem) },
-                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
-                            { column: Columns.prodPrincipal.category, object: String(subItem) },
-                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
-                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                            { column: Columns.prodImg.id_prod, object: String(subItem) }
                         ]
                     };
                     filters.push(filter);
