@@ -99,7 +99,7 @@ export = (injectedStore: typeof StoreType) => {
             mode: EModeWhere.higherEqual,
             concat: EConcatWhere.none,
             items: [
-                { column: Columns.facturas.create_time, object: String(desde) }
+                { column: Columns.facturas.fecha, object: String(desde) }
             ]
         };
 
@@ -107,7 +107,7 @@ export = (injectedStore: typeof StoreType) => {
             mode: EModeWhere.lessEqual,
             concat: EConcatWhere.none,
             items: [
-                { column: Columns.facturas.create_time, object: String(hasta) }
+                { column: Columns.facturas.fecha, object: String(hasta) }
             ]
         };
 
@@ -132,8 +132,6 @@ export = (injectedStore: typeof StoreType) => {
                 totales
             };
         } else {
-
-
             const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined);
             const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, undefined, undefined, { columns: [Columns.facturas.fecha], asc: false });
 
@@ -391,6 +389,9 @@ export = (injectedStore: typeof StoreType) => {
         return await store.insert(Tables.CTA_CTE, body)
     }
 
+    const changePayType = async (idPay: number, idType: number) => {
+        return await store.update(Tables.FACTURAS, { forma_pago: idType }, idPay)
+    }
 
     return {
         lastInvoice,
@@ -401,6 +402,7 @@ export = (injectedStore: typeof StoreType) => {
         getFiscalDataInvoice,
         cajaList,
         getDetails,
-        getDataFact
+        getDataFact,
+        changePayType
     }
 }

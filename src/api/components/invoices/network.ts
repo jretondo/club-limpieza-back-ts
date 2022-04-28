@@ -160,6 +160,18 @@ const cajaListPDF = (
         .catch(next)
 };
 
+const changePayType = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.changePayType(Number(req.params.id), req.body.idType)
+        .then((data) => {
+            success({ req, res, message: data });
+        })
+        .catch(next)
+}
+
 router.get("/details/:id", secure(EPermissions.ventas), get)
     .get("/cajaList/:page", secure(EPermissions.ventas), cajaList)
     .get("/cajaListPDF", secure(EPermissions.ventas), cajaListPDF)
@@ -170,5 +182,6 @@ router.get("/details/:id", secure(EPermissions.ventas), get)
     .post("/notaCred", secure(EPermissions.ventas), devFactMiddle(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)
     .post("/", secure(EPermissions.ventas), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)
     .delete("/:id", secure(EPermissions.ventas), remove)
+    .put("/paytype/:id", secure(EPermissions.ventas), changePayType)
 
 export = router;
