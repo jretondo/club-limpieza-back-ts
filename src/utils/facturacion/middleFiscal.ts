@@ -51,7 +51,7 @@ export const fiscalMiddle = () => {
                 if (asociado) {
                     req.body.dataFiscal.CbtesAsoc = asociado
                 }
-
+                console.log('newDataFiscal :>> ', newDataFiscal);
 
                 next()
             } else {
