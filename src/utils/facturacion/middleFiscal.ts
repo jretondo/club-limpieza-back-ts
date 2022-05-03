@@ -28,7 +28,7 @@ export const fiscalMiddle = () => {
             }
 
             if (Number(asociado[0].Cuit) === 0) {
-                asociado[0].Cuit = '99999999999'
+                asociado[0].Cuit = newFact.cuit_origen
             }
 
             console.log('req.body fact :>> ', req.body);
