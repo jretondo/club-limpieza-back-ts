@@ -28,6 +28,7 @@ export const fiscalMiddle = () => {
             }
 
             console.log('req.body fact :>> ', req.body);
+            console.log('asociado :>> ', asociado);
             if (newFact.fiscal) {
                 let certDir = "drop_test.crt"
                 let keyDir = "drop.key"
