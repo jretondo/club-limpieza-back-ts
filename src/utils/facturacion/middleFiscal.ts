@@ -28,11 +28,11 @@ export const fiscalMiddle = () => {
             }
 
             if (Number(asociado[0].Cuit) === 0) {
-                asociado = {
+                asociado = [{
                     Tipo: asociado.Tipo,
                     PtoVta: asociado.PtoVta,
                     Nro: asociado.Nro
-                }
+                }]
             }
 
             console.log('req.body fact :>> ', req.body);
