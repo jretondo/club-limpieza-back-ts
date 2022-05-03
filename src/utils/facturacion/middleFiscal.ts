@@ -29,9 +29,9 @@ export const fiscalMiddle = () => {
 
             if (Number(asociado[0].Cuit) === 0) {
                 asociado = [{
-                    Tipo: asociado.Tipo,
-                    PtoVta: asociado.PtoVta,
-                    Nro: asociado.Nro
+                    Tipo: asociado[0].Tipo,
+                    PtoVta: asociado[0].PtoVta,
+                    Nro: asociado[0].Nro
                 }]
             }
 
