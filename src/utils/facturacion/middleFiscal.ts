@@ -27,6 +27,14 @@ export const fiscalMiddle = () => {
                 asociado = dataFiscal.CbtesAsoc
             }
 
+            if (Number(asociado[0].Cuit) === 0) {
+                asociado = {
+                    Tipo: asociado.Tipo,
+                    PtoVta: asociado.PtoVta,
+                    Nro: asociado.Nro
+                }
+            }
+
             console.log('req.body fact :>> ', req.body);
             console.log('asociado :>> ', asociado);
             if (newFact.fiscal) {
