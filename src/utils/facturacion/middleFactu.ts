@@ -147,9 +147,7 @@ const factuMiddel = () => {
                 }
             }
             req.body.newFact = newFact
-            console.log('newFact :>> ', newFact);
             req.body.dataFiscal = dataFiscal
-            console.log('dataFiscal :>> ', dataFiscal);
             req.body.pvData = pvData[0]
             req.body.productsList = productsList.listaProd
             next();
@@ -230,8 +228,7 @@ const listaIva = async (listaProd: Array<IDetFactura>, descuento: number): Promi
                             BaseImp: (Math.round((item.total_neto - (item.total_neto * (descuento / 100))) * 100)) / 100,
                             Importe: (Math.round((item.total_iva - (item.total_iva * (descuento / 100))) * 100)) / 100
                         })
-                        console.log(' (Math.round((item.total_neto - (item.total_neto * (descuento / 100))) * 100)) / 100 :>> ', (Math.round((item.total_neto - (item.total_neto * (descuento / 100))) * 100)) / 100);
-                        console.log('descuento :>> ', descuento);
+
                     } else {
                         listaIva.push({
                             Id: iva,
