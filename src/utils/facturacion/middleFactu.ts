@@ -77,8 +77,10 @@ const factuMiddel = () => {
 
             const descuento: number = body.descuentoPerc
             let descuentoNumber: number = 0
+            let descuentoPer = 0
             if (descuento > 0) {
                 descuentoNumber = Math.round(((productsList.totalFact * (descuento / 100)) * 100)) / 100
+                descuentoPer = descuento
                 productsList.totalFact = (productsList.totalFact) - (productsList.totalFact * (descuento / 100))
                 productsList.totalIva = (productsList.totalIva) - (productsList.totalIva * (descuento / 100))
                 productsList.totalNeto = (productsList.totalNeto) - (productsList.totalNeto * (descuento / 100))
@@ -124,7 +126,7 @@ const factuMiddel = () => {
                 any = {}
 
             if (body.fiscal) {
-                ivaList = await listaIva(productsList.listaProd, descuentoNumber);
+                ivaList = await listaIva(productsList.listaProd, descuentoPer);
                 dataFiscal = {
                     CantReg: 1,
                     PtoVta: pvData[0].pv,
