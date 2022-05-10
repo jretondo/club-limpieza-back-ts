@@ -36,9 +36,6 @@ export const fiscalMiddle = () => {
 
             }
 
-
-            console.log('req.body fact :>> ', req.body);
-            console.log('asociado :>> ', asociado);
             if (newFact.fiscal) {
                 let certDir = "drop_test.crt"
                 let keyDir = "drop.key"
@@ -57,7 +54,6 @@ export const fiscalMiddle = () => {
                 if (asociado) {
                     req.body.dataFiscal.CbtesAsoc = asociado
                 }
-                console.log('newDataFiscal :>> ', newDataFiscal);
 
                 next()
             } else {

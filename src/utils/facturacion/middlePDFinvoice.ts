@@ -160,13 +160,17 @@ export const invoicePDFMiddle = () => {
                 tipoDoc: newFact.tipo_doc_cliente === 80 ? "CUIT" : "DNI",
                 condIvaCliente: condIvaStrCliente
             }
+            console.log('newFact :>> ', newFact);
+
             const totales = {
-                subTotal: formatMoney(newFact.total_neto + newFact.descuento),
-                subTotalNoFiscal: formatMoney(newFact.total_neto + newFact.total_iva + newFact.descuento),
-                totalIva: formatMoney(newFact.total_iva),
+                subTotal: formatMoney((newFact.total_neto<0?-newFact.total_neto:newFact.total_neto) + (newFact.descuento<0?-newFact.descuento:newFact.descuento)),
+                subTotalNoFiscal: formatMoney((newFact.total_neto<0?-newFact.total_neto:newFact.total_neto) + (newFact.total_iva<0?-newFact.total_iva:newFact.total_iva) + (newFact.descuento<0?-newFact.descuento:newFact.descuento)),
+                totalIva: formatMoney(newFact.total_iva<0?-newFact.total_iva:newFact.total_iva),
                 totalFact: formatMoney(newFact.total_fact),
                 totalDesc: formatMoney(newFact.descuento),
             }
+
+            console.log('totales :>> ', totales);
 
             let formapagoStr = ""
             switch (newFact.forma_pago) {
