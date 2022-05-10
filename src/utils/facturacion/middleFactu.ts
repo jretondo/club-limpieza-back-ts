@@ -145,7 +145,9 @@ const factuMiddel = () => {
                 }
             }
             req.body.newFact = newFact
+            console.log('newFact :>> ', newFact);
             req.body.dataFiscal = dataFiscal
+            console.log('dataFiscal :>> ', dataFiscal);
             req.body.pvData = pvData[0]
             req.body.productsList = productsList.listaProd
             next();
