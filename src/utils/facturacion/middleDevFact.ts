@@ -106,7 +106,7 @@ const devFactMiddle = () => {
             console.log('dataFact[0].descuento :>> ', dataFact[0].descuento);
             console.log('dataFact[0].total_fact :>> ', dataFact[0].total_fact);
 
-            const descuentoPer = - (dataFact[0].descuento / (dataFact[0].total_fact + dataFact[0].descuento))
+            const descuentoPer = (dataFact[0].descuento / (dataFact[0].total_fact + dataFact[0].descuento))
             console.log('descuentoPer :>> ', descuentoPer);
             ivaList = await listaIva(detFact, descuentoPer);
             dataFiscal = {
