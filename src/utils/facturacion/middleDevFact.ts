@@ -78,7 +78,6 @@ const devFactMiddle = () => {
             id_fact_asoc: dataFact[0].id || 0,
             descuento: dataFact[0].descuento
         }
-        console.log('newFact :>> ', newFact);
         let newDet: Array<IDetFactura> = []
 
         new Promise((resolve, reject) => {
@@ -130,6 +129,7 @@ const devFactMiddle = () => {
                 }]
             }
         }
+        console.log('dataFiscal :>> ', dataFiscal);
         req.body.newFact = newFact
         req.body.dataFiscal = dataFiscal
         req.body.pvData = pvData[0]
