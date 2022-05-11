@@ -118,13 +118,13 @@ const listCtaCteClient = (
 };
 
 router
-    .get("/dataFiscal", secure(EPermissions.proveedores), dataFiscalPadron)
+    .get("/dataFiscal", secure(EPermissions.clientes), dataFiscalPadron)
     .get("/ctaCte/:page", secure(EPermissions.clientes), listCtaCteClient)
-    .get("/details/:id", secure(EPermissions.proveedores), get)
-    .get("/:page", secure(EPermissions.proveedores), listPagination)
-    .delete("/:id", secure(EPermissions.proveedores), remove)
-    .get("/", secure(EPermissions.proveedores), list)
-    .post("/", secure(EPermissions.proveedores), upsert)
-    .put("/", secure(EPermissions.proveedores), upsert)
+    .get("/details/:id", secure(EPermissions.clientes), get)
+    .get("/:page", secure(EPermissions.clientes), listPagination)
+    .delete("/:id", secure(EPermissions.clientes), remove)
+    .get("/", secure(EPermissions.clientes), list)
+    .post("/", secure(EPermissions.clientes), upsert)
+    .put("/", secure(EPermissions.clientes), upsert)
 
 export = router;
