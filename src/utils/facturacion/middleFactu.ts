@@ -43,7 +43,7 @@ const factuMiddel = () => {
                     cliente_ndoc: body.cliente_ndoc || 0
                 }
             }
-
+            console.log('body.cond_iva :>> ', body.cond_iva);
             let letra = "";
             if (body.fiscal) {
                 if (pvData[0].cond_iva === 1) {
