@@ -103,7 +103,9 @@ const devFactMiddle = () => {
             any = {}
 
         if (esFiscal) {
-            ivaList = await listaIva(detFact);
+            const descuentoPer = ((Math.round((dataFact[0].descuento / newFact.total_fact) * 100)) / 100) * 100
+            console.log('descuentoPer :>> ', descuentoPer);
+            ivaList = await listaIva(detFact, descuentoPer);
             dataFiscal = {
                 CantReg: 1,
                 PtoVta: dataFact[0].pv,
@@ -140,7 +142,7 @@ const devFactMiddle = () => {
     return middleware
 }
 
-const listaIva = async (listaProd: Array<IDetFactura>): Promise<Array<IIvaItem>> => {
+const listaIva = async (listaProd: Array<IDetFactura>, descuento: number): Promise<Array<IIvaItem>> => {
     listaProd.sort((a, b) => { return a.alicuota_id - b.alicuota_id })
     let ivaAnt = 0;
     let listaIva: Array<IIvaItem> = []
@@ -150,21 +152,39 @@ const listaIva = async (listaProd: Array<IDetFactura>): Promise<Array<IIvaItem>>
                 let ivaAux = perIvaAlicuotas.find(e => e.per === item.alicuota_id) || { per: 0, id: 3 };
                 const iva = ivaAux.id
                 if (iva !== ivaAnt) {
-                    listaIva.push({
-                        Id: iva,
-                        BaseImp: (Math.round((item.total_neto) * 100)) / 100,
-                        Importe: (Math.round((item.total_iva) * 100)) / 100
-                    })
+                    if (descuento > 0) {
+                        listaIva.push({
+                            Id: iva,
+                            BaseImp: (Math.round((item.total_neto - (item.total_neto * (descuento / 100))) * 100)) / 100,
+                            Importe: (Math.round((item.total_iva - (item.total_iva * (descuento / 100))) * 100)) / 100
+                        })
+
+                    } else {
+                        listaIva.push({
+                            Id: iva,
+                            BaseImp: (Math.round((item.total_neto) * 100)) / 100,
+                            Importe: (Math.round((item.total_iva) * 100)) / 100
+                        })
+                    }
                 } else {
                     const index = listaIva.length - 1
-                    listaIva[index] = {
-                        Id: iva,
-                        BaseImp: (Math.round((listaIva[index].BaseImp + (item.total_neto)) * 100)) / 100,
-                        Importe: (Math.round((listaIva[index].Importe + (item.total_iva)) * 100)) / 100
+                    if (descuento > 0) {
+                        listaIva[index] = {
+                            Id: iva,
+                            BaseImp: (Math.round((listaIva[index].BaseImp + (item.total_neto - (item.total_neto * (descuento / 100)))) * 100)) / 100,
+                            Importe: (Math.round((listaIva[index].Importe + (item.total_iva - (item.total_iva * (descuento / 100)))) * 100)) / 100
+                        }
+                    } else {
+                        listaIva[index] = {
+                            Id: iva,
+                            BaseImp: (Math.round((listaIva[index].BaseImp + (item.total_neto)) * 100)) / 100,
+                            Importe: (Math.round((listaIva[index].Importe + (item.total_iva)) * 100)) / 100
+                        }
                     }
                 }
                 ivaAnt = 5;
                 if (key === listaProd.length - 1) {
+
                     resolve(listaIva)
                 }
             })
