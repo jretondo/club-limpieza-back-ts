@@ -103,11 +103,9 @@ const devFactMiddle = () => {
             any = {}
 
         if (esFiscal) {
-            console.log('dataFact[0].descuento :>> ', dataFact[0].descuento);
-            console.log('dataFact[0].total_fact :>> ', dataFact[0].total_fact);
 
             const descuentoPer = ((dataFact[0].descuento / (dataFact[0].total_fact + dataFact[0].descuento)) * 100)
-            console.log('descuentoPer :>> ', descuentoPer);
+
             ivaList = await listaIva(detFact, descuentoPer);
             dataFiscal = {
                 CantReg: 1,
@@ -134,7 +132,6 @@ const devFactMiddle = () => {
                 }]
             }
         }
-        console.log('dataFiscal :>> ', dataFiscal);
         req.body.newFact = newFact
         req.body.dataFiscal = dataFiscal
         req.body.pvData = pvData[0]
