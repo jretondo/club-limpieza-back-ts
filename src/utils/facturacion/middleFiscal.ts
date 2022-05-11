@@ -28,7 +28,7 @@ export const fiscalMiddle = () => {
 
                 try {
                     if (Number(asociado[0].Cuit) === 0) {
-                        asociado[0].Cuit = newFact.cuit_origen
+                        asociado[0].Cuit = newFact.n_doc_cliente
                     }
                 } catch (error) {
 
@@ -46,6 +46,7 @@ export const fiscalMiddle = () => {
                     keyDir = pvData.key_file || "drop.key"
                     entornoAlt = true
                 }
+                console.log('newFact.cuit_origen :>> ', newFact.cuit_origen);
                 const afip = new AfipClass(newFact.cuit_origen, certDir, keyDir, entornoAlt);
                 const newDataFiscal = await afip.newFact(dataFiscal);
                 req.body.dataFiscal = newDataFiscal.data
