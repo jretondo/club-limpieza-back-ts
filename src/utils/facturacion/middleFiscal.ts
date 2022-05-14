@@ -25,10 +25,15 @@ export const fiscalMiddle = () => {
                 any = req.body.dataFiscal
             if (dataFiscal.CbtesAsoc) {
                 asociado = dataFiscal.CbtesAsoc
-
                 try {
-                    if (Number(asociado[0].Cuit) === 0) {
+                    if (Number(asociado[0].Cuit) === 0 && Number(newFact.n_doc_cliente) !== 0) {
                         asociado[0].Cuit = newFact.n_doc_cliente
+                    } else {
+                        asociado[0] = {
+                            Tipo: asociado[0].Tipo,
+                            PtoVta: asociado[0].PtoVta,
+                            Nro: asociado[0].Nro
+                        }
                     }
                 } catch (error) {
 
