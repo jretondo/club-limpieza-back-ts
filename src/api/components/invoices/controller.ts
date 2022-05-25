@@ -393,6 +393,27 @@ export = (injectedStore: typeof StoreType) => {
         return await store.update(Tables.FACTURAS, { forma_pago: idType }, idPay)
     }
 
+    const dummyServers = async (certFile: string, keyFile: string, cuit: number) => {
+        let certDir = "drop_test.crt"
+        let keyDir = "drop.key"
+        let entornoAlt = false
+
+        if (process.env.ENTORNO === "PROD") {
+            certDir = certFile || "drop_test.crt"
+            keyDir = keyFile || "drop.key"
+            entornoAlt = true
+        }
+        const nowTime = Number(new Date())
+        const afip = new AfipClass(cuit, certDir, keyDir, entornoAlt);
+        const dummy = await afip.getServerStatusFact()
+        const afterTime = Number(new Date())
+        const difference = afterTime - nowTime
+        return {
+            statusDummy: dummy,
+            difference: difference
+        }
+    }
+
     return {
         lastInvoice,
         list,
@@ -403,6 +424,7 @@ export = (injectedStore: typeof StoreType) => {
         cajaList,
         getDetails,
         getDataFact,
-        changePayType
+        changePayType,
+        dummyServers
     }
 }

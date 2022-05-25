@@ -172,11 +172,25 @@ const changePayType = (
         .catch(next)
 }
 
+const getDummy = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.dummyServers(
+        String(req.query.certFile),
+        String(req.query.keyFile),
+        Number(req.query.cuit)).then(data => {
+            success({ req, res, message: data });
+        }).catch(next)
+}
+
 router.get("/details/:id", secure(EPermissions.ventas), get)
     .get("/cajaList/:page", secure(EPermissions.ventas), cajaList)
     .get("/cajaListPDF", secure(EPermissions.ventas), cajaListPDF)
     .get("/factDataPDF/:id", secure(EPermissions.ventas), dataFactMiddle(), invoicePDFMiddle(), sendFactMiddle(), getDataFactPDF)
     .get("/last", secure(EPermissions.ventas), getLast)
+    .get("/dummy", secure(EPermissions.ventas), getDummy)
     .get("/afipData", secure(EPermissions.ventas), getFiscalDataInvoice)
     .get("/:page", secure(EPermissions.ventas), list)
     .post("/notaCred", secure(EPermissions.ventas), devFactMiddle(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)

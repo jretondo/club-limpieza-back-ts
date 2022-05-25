@@ -20,7 +20,6 @@ const devFactMiddle = () => {
         const pvData: Array<INewPV> = await ControllerPtoVta.get(dataFact[0].pv_id);
         const esFiscal = dataFact[0].fiscal
         const tipoFact = dataFact[0].t_fact
-        console.log('dataFact :>> ', dataFact);
         let tipoNC: number = 0
         let letra: string = "DEV"
         if (esFiscal) {

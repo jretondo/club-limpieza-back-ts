@@ -52,7 +52,7 @@ export class AfipClass {
             return response;
         }
     }
-    async getServerStatusFAct(): Promise<{
+    async getServerStatusFact(): Promise<{
         status: resStatus,
         data: string
     }> {
