@@ -56,8 +56,8 @@ export class AfipClass {
         status: resStatus,
         data: string
     }> {
-        const status = await this.afip.ElectronicBilling.getServerStatus();
-        if (status.appserver === "OK" && status.authserver === "OK" && status.dbserver === "OK") {
+        const status: any = await this.afip.ElectronicBilling.getServerStatus();
+        if (status.AppServer === "OK" && status.DbServer === "OK" && status.AuthServer === "OK") {
             const response = {
                 status: resStatus.ok,
                 data: "Servidores online"
