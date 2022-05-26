@@ -76,7 +76,7 @@ const newInvoice = (
     res: Response,
     next: NextFunction
 ) => {
-    Controller.newInvoice(req.body.pvData, req.body.newFact, req.body.dataFiscal, req.body.productsList, req.body.fileName, req.body.filePath, next)
+    Controller.newInvoice(req.body.pvData, req.body.newFact, req.body.dataFiscal, req.body.productsList, req.body.fileName, req.body.filePath, req.body.timer, req.body.user, next)
         .then((dataFact) => {
             file(req, res, dataFact.filePath, 'application/pdf', dataFact.fileName, dataFact);
         })
@@ -185,12 +185,23 @@ const getDummy = (
         }).catch(next)
 }
 
+const timeoutProuf = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    setTimeout(() => {
+        success({ req, res, message: "ok" })
+    }, 5000);
+}
+
 router.get("/details/:id", secure(EPermissions.ventas), get)
     .get("/cajaList/:page", secure(EPermissions.ventas), cajaList)
     .get("/cajaListPDF", secure(EPermissions.ventas), cajaListPDF)
     .get("/factDataPDF/:id", secure(EPermissions.ventas), dataFactMiddle(), invoicePDFMiddle(), sendFactMiddle(), getDataFactPDF)
     .get("/last", secure(EPermissions.ventas), getLast)
     .get("/dummy", secure(EPermissions.ventas), getDummy)
+    .get("/timeout", secure(EPermissions.ventas), timeoutProuf)
     .get("/afipData", secure(EPermissions.ventas), getFiscalDataInvoice)
     .get("/:page", secure(EPermissions.ventas), list)
     .post("/notaCred", secure(EPermissions.ventas), devFactMiddle(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)

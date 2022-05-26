@@ -1,3 +1,4 @@
+import { sendAvisoFact } from './../../../utils/sendEmails/sendAvisoFact';
 import { IMovCtaCte } from './../../../interfaces/Itables';
 import { createListSellsPDF } from './../../../utils/facturacion/lists/createListSellsPDF';
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
@@ -10,13 +11,14 @@ import {
 } from '../../../utils/facturacion/AfipClass'
 import ptosVtaController from '../ptosVta';
 import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
-import { IClientes, IDetFactura, IFactura } from 'interfaces/Itables';
+import { IClientes, IDetFactura, IFactura, IUser } from 'interfaces/Itables';
 import { INewPV } from 'interfaces/Irequests';
 import ControllerStock from '../stock';
 import ControllerClientes from '../clientes';
 import fs from 'fs';
 import { NextFunction } from 'express';
 import controller from '../clientes';
+import { zfill } from '../../../utils/cerosIzq';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
@@ -317,9 +319,10 @@ export = (injectedStore: typeof StoreType) => {
         productsList: Array<IDetFactura>,
         fileName: string,
         filePath: string,
+        timer: number,
+        userData: IUser,
         next: NextFunction
     ) => {
-
         const resultInsert = await insertFact(pvData.id || 0, newFact, productsList, factFiscal)
         const clienteArray: { data: Array<IClientes> } = await controller.list(undefined, String(newFact.n_doc_cliente), undefined)
 
@@ -348,7 +351,7 @@ export = (injectedStore: typeof StoreType) => {
         if (Number(newFact.forma_pago) === 4) {
             const clienteArray2: { data: Array<IClientes> } = await controller.list(undefined, String(newFact.n_doc_cliente), undefined)
             const idCliente = clienteArray2.data[0].id
-            const resNewCta = await newMovCtaCte({
+            await newMovCtaCte({
                 id_cliente: idCliente || 0,
                 id_factura: resultInsert.msg.factId,
                 id_recibo: 0,
@@ -358,10 +361,31 @@ export = (injectedStore: typeof StoreType) => {
             })
         }
 
+        if (newFact.id_fact_asoc !== 0) {
+            await store.update(Tables.FACTURAS, { id_fact_asoc: resultInsert.msg.factId }, newFact.id_fact_asoc)
+        }
+
         setTimeout(() => {
             fs.unlinkSync(filePath)
         }, 6000);
-
+        const difTime = Number(new Date()) - timer
+        if (difTime > 5000) {
+            sendAvisoFact(
+                `${newFact.letra} ${zfill(newFact.pv, 5)} - ${zfill(newFact.cbte, 8)}`,
+                newFact.nota_cred,
+                newFact.total_fact,
+                String(userData.email),
+                newFact.forma_pago === 0 ? "Efectivo" :
+                    newFact.forma_pago === 1 ? "Mercado Pago" :
+                        newFact.forma_pago === 2 ? "Débito" :
+                            newFact.forma_pago === 3 ? "Crédito" :
+                                newFact.forma_pago === 4 ? "Cuenta Corriente" : "Efectivo",
+                userData,
+                newFact.raz_soc_cliente,
+                newFact.tipo_doc_cliente,
+                newFact.n_doc_cliente
+            )
+        }
         const dataFact = {
             fileName,
             filePath,

@@ -12,6 +12,7 @@ const devFactMiddle = () => {
         res: Response,
         next: NextFunction
     ) => {
+        req.body.timer = Number(new Date())
         const idFact = req.body.id
         const fecha = req.body.fecha
         const dataFact: Array<IFactura> = await ControllerInvoices.get(idFact)

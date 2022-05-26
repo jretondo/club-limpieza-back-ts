@@ -22,7 +22,7 @@ const factuMiddel = () => {
         next: NextFunction
     ) => {
         try {
-
+            req.body.timer = Number(new Date())
             const body: INewFactura = req.body.dataFact
             const user: IUser = req.body.user
             const pvId = body.pv_id;
