@@ -1,13 +1,14 @@
-import { IMovCtaCte } from './../../../interfaces/Itables';
+import { INewInsert } from './../../../interfaces/Ifunctions';
+import { IFactura, IMovCtaCte } from './../../../interfaces/Itables';
 import { AfipClass } from './../../../utils/facturacion/AfipClass';
-
 import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
-import { IClientes, IUser } from 'interfaces/Itables';
+import { IClientes, } from 'interfaces/Itables';
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
 import StoreType from '../../../store/mysql';
 import getPages from '../../../utils/getPages';
 import { NextFunction } from 'express';
+import fs from 'fs';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
@@ -188,12 +189,60 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
+    const registerPayment = async (
+        newFact: IFactura,
+        fileName: string,
+        filePath: string,
+        clienteData: IClientes,
+        next: NextFunction
+    ) => {
+        const result: INewInsert = await store.insert(Tables.FACTURAS, newFact)
+        console.log('result :>> ', result);
+        console.log(' result.insertId :>> ', result.insertId);
+        if (result.affectedRows > 0) {
+            const ctacteData = {
+                id_cliente: clienteData.id || 0,
+                id_factura: result.insertId,
+                id_recibo: result.insertId,
+                forma_pago: newFact.forma_pago,
+                importe: (newFact.total_fact),
+                detalle: "Recibo de Pago"
+            }
+            const resultCtaCte = await store.insert(Tables.CTA_CTE, ctacteData)
+
+            setTimeout(() => {
+                fs.unlinkSync(filePath)
+            }, 6000);
+
+            const dataFact = {
+                fileName,
+                filePath,
+                resultInsert: resultCtaCte
+            }
+            return dataFact
+        } else {
+            throw new Error("Error interno. No se pudo registrar el nuevo recibo.")
+        }
+    }
+
+    const getDataPayment = async (
+        fileName: string,
+        filePath: string) => {
+        const dataFact = {
+            fileName,
+            filePath
+        }
+        return dataFact
+    }
+
     return {
         list,
         upsert,
         remove,
         get,
         dataFiscalPadron,
-        listCtaCteClient
+        listCtaCteClient,
+        registerPayment,
+        getDataPayment
     }
 }

@@ -438,6 +438,30 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
+    const correctorNC = async () => {
+        const filtersNC: Array<IWhereParams> = [{
+            mode: EModeWhere.strict,
+            concat: EConcatWhere.and,
+            items: [
+                { column: Columns.facturas.nota_cred, object: String(1) }
+            ]
+        }];
+
+        const listNC: Array<IFactura> = await store.list(Tables.FACTURAS, ["*"], filtersNC)
+
+        listNC.map(async item => {
+            const idNC = item.id
+            const idFact = item.id_fact_asoc
+
+            await store.update(Tables.FACTURAS, { id_fact_asoc: idNC }, idFact)
+            console.log('idFact :>> ', idFact);
+        })
+
+        return {
+            listNC
+        }
+    }
+
     return {
         lastInvoice,
         list,
@@ -449,6 +473,8 @@ export = (injectedStore: typeof StoreType) => {
         getDetails,
         getDataFact,
         changePayType,
-        dummyServers
+        dummyServers,
+        correctorNC,
+        newMovCtaCte
     }
 }

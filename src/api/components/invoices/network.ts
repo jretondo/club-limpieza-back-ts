@@ -195,6 +195,16 @@ const timeoutProuf = (
     }, 5000);
 }
 
+const correctorNC = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.correctorNC().then(data => {
+        success({ req, res, message: data });
+    }).catch(next)
+}
+
 router.get("/details/:id", secure(EPermissions.ventas), get)
     .get("/cajaList/:page", secure(EPermissions.ventas), cajaList)
     .get("/cajaListPDF", secure(EPermissions.ventas), cajaListPDF)

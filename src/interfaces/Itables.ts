@@ -102,7 +102,8 @@ export interface IFactura {
     forma_pago: number,
     pv_id: number,
     id_fact_asoc: number,
-    descuento: number
+    descuento: number,
+    det_rbo?: string
 }
 
 export interface IDetFactura {

@@ -91,4 +91,5 @@ export interface INewFactura {
     cliente_ndoc?: number,
     cliente_email?: string,
     cliente_name?: string,
+    det_rbo?: string
 }
