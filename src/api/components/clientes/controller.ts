@@ -78,13 +78,12 @@ export = (injectedStore: typeof StoreType) => {
         const listCtaCte: {
             data: Array<IMovCtaCte>
         } = await listCtaCteClient(idCliente, false, false)
-        console.log('listCtaCte :>> ', listCtaCte);
         const cant = listCtaCte.data.length
         if (cant > 0) {
             return 403
         } else {
             const result: any = await store.remove(Tables.CLIENTES, { id: idCliente });
-            console.log('result :>> ', result);
+
             if (result.affectedRows > 0) {
                 return 200
             } else {
@@ -111,7 +110,6 @@ export = (injectedStore: typeof StoreType) => {
 
     const listCtaCteClient = async (idCliente: number, debit: boolean, credit: boolean, page?: number, cantPerPage?: number) => {
 
-        console.log('idCliente :>> ', idCliente);
         let filter: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
 
@@ -168,7 +166,7 @@ export = (injectedStore: typeof StoreType) => {
                 currentPage: page,
                 cantPerPage: cantPerPage || 10,
                 order: Columns.clientes.id,
-                asc: true
+                asc: false
             };
             const data = await store.list(Tables.CTA_CTE, [ESelectFunct.all], filters, undefined, pages);
             const cant = await store.list(Tables.CTA_CTE, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters);
@@ -197,8 +195,7 @@ export = (injectedStore: typeof StoreType) => {
         next: NextFunction
     ) => {
         const result: INewInsert = await store.insert(Tables.FACTURAS, newFact)
-        console.log('result :>> ', result);
-        console.log(' result.insertId :>> ', result.insertId);
+
         if (result.affectedRows > 0) {
             const ctacteData = {
                 id_cliente: clienteData.id || 0,
