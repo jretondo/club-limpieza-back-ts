@@ -25,6 +25,7 @@ export const invoicePDFMiddle = () => {
             const pvData: INewPV = req.body.pvData
             const newFact: IFactura = req.body.newFact
             const productsList: Array<IDetFactura> = req.body.productsList
+            const variosPagos = req.body.variosPagos
             const dataFiscal:
                 FactInscriptoProd |
                 FactInscriptoServ |
@@ -173,24 +174,26 @@ export const invoicePDFMiddle = () => {
                 case 0:
                     formapagoStr = "EFECTIVO"
                     break;
-                case 0:
+                case 1:
                     formapagoStr = "MERCADO PAGO"
                     break;
-                case 0:
+                case 2:
                     formapagoStr = "DEBITO"
                     break;
-                case 0:
+                case 3:
                     formapagoStr = "CREDITO"
                     break;
-                case 0:
+                case 4:
                     formapagoStr = "CUENTA CORRIENTE"
                     break;
                 default:
+                    formapagoStr = "OTROS"
                     break;
             }
 
             const formaPago = {
-                formaPago: formapagoStr
+                string: formapagoStr,
+                code: newFact.forma_pago
             }
             const listaItems = productsList
 
@@ -198,11 +201,12 @@ export const invoicePDFMiddle = () => {
                 myCss: `<style>${myCss}</style>`,
                 listaItems,
                 cbteAsoc,
+                formaPago,
+                variosPagos,
                 ...encabezado,
                 ...ptoVta,
                 ...cliente,
                 ...totales,
-                ...formaPago,
                 ...footer,
             }
 

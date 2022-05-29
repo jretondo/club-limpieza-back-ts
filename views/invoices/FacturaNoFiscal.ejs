@@ -90,11 +90,20 @@
                     <%- cbteAsoc %>
                   </h2>
                   <% }else{ %>
-                    <div class="to">Forma de Pago:</div>
-                    <h2 class="name">
-                      <%- formaPago %>
-                    </h2>
-                    <% } %>
+                    <% if(parseInt(formaPago.code)===5){ %>
+                      <div class="to">Forma de Pago:</div>
+                      <% variosPagos.forEach(function(item){ %>
+                        <h2 class="name">
+                          <%- item.tipo_txt %>: $ <%- item.importe %>
+                        </h2>
+                        <% }); %>
+                          <% }else{ %>
+                            <div class="to">Forma de Pago:</div>
+                            <h2 class="name">
+                              <%- formaPago.string %>
+                            </h2>
+                            <% } %>
+                              <% } %>
               </div>
       </div>
 

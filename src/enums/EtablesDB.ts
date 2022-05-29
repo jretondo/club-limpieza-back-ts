@@ -178,6 +178,23 @@ enum CtaCte {
     detalle = "detalle"
 }
 
+enum FormasPago {
+    id = "id",
+    id_fact = "id_fact",
+    tipo = "tipo",
+    importe = "importe"
+}
+
+export enum MetodosPago {
+    efectivo = 0,
+    mercaPago = 1,
+    debito = 2,
+    credito = 3,
+    ctaCte = 4,
+    varios = 5
+
+}
+
 export enum Tables {
     ADMIN = "administradores",
     AUTH_ADMIN = "auth_admin",
@@ -192,7 +209,8 @@ export enum Tables {
     STOCK = "stock",
     FACTURAS = "facturas",
     DET_FACTURAS = "detalle_fact",
-    CTA_CTE = "cta_cte"
+    CTA_CTE = "cta_cte",
+    FORMAS_PAGO = "formas_pago"
 }
 
 export const Columns = {
@@ -209,5 +227,6 @@ export const Columns = {
     stock: Stock,
     facturas: Facturas,
     detallesFact: DetalleFact,
-    ctaCte: CtaCte
+    ctaCte: CtaCte,
+    formasPago: FormasPago
 }

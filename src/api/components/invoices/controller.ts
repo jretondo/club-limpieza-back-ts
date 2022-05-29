@@ -1,5 +1,7 @@
+import { ETypesJoin } from '../../../enums/EfunctMysql';
+import { MetodosPago } from './../../../enums/EtablesDB';
 import { sendAvisoFact } from './../../../utils/sendEmails/sendAvisoFact';
-import { IMovCtaCte } from './../../../interfaces/Itables';
+import { IFormasPago, IMovCtaCte } from './../../../interfaces/Itables';
 import { createListSellsPDF } from './../../../utils/facturacion/lists/createListSellsPDF';
 import { EConcatWhere, EModeWhere, ESelectFunct } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
@@ -10,7 +12,7 @@ import {
     CbteTipos
 } from '../../../utils/facturacion/AfipClass'
 import ptosVtaController from '../ptosVta';
-import { Ipages, IWhereParams } from 'interfaces/Ifunctions';
+import { Ipages, IWhereParams, IJoin } from 'interfaces/Ifunctions';
 import { IClientes, IDetFactura, IFactura, IUser } from 'interfaces/Itables';
 import { INewPV } from 'interfaces/Irequests';
 import ControllerStock from '../stock';
@@ -117,6 +119,13 @@ export = (injectedStore: typeof StoreType) => {
 
         let pages: Ipages;
 
+        const joinQuery: IJoin = {
+            table: Tables.FORMAS_PAGO,
+            colJoin: Columns.formasPago.id_fact,
+            colOrigin: Columns.prodPrincipal.id,
+            type: ETypesJoin.left
+        };
+
         if (page) {
             pages = {
                 currentPage: page,
@@ -125,16 +134,18 @@ export = (injectedStore: typeof StoreType) => {
                 asc: true
             };
             const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined);
+            const totales2 = await store.list(Tables.FACTURAS, [`SUM(${Columns.formasPago.importe}) AS SUMA`, Columns.formasPago.tipo], filters, [Columns.formasPago.tipo], undefined, joinQuery);
             const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, pages, undefined, { columns: [Columns.facturas.fecha], asc: false });
             const cant = await store.list(Tables.FACTURAS, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters, undefined, undefined);
             const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
             return {
                 data,
                 pagesObj,
-                totales
+                totales,
+                totales2
             };
         } else {
-            const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined);
+            const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined, joinQuery);
             const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, undefined, undefined, { columns: [Columns.facturas.fecha], asc: false });
 
             const dataFact = {
@@ -321,6 +332,11 @@ export = (injectedStore: typeof StoreType) => {
         filePath: string,
         timer: number,
         userData: IUser,
+        variosPagos: Array<{
+            tipo: MetodosPago,
+            tipo_txt: string,
+            importe: number
+        }>,
         next: NextFunction
     ) => {
         const resultInsert = await insertFact(pvData.id || 0, newFact, productsList, factFiscal)
@@ -348,16 +364,20 @@ export = (injectedStore: typeof StoreType) => {
             }
         }
 
-        if (Number(newFact.forma_pago) === 4) {
-            const clienteArray2: { data: Array<IClientes> } = await controller.list(undefined, String(newFact.n_doc_cliente), undefined)
-            const idCliente = clienteArray2.data[0].id
-            await newMovCtaCte({
-                id_cliente: idCliente || 0,
-                id_factura: resultInsert.msg.factId,
-                id_recibo: 0,
-                forma_pago: 4,
-                importe: - (newFact.total_fact),
-                detalle: "Compra de productos"
+        await newmovCtaCte(newFact.forma_pago, newFact.total_fact, newFact.n_doc_cliente, resultInsert.msg.factId)
+
+        if (Number(newFact.forma_pago) === 5) {
+            variosPagos.map(async item => {
+                const dataForma: IFormasPago = {
+                    id_fact: resultInsert.msg.factId,
+                    tipo: item.tipo,
+                    importe: item.importe,
+                    tipo_txt: item.tipo_txt
+                }
+                await store.insert(Tables.FORMAS_PAGO, dataForma)
+                if (Number(item.tipo) === 4) {
+                    await newmovCtaCte(item.tipo, item.importe, newFact.n_doc_cliente, resultInsert.msg.factId)
+                }
             })
         }
 
@@ -379,7 +399,7 @@ export = (injectedStore: typeof StoreType) => {
                     newFact.forma_pago === 1 ? "Mercado Pago" :
                         newFact.forma_pago === 2 ? "Débito" :
                             newFact.forma_pago === 3 ? "Crédito" :
-                                newFact.forma_pago === 4 ? "Cuenta Corriente" : "Efectivo",
+                                newFact.forma_pago === 4 ? "Cuenta Corriente" : "Varios",
                 userData,
                 newFact.raz_soc_cliente,
                 newFact.tipo_doc_cliente,
@@ -396,6 +416,21 @@ export = (injectedStore: typeof StoreType) => {
 
     const getDetails = async (fact_id: number): Promise<Array<IDetFactura>> => {
         return await store.getAnyCol(Tables.DET_FACTURAS, { fact_id })
+    }
+
+    const newmovCtaCte = async (formaPago: number, importe: number, ndocCliente: number, idfact: number) => {
+        if (Number(formaPago) === 4) {
+            const clienteArray2: { data: Array<IClientes> } = await controller.list(undefined, String(ndocCliente), undefined)
+            const idCliente = clienteArray2.data[0].id
+            await newMovCtaCte({
+                id_cliente: idCliente || 0,
+                id_factura: idfact,
+                id_recibo: 0,
+                forma_pago: 4,
+                importe: - (importe),
+                detalle: "Compra de productos"
+            })
+        }
     }
 
     const getDataFact = async (
@@ -415,6 +450,18 @@ export = (injectedStore: typeof StoreType) => {
 
     const changePayType = async (idPay: number, idType: number) => {
         return await store.update(Tables.FACTURAS, { forma_pago: idType }, idPay)
+    }
+
+    const getFormasPago = async (idFact: number) => {
+        const filter: Array<IWhereParams> = [{
+            mode: EModeWhere.strict,
+            concat: EConcatWhere.none,
+            items: [
+                { column: Columns.formasPago.id_fact, object: String(idFact) }
+            ]
+        }];
+
+        return await store.list(Tables.FORMAS_PAGO, ["*"], filter)
     }
 
     const dummyServers = async (certFile: string, keyFile: string, cuit: number) => {
@@ -475,6 +522,7 @@ export = (injectedStore: typeof StoreType) => {
         changePayType,
         dummyServers,
         correctorNC,
-        newMovCtaCte
+        newMovCtaCte,
+        getFormasPago
     }
 }
