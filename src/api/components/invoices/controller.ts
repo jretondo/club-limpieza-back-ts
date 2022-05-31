@@ -441,6 +441,11 @@ export = (injectedStore: typeof StoreType) => {
             fileName,
             filePath
         }
+
+        setTimeout(() => {
+            fs.unlinkSync(filePath)
+        }, 6000);
+
         return dataFact
     }
 
