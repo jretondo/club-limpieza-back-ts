@@ -192,7 +192,6 @@ export enum MetodosPago {
     credito = 3,
     ctaCte = 4,
     varios = 5
-
 }
 
 export enum Tables {
