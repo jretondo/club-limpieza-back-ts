@@ -14,6 +14,7 @@ import {
 } from './AfipClass';
 import moment from 'moment';
 import errorSend from '../error';
+import { roundNumber } from '../../utils/roundNumb';
 
 const factuMiddel = () => {
     const middleware = async (
@@ -28,6 +29,7 @@ const factuMiddel = () => {
             const pvId = body.pv_id;
             const pvData: Array<INewPV> = await ptosVtaController.get(pvId);
             const productsList: IfactCalc = await calcProdLista(body.lista_prod);
+            console.log('productsList :>> ', productsList);
             const fiscalBool = req.body.fiscal
             const variosPagos = body.variosPagos
             if (parseInt(fiscalBool) === 0) {
@@ -183,21 +185,21 @@ const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCa
             idAnt = prod.id_prod
             dataAnt = dataProd
 
-            const totalCosto = (Math.round(((dataProd[0].precio_compra * prod.cant_prod)) * 100)) / 100;
-            const totalProd = (Math.round(((dataProd[0].vta_price * prod.cant_prod)) * 100)) / 100;
-            const totalNeto = (Math.round((totalProd / (1 + (dataProd[0].iva / 100))) * 100)) / 100;
-            const totalIva = (Math.round((totalNeto * (dataProd[0].iva / 100)) * 100)) / 100;
+            const totalCosto = (dataProd[0].precio_compra * prod.cant_prod);
+            const totalProd = (dataProd[0].vta_price * prod.cant_prod);
+            const totalNeto = (totalProd / (1 + (dataProd[0].iva / 100)));
+            const totalIva = (totalNeto * (dataProd[0].iva / 100));
 
             const newProdFact: IDetFactura = {
                 nombre_prod: dataProd[0].name,
                 cant_prod: prod.cant_prod,
                 unidad_tipo_prod: dataProd[0].unidad,
                 id_prod: prod.id_prod,
-                total_prod: totalProd,
-                total_iva: totalIva,
+                total_prod: roundNumber(totalProd),
+                total_iva: roundNumber(totalIva),
                 alicuota_id: dataProd[0].iva,
-                total_costo: totalCosto,
-                total_neto: totalNeto,
+                total_costo: roundNumber(totalCosto),
+                total_neto: roundNumber(totalNeto),
                 precio_ind: dataProd[0].vta_price
             }
 
