@@ -80,7 +80,7 @@ export = (injectedStore: typeof StoreType) => {
             iva: prodData[0].iva,
             id_user: user.id,
             prod_name: prodData[0].name,
-            pv_descr: `${body.pv_id === 0 ? "Deposito" : pvData[0].direccion + ` (PV: ${pvData[0].pv})`}`,
+            pv_descr: `${Number(body.pv_id) === 0 || Number(body.pv_id) === -1 ? "Deposito" : pvData[0].direccion + ` (PV: ${pvData[0].pv})`}`,
             category: prodData[0].category,
             sub_category: prodData[0].subcategory
         };

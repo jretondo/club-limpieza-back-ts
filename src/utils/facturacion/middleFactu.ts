@@ -29,7 +29,6 @@ const factuMiddel = () => {
             const pvId = body.pv_id;
             const pvData: Array<INewPV> = await ptosVtaController.get(pvId);
             const productsList: IfactCalc = await calcProdLista(body.lista_prod);
-            console.log('productsList :>> ', productsList);
             const fiscalBool = req.body.fiscal
             const variosPagos = body.variosPagos
             if (parseInt(fiscalBool) === 0) {
@@ -46,7 +45,6 @@ const factuMiddel = () => {
                     cliente_ndoc: body.cliente_ndoc || 0
                 }
             }
-            console.log('body.cond_iva :>> ', body.cond_iva);
             let letra = "";
             if (body.fiscal) {
                 if (pvData[0].cond_iva === 1) {
@@ -130,6 +128,7 @@ const factuMiddel = () => {
 
             if (body.fiscal) {
                 ivaList = await listaIva(productsList.listaProd, descuentoPer);
+
                 dataFiscal = {
                     CantReg: 1,
                     PtoVta: pvData[0].pv,
