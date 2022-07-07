@@ -237,8 +237,8 @@ const listaIva = async (listaProd: Array<IDetFactura>, descuento: number): Promi
                     } else {
                         listaIva.push({
                             Id: iva,
-                            BaseImp: ((item.total_neto) * 100),
-                            Importe: ((item.total_iva) * 100)
+                            BaseImp: (item.total_neto),
+                            Importe: (item.total_iva)
                         })
                     }
                 } else {
