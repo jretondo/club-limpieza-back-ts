@@ -79,6 +79,8 @@ const factuMiddel = () => {
             const descuento: number = body.descuentoPerc
             let descuentoNumber: number = 0
             let descuentoPer = 0
+            console.log(' productsList.totalNeto :>> ', productsList.totalNeto);
+            console.log(' productsList.totalIva :>> ', productsList.totalIva);
             if (descuento > 0) {
                 descuentoNumber = Math.round(((productsList.totalFact * (descuento / 100)) * 100)) / 100
                 descuentoPer = descuento
