@@ -70,6 +70,8 @@ export const fiscalMiddle = () => {
             }
         } catch (error) {
             console.error(error)
+            console.log('dataFiscal :>> ', req.body.dataFiscal);
+            console.log('newFact :>> ', req.body.newFact);
             next(new Error("Faltan datos o hay datos erroneos, controlelo!"))
         }
     }
