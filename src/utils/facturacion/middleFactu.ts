@@ -230,15 +230,15 @@ const listaIva = async (listaProd: Array<IDetFactura>, descuento: number): Promi
                     if (descuento > 0) {
                         listaIva.push({
                             Id: iva,
-                            BaseImp: (Math.round((item.total_neto - (item.total_neto * (descuento / 100))) * 100)) / 100,
-                            Importe: (Math.round((item.total_iva - (item.total_iva * (descuento / 100))) * 100)) / 100
+                            BaseImp: (item.total_neto - (item.total_neto * (descuento / 100))),
+                            Importe: (item.total_iva - (item.total_iva * (descuento / 100)))
                         })
 
                     } else {
                         listaIva.push({
                             Id: iva,
-                            BaseImp: (Math.round((item.total_neto) * 100)) / 100,
-                            Importe: (Math.round((item.total_iva) * 100)) / 100
+                            BaseImp: ((item.total_neto) * 100),
+                            Importe: ((item.total_iva) * 100)
                         })
                     }
                 } else {
@@ -246,14 +246,14 @@ const listaIva = async (listaProd: Array<IDetFactura>, descuento: number): Promi
                     if (descuento > 0) {
                         listaIva[index] = {
                             Id: iva,
-                            BaseImp: (Math.round((listaIva[index].BaseImp + (item.total_neto - (item.total_neto * (descuento / 100)))) * 100)) / 100,
-                            Importe: (Math.round((listaIva[index].Importe + (item.total_iva - (item.total_iva * (descuento / 100)))) * 100)) / 100
+                            BaseImp: (listaIva[index].BaseImp + (item.total_neto - (item.total_neto * (descuento / 100)))),
+                            Importe: (listaIva[index].Importe + (item.total_iva - (item.total_iva * (descuento / 100))))
                         }
                     } else {
                         listaIva[index] = {
                             Id: iva,
-                            BaseImp: (Math.round((listaIva[index].BaseImp + (item.total_neto)) * 100)) / 100,
-                            Importe: (Math.round((listaIva[index].Importe + (item.total_iva)) * 100)) / 100
+                            BaseImp: (listaIva[index].BaseImp + (item.total_neto)),
+                            Importe: (listaIva[index].Importe + (item.total_iva))
                         }
                     }
                 }
