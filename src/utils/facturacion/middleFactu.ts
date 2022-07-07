@@ -259,8 +259,17 @@ const listaIva = async (listaProd: Array<IDetFactura>, descuento: number): Promi
                 }
                 ivaAnt = 5;
                 if (key === listaProd.length - 1) {
-
-                    resolve(listaIva)
+                    const newList: Array<IIvaItem> = []
+                    listaIva.map((item, key2) => {
+                        newList.push({
+                            Id: item.Id,
+                            BaseImp: (Math.round(item.BaseImp * 100)) / 100,
+                            Importe: (Math.round(item.Importe * 100)) / 100
+                        })
+                        if (key2 === listaIva.length - 1) {
+                            resolve(newList)
+                        }
+                    })
                 }
             })
         })
