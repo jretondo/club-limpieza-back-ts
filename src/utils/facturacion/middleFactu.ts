@@ -197,20 +197,22 @@ const calcProdLista = (productsList: INewFactura["lista_prod"]): Promise<IfactCa
                 unidad_tipo_prod: dataProd[0].unidad,
                 id_prod: prod.id_prod,
                 total_prod: roundNumber(totalProd),
-                total_iva: roundNumber(totalIva),
+                total_iva: (totalIva),
                 alicuota_id: dataProd[0].iva,
                 total_costo: roundNumber(totalCosto),
-                total_neto: roundNumber(totalNeto),
+                total_neto: (totalNeto),
                 precio_ind: dataProd[0].vta_price
             }
 
             factura.listaProd.push(newProdFact);
             factura.totalFact = (Math.round((factura.totalFact + (totalProd)) * 100)) / 100;
-            factura.totalIva = (Math.round((factura.totalIva + (totalIva)) * 100)) / 100;
-            factura.totalNeto = (Math.round((factura.totalNeto + (totalNeto)) * 100)) / 100;
+            factura.totalIva = (factura.totalIva + (totalIva));
+            factura.totalNeto = (factura.totalNeto + (totalNeto));
             factura.totalCosto = (Math.round((factura.totalCosto + (totalCosto)) * 100)) / 100;
 
             if (key === productsList.length - 1) {
+                factura.totalIva = (Math.round((factura.totalIva) * 100)) / 100;
+                factura.totalNeto = (Math.round((factura.totalNeto) * 100)) / 100;
                 resolve(factura)
             }
         })
