@@ -278,11 +278,10 @@ export = (injectedStore: typeof StoreType) => {
             filters.push(filter);
         }
 
-        let aumentoFinal = 1 + porc;
+        let aumentoFinal = 1 + Number(porc);
         if (!aumento) {
             aumentoFinal = (- aumentoFinal);
         }
-        aumentoFinal = aumentoFinal + 1
 
         let roundNumber = 2
         if (roundBool) {
