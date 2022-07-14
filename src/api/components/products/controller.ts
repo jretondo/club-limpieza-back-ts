@@ -278,9 +278,9 @@ export = (injectedStore: typeof StoreType) => {
             filters.push(filter);
         }
 
-        let aumentoFinal = porc;
+        let aumentoFinal = 1 + porc;
         if (!aumento) {
-            aumentoFinal = (- porc);
+            aumentoFinal = (- aumentoFinal);
         }
         aumentoFinal = aumentoFinal + 1
 
