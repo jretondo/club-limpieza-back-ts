@@ -46,6 +46,7 @@ const factuMiddel = () => {
                 }
             }
             let letra = "";
+            console.log('body.cond_iva :>> ', body.cond_iva);
             if (body.fiscal) {
                 if (pvData[0].cond_iva === 1) {
                     if (body.cond_iva === 1) {
