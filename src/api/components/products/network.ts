@@ -1,3 +1,4 @@
+import { file } from './../../../network/response';
 import { Router, NextFunction, Response, Request } from 'express';
 import { success } from '../../../network/response';
 const router = Router();
@@ -24,6 +25,20 @@ const list = (
                 status: 200,
                 message: lista
             });
+        })
+        .catch(next)
+};
+
+const PDFList = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.printPDF(
+        String(req.query.query)
+    )
+        .then((dataFact: any) => {
+            file(req, res, dataFact.filePath, 'application/pdf', dataFact.fileName, dataFact);
         })
         .catch(next)
 };
@@ -160,6 +175,7 @@ const updateCost = (
 
 router.get("/details/:id", secure(EPermissions.productos), get);
 router.get("/getCat", secure(EPermissions.productos), getCategorys);
+router.get("/pdf", secure(EPermissions.productos), PDFList);
 router.get("/getGetSubCat", secure(EPermissions.productos), getSubCategorys);
 router.get("/:page", secure(EPermissions.productos), list);
 router.post("/varCost", secure(EPermissions.productos), varCost);
