@@ -1,3 +1,4 @@
+import { Iorder } from './../../../interfaces/Ifunctions';
 import { ETypesJoin } from '../../../enums/EfunctMysql';
 import { MetodosPago } from './../../../enums/EtablesDB';
 import { sendAvisoFact } from './../../../utils/sendEmails/sendAvisoFact';
@@ -66,12 +67,17 @@ export = (injectedStore: typeof StoreType) => {
         }
 
         let pages: Ipages;
+        let order: Iorder;
         if (page) {
             pages = {
                 currentPage: page,
                 cantPerPage: cantPerPage || 10,
-                order: Columns.facturas.id,
-                asc: true
+                order: Columns.facturas.create_time,
+                asc: false
+            };
+            order = {
+                asc: false,
+                columns: [Columns.facturas.create_time]
             };
             const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, pages);
             const cant = await store.list(Tables.FACTURAS, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters, undefined, undefined);
@@ -125,17 +131,21 @@ export = (injectedStore: typeof StoreType) => {
             colOrigin: Columns.prodPrincipal.id,
             type: ETypesJoin.left
         };
-
+        let order: Iorder;
         if (page) {
             pages = {
                 currentPage: page,
                 cantPerPage: cantPerPage || 10,
-                order: Columns.facturas.id,
+                order: Columns.facturas.create_time,
                 asc: true
+            };
+            order = {
+                asc: false,
+                columns: [Columns.facturas.create_time]
             };
             const totales = await store.list(Tables.FACTURAS, [`SUM(${Columns.facturas.total_fact}) AS SUMA`, Columns.facturas.forma_pago], filters, [Columns.facturas.forma_pago], undefined);
             const totales2 = await store.list(Tables.FACTURAS, [`SUM(${Columns.formasPago.importe}) AS SUMA`, Columns.formasPago.tipo], filters, [Columns.formasPago.tipo], undefined, joinQuery);
-            const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, pages, undefined, { columns: [Columns.facturas.fecha], asc: false });
+            const data = await store.list(Tables.FACTURAS, [ESelectFunct.all], filters, undefined, pages, undefined, order);
             const cant = await store.list(Tables.FACTURAS, [`COUNT(${ESelectFunct.all}) AS COUNT`], filters, undefined, undefined);
             const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
             return {
