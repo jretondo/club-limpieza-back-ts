@@ -520,7 +520,6 @@ export = (injectedStore: typeof StoreType) => {
             const idFact = item.id_fact_asoc
 
             await store.update(Tables.FACTURAS, { id_fact_asoc: idNC }, idFact)
-            console.log('idFact :>> ', idFact);
         })
 
         return {

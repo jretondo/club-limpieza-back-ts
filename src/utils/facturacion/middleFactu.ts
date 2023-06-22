@@ -46,17 +46,11 @@ const factuMiddel = () => {
                 }
             }
             let letra = "";
-            console.log('body.cond_iva :>> ', body.cond_iva);
             if (body.fiscal) {
                 if (pvData[0].cond_iva === 1) {
                     if (body.cond_iva === 1) {
-                        if (pvData[0].fact_m === true) {
-                            body.t_fact = 51
-                            letra = "M"
-                        } else {
-                            body.t_fact = 1
-                            letra = "A"
-                        }
+                        body.t_fact = 6
+                        letra = "B"
                     } else {
                         body.t_fact = 6
                         letra = "B"

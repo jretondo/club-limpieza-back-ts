@@ -244,7 +244,6 @@ export const selectContructor = (
             query = ` ${query} ORDER BY ${pages.order} ${asc} LIMIT ${desdePag}, ${pages.cantPerPage} `;
         }
     }
-    console.log('query :>> ', query);
     return query;
 }
 
