@@ -541,7 +541,7 @@ export = (injectedStore: typeof StoreType) => {
 
     const codigoVerificacionDescuento = async (total: string, descuentoPorcentaje: string, descuento: number, cliente: string) => {
         const codigoSeis = Math.floor(Math.random() * 900000) + 100000
-        const vencimiento = moment(new Date().setMinutes(new Date().getMinutes() + 1)).format("YYYY-MM-DD HH:mm:ss")
+        const vencimiento = moment(new Date().setMinutes(new Date().getMinutes() + 7)).format("YYYY-MM-DD HH:mm:ss")
         await store.insert(Tables.CODIGOS_APROBACION, { codigo: codigoSeis, vencimiento })
         await sendCode(
             total,
