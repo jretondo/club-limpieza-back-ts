@@ -22,6 +22,8 @@ import fs from 'fs';
 import { NextFunction } from 'express';
 import controller from '../clientes';
 import { zfill } from '../../../utils/cerosIzq';
+import { sendCode } from '../../../utils/sendEmails/sendCode';
+import moment from 'moment';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
@@ -537,6 +539,53 @@ export = (injectedStore: typeof StoreType) => {
         return await store.list(Tables.DET_FACTURAS, ["*"], filterList)
     }
 
+    const codigoVerificacionDescuento = async (total: string, descuentoPorcentaje: string, descuento: number, cliente: string) => {
+        const codigoSeis = Math.floor(Math.random() * 900000) + 100000
+        const vencimiento = moment(new Date().setMinutes(new Date().getMinutes() + 5)).format("YYYY-MM-DD HH:mm:ss")
+        await store.insert(Tables.CODIGOS_APROBACION, { codigo: codigoSeis, vencimiento })
+        await sendCode(
+            total,
+            descuentoPorcentaje,
+            descuento,
+            cliente,
+            codigoSeis,
+            "jretondo90@gmail.com",
+            "Código de aprobación de descuento",
+            false
+        )
+
+        return ""
+    }
+
+    const verificaCodigo = async (codigo: number) => {
+        const filterList: Array<IWhereParams> = [{
+            mode: EModeWhere.strict,
+            concat: EConcatWhere.and,
+            items: [{ column: Columns.codigosAprobacion.codigo, object: String(codigo) }]
+        }]
+        const list = await store.list(Tables.CODIGOS_APROBACION, ["*"], filterList)
+        if (list.length > 0) {
+            const fecha = moment(list[0].vencimiento).format("YYYY-MM-DD HH:mm:ss")
+            const fechaActual = moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
+            if (fechaActual > fecha) {
+                return {
+                    status: 400,
+                    msg: "El código ha vencido"
+                }
+            } else {
+                return {
+                    status: 200,
+                    msg: "Código válido"
+                }
+            }
+        } else {
+            return {
+                status: 400,
+                msg: "Código inválido"
+            }
+        }
+    }
+
     return {
         lastInvoice,
         list,
@@ -552,6 +601,8 @@ export = (injectedStore: typeof StoreType) => {
         correctorNC,
         newMovCtaCte,
         getFormasPago,
-        getDetFact
+        getDetFact,
+        codigoVerificacionDescuento,
+        verificaCodigo
     }
 }

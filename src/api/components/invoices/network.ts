@@ -216,6 +216,26 @@ const detFact = (
     }).catch(next)
 }
 
+const generarCodDescuento = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.codigoVerificacionDescuento(req.body.total, req.body.descuentoPorcentaje, req.body.descuento, req.body.cliente).then(data => {
+        success({ req, res, message: data });
+    }).catch(next)
+}
+
+const verificaCodigoDescuento = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.verificaCodigo(req.body.codigo).then(data => {
+        success({ req, res, message: data });
+    }).catch(next)
+}
+
 router.get("/details/:id", secure(EPermissions.ventas), get)
     .get("/cajaList/:page", secure(EPermissions.ventas), cajaList)
     .get("/cajaListPDF", secure(EPermissions.ventas), cajaListPDF)
@@ -226,6 +246,8 @@ router.get("/details/:id", secure(EPermissions.ventas), get)
     .get("/timeout", secure(EPermissions.ventas), timeoutProuf)
     .get("/afipData", secure(EPermissions.ventas), getFiscalDataInvoice)
     .get("/:page", secure(EPermissions.ventas), list)
+    .post("/codigoDescuento", secure(EPermissions.ventas), generarCodDescuento)
+    .post("/verificaCodigo", secure(EPermissions.ventas), verificaCodigoDescuento)
     .post("/notaCred", secure(EPermissions.ventas), devFactMiddle(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)
     .post("/notaCredPart", secure(EPermissions.ventas), factuMiddelDevPart(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)
     .post("/", secure(EPermissions.ventas), factuMiddel(), fiscalMiddle(), invoicePDFMiddle(), sendFactMiddle(), newInvoice)

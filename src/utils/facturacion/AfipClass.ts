@@ -90,7 +90,7 @@ export class AfipClass {
             return response;
         }
     }
-    async lastFact(pv: number, tipo: CbteTipos): Promise<{
+    async lastFact(pv: number, tipo: CbteTipos | any): Promise<{
         status: resStatus,
         data: number | string
     }> {
@@ -123,7 +123,7 @@ export class AfipClass {
             | FactMonotribServ
             | FactInscriptoProd
             | FactInscriptoServ
-            | string
+            | string | any
         }> {
         const nfact = await this.lastFact(data.PtoVta, data.CbteTipo);
         if (nfact.status === 200) {
@@ -190,7 +190,7 @@ export enum CbteTipos {
     "Factura M" = 51,
     "Nota de Débito M" = 52,
     "Nota de Crédito M" = 53,
-    "Recibo M" = 54,
+    "Recibo M" = 54
 }
 export enum TiposTributo {
     "Impuestos nacionales" = 1,

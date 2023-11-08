@@ -142,3 +142,10 @@ export interface IFormasPago {
     importe: number,
     tipo_txt: string
 }
+
+export interface ICodigoAprobacion {
+    id?: number,
+    codigo: number,
+    fecha: Date,
+    vencimiento: Date,
+}

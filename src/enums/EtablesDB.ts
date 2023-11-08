@@ -186,6 +186,13 @@ enum FormasPago {
     importe = "importe"
 }
 
+enum CodigosAprobacion {
+    id = "id",
+    codigo = "codigo",
+    fecha = "fecha",
+    vencimiento = "vencimiento"
+}
+
 export enum MetodosPago {
     efectivo = 0,
     mercaPago = 1,
@@ -210,7 +217,8 @@ export enum Tables {
     FACTURAS = "facturas",
     DET_FACTURAS = "detalle_fact",
     CTA_CTE = "cta_cte",
-    FORMAS_PAGO = "formas_pago"
+    FORMAS_PAGO = "formas_pago",
+    CODIGOS_APROBACION = "codigo_aprobacion"
 }
 
 export const Columns = {
@@ -228,5 +236,6 @@ export const Columns = {
     facturas: Facturas,
     detallesFact: DetalleFact,
     ctaCte: CtaCte,
-    formasPago: FormasPago
+    formasPago: FormasPago,
+    codigosAprobacion: CodigosAprobacion
 }
