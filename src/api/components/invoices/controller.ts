@@ -541,7 +541,7 @@ export = (injectedStore: typeof StoreType) => {
 
     const codigoVerificacionDescuento = async (total: string, descuentoPorcentaje: string, descuento: number, cliente: string) => {
         const codigoSeis = Math.floor(Math.random() * 900000) + 100000
-        const vencimiento = moment(new Date().setMinutes(new Date().getMinutes() + 5)).format("YYYY-MM-DD HH:mm:ss")
+        const vencimiento = moment(new Date().setMinutes(new Date().getMinutes() + 1)).format("YYYY-MM-DD HH:mm:ss")
         await store.insert(Tables.CODIGOS_APROBACION, { codigo: codigoSeis, vencimiento })
         await sendCode(
             total,
@@ -568,11 +568,13 @@ export = (injectedStore: typeof StoreType) => {
             const fecha = moment(list[0].vencimiento).format("YYYY-MM-DD HH:mm:ss")
             const fechaActual = moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
             if (fechaActual > fecha) {
+                await store.remove(Tables.CODIGOS_APROBACION, { id: list[0].id })
                 return {
                     status: 400,
                     msg: "El código ha vencido"
                 }
             } else {
+                await store.remove(Tables.CODIGOS_APROBACION, { id: list[0].id })
                 return {
                     status: 200,
                     msg: "Código válido"
