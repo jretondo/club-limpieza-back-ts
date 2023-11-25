@@ -8,39 +8,54 @@ import fs from 'fs';
 import { staticFolders } from '../../../enums/EStaticFiles';
 import OptimizeImg from '../../../utils/optimeImg';
 import { IJoin, Ipages, IWhere, IWhereParams } from 'interfaces/Ifunctions';
-import { INewProduct, INewPV } from 'interfaces/Irequests';
-import { IImgProd, IMovStock } from 'interfaces/Itables';
+import { INewProduct } from 'interfaces/Irequests';
+import { IImgProd } from 'interfaces/Itables';
 
 export = (injectedStore: typeof StoreType) => {
     let store = injectedStore;
 
-    const list = async (page?: number, item?: string, cantPerPage?: number) => {
+    const list = async (page?: number, item?: string, cantPerPage?: number, advanced?: boolean, name?: string, provider?: string, brand?: string) => {
         let filter: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
         let conID = false
         let idProd = 0
-        if (item) {
-            if (item.includes("id:")) {
-                conID = true
-                idProd = Number(item.replace("id:", ""))
-            } else {
-                const arrayStr = item.split(" ")
-                arrayStr.map(subItem => {
-                    filter = {
-                        mode: EModeWhere.like,
-                        concat: EConcatWhere.or,
-                        items: [
-                            { column: Columns.prodPrincipal.name, object: String(subItem) },
-                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
-                            { column: Columns.prodPrincipal.category, object: String(subItem) },
-                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
-                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
-                        ]
-                    };
-                    filters.push(filter);
-                })
+
+        if (advanced) {
+            filter = {
+                mode: EModeWhere.like,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.prodPrincipal.name, object: String(name) },
+                    { column: Columns.prodPrincipal.subcategory, object: String(brand) },
+                    { column: Columns.prodPrincipal.category, object: String(provider) }
+                ]
+            };
+            filters.push(filter);
+        } else {
+            if (item) {
+                if (item.includes("id:")) {
+                    conID = true
+                    idProd = Number(item.replace("id:", ""))
+                } else {
+                    const arrayStr = item.split(" ")
+                    arrayStr.map(subItem => {
+                        filter = {
+                            mode: EModeWhere.like,
+                            concat: EConcatWhere.or,
+                            items: [
+                                { column: Columns.prodPrincipal.name, object: String(subItem) },
+                                { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                                { column: Columns.prodPrincipal.category, object: String(subItem) },
+                                { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                                { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                            ]
+                        };
+                        filters.push(filter);
+                    })
+                }
             }
         }
+
         if (conID) {
             let data = await store.get(Tables.PRODUCTS_PRINCIPAL, idProd)
             data[0].id_prod = data[0].id
@@ -217,31 +232,44 @@ export = (injectedStore: typeof StoreType) => {
         }
     }
 
-    const printPDF = async (item?: string) => {
+    const printPDF = async (item?: string, advanced?: boolean, name?: string, provider?: string, brand?: string) => {
         let filter: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
         let conID = false
         let idProd = 0
-        if (item) {
-            if (item.includes("id:")) {
-                conID = true
-                idProd = Number(item.replace("id:", ""))
-            } else {
-                const arrayStr = item.split(" ")
-                arrayStr.map(subItem => {
-                    filter = {
-                        mode: EModeWhere.like,
-                        concat: EConcatWhere.or,
-                        items: [
-                            { column: Columns.prodPrincipal.name, object: String(subItem) },
-                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
-                            { column: Columns.prodPrincipal.category, object: String(subItem) },
-                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
-                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
-                        ]
-                    };
-                    filters.push(filter);
-                })
+        if (advanced) {
+            filter = {
+                mode: EModeWhere.like,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.prodPrincipal.name, object: String(name) },
+                    { column: Columns.prodPrincipal.subcategory, object: String(brand) },
+                    { column: Columns.prodPrincipal.category, object: String(provider) }
+                ]
+            };
+            filters.push(filter);
+        } else {
+            if (item) {
+                if (item.includes("id:")) {
+                    conID = true
+                    idProd = Number(item.replace("id:", ""))
+                } else {
+                    const arrayStr = item.split(" ")
+                    arrayStr.map(subItem => {
+                        filter = {
+                            mode: EModeWhere.like,
+                            concat: EConcatWhere.or,
+                            items: [
+                                { column: Columns.prodPrincipal.name, object: String(subItem) },
+                                { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                                { column: Columns.prodPrincipal.category, object: String(subItem) },
+                                { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                                { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                            ]
+                        };
+                        filters.push(filter);
+                    })
+                }
             }
         }
         if (conID) {
@@ -308,46 +336,89 @@ export = (injectedStore: typeof StoreType) => {
         return await store.list(Tables.PRODUCTS_PRINCIPAL, [Columns.prodPrincipal.subcategory], undefined, groupBy, undefined, undefined);
     }
 
-    const varCost = async (aumento: boolean, porc: number, round: number, roundBool: boolean, item?: string) => {
+    const varCost = async (aumento: boolean, porc: number, round: number, roundBool: boolean, fixAmount: boolean, item?: string, advanced?: boolean, name?: string, provider?: string, brand?: string) => {
         let filter: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
-        if (item) {
+        if (advanced) {
             filter = {
                 mode: EModeWhere.like,
-                concat: EConcatWhere.or,
+                concat: EConcatWhere.and,
                 items: [
-                    { column: Columns.prodPrincipal.name, object: String(item) },
-                    { column: Columns.prodPrincipal.subcategory, object: String(item) },
-                    { column: Columns.prodPrincipal.category, object: String(item) },
-                    { column: Columns.prodPrincipal.short_decr, object: String(item) },
-                    { column: Columns.prodPrincipal.cod_barra, object: String(item) }
+                    { column: Columns.prodPrincipal.name, object: String(name) },
+                    { column: Columns.prodPrincipal.subcategory, object: String(brand) },
+                    { column: Columns.prodPrincipal.category, object: String(provider) }
                 ]
             };
             filters.push(filter);
+        } else {
+            if (item) {
+
+                const arrayStr = item.split(" ")
+                arrayStr.map(subItem => {
+                    filter = {
+                        mode: EModeWhere.like,
+                        concat: EConcatWhere.or,
+                        items: [
+                            { column: Columns.prodPrincipal.name, object: String(subItem) },
+                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                            { column: Columns.prodPrincipal.category, object: String(subItem) },
+                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                        ]
+                    };
+                    filters.push(filter);
+                })
+            }
         }
 
-        let aumentoFinal = 1 + Number(porc);
-        if (!aumento) {
-            aumentoFinal = (- aumentoFinal);
+        if (fixAmount) {
+            let aumentoFinal = Number(porc);
+            if (!aumento) {
+                aumentoFinal = (- aumentoFinal);
+            }
+
+            let roundNumber = 2
+            if (roundBool) {
+                roundNumber = round
+            }
+
+            const updateCol: Array<IWhere> = [
+                {
+                    column: Columns.prodPrincipal.precio_compra,
+                    object: `(ROUND((${Columns.prodPrincipal.precio_compra} + ${aumentoFinal}), ${roundNumber}))`
+                },
+                {
+                    column: Columns.prodPrincipal.vta_price,
+                    object: `(ROUND((${Columns.prodPrincipal.vta_price} * (1 + (${aumentoFinal} / (${Columns.prodPrincipal.precio_compra} - ${aumentoFinal})))), ${roundNumber}))`
+                },
+            ];
+
+            await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
+        } else {
+            let aumentoFinal = 1 + Number(porc);
+            if (!aumento) {
+                aumentoFinal = (- aumentoFinal);
+            }
+
+            let roundNumber = 2
+            if (roundBool) {
+                roundNumber = round
+            }
+
+            const updateCol: Array<IWhere> = [
+                {
+                    column: Columns.prodPrincipal.precio_compra,
+                    object: `(ROUND((${Columns.prodPrincipal.precio_compra} * ${aumentoFinal}), ${roundNumber}))`
+                },
+                {
+                    column: Columns.prodPrincipal.vta_price,
+                    object: `(ROUND((${Columns.prodPrincipal.vta_price} * ${aumentoFinal}), ${roundNumber}))`
+                },
+            ];
+
+            await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
         }
 
-        let roundNumber = 2
-        if (roundBool) {
-            roundNumber = round
-        }
-
-        const updateCol: Array<IWhere> = [
-            {
-                column: Columns.prodPrincipal.precio_compra,
-                object: `(ROUND((${Columns.prodPrincipal.precio_compra} * ${aumentoFinal}), ${roundNumber}))`
-            },
-            {
-                column: Columns.prodPrincipal.vta_price,
-                object: `(ROUND((${Columns.prodPrincipal.vta_price} * ${aumentoFinal}), ${roundNumber}))`
-            },
-        ];
-
-        await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
     };
 
     const aplicatePorcGan = async (porc: number, item?: string) => {

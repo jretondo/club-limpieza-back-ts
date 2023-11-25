@@ -16,7 +16,11 @@ const list = (
     Controller.list(
         Number(req.params.page),
         String(req.query.query),
-        Number(req.query.cantPerPage)
+        Number(req.query.cantPerPage),
+        Boolean(req.query.advanced),
+        String(req.query.name),
+        String(req.query.provider),
+        String(req.query.brand)
     )
         .then((lista: any) => {
             success({
@@ -35,7 +39,11 @@ const PDFList = (
     next: NextFunction
 ) => {
     Controller.printPDF(
-        String(req.query.query)
+        String(req.query.query),
+        Boolean(req.query.advanced),
+        String(req.query.name),
+        String(req.query.provider),
+        String(req.query.brand)
     )
         .then((dataFact: any) => {
             file(req, res, dataFact.filePath, 'application/pdf', dataFact.fileName, dataFact);
@@ -53,7 +61,12 @@ const varCost = (
         Number(req.body.porc),
         Number(req.body.round),
         Boolean(req.body.roundBool),
-        String(req.query.query)
+        Boolean(req.body.fixAmount),
+        String(req.query.query),
+        Boolean(req.query.advanced),
+        String(req.query.name),
+        String(req.query.provider),
+        String(req.query.brand)
     )
         .then(() => {
             success({
