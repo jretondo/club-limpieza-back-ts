@@ -389,7 +389,7 @@ export = (injectedStore: typeof StoreType) => {
                 },
                 {
                     column: Columns.prodPrincipal.vta_price,
-                    object: `(ROUND((${Columns.prodPrincipal.vta_price} * (1 + (${aumentoFinal} / (${Columns.prodPrincipal.precio_compra} - ${aumentoFinal})))), ${roundNumber}))`
+                    object: `(ROUND(((1 + ${Columns.prodPrincipal.iva}/100) * (1 + ${Columns.prodPrincipal.porc_minor}/100) * (${Columns.prodPrincipal.precio_compra})), ${roundNumber}))`
                 },
             ];
 
