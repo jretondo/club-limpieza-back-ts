@@ -65,6 +65,7 @@ const factuMiddel = () => {
             } else {
                 body.t_fact = 0
                 letra = "X"
+                body.forma_pago = 0
             }
 
             if (body.t_fact === 6 && productsList.totalFact < 10000 && body.cliente_tdoc === 99) {
