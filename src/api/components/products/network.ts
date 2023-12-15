@@ -77,6 +77,31 @@ const varCost = (
         .catch(next)
 };
 
+const updateList = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.updateList(
+        req.body.marcaUpdate,
+        req.body.proveedorUpdate,
+        req.body.costoUpdate,
+        req.body.ventaUpdate,
+        String(req.query.query),
+        Boolean(req.query.advanced),
+        String(req.query.name),
+        String(req.query.provider),
+        String(req.query.brand)
+    )
+        .then(() => {
+            success({
+                req,
+                res
+            });
+        })
+        .catch(next)
+};
+
 const aplicatePorcGan = (
     req: Request,
     res: Response,
@@ -191,6 +216,7 @@ router.get("/getCat", secure(EPermissions.productos), getCategorys);
 router.get("/pdf", secure(EPermissions.productos), PDFList);
 router.get("/getGetSubCat", secure(EPermissions.productos), getSubCategorys);
 router.get("/:page", secure(EPermissions.productos), list);
+router.put("/updateList", secure(EPermissions.productos), updateList);
 router.post("/varCost", secure(EPermissions.productos), varCost);
 router.post("/changePorc", secure(EPermissions.productos), aplicatePorcGan);
 router.put("/cost/:id", secure(EPermissions.productos), updateCost);

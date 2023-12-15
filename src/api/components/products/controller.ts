@@ -421,6 +421,111 @@ export = (injectedStore: typeof StoreType) => {
 
     };
 
+
+    const updateList = async (
+        marcaUpdate?: string,
+        proveedorUpdate?: string,
+        costoUpdate?: number,
+        ventaUpdate?: number,
+        item?: string,
+        advanced?: boolean,
+        name?: string,
+        provider?: string,
+        brand?: string
+    ) => {
+        let filter: IWhereParams | undefined = undefined;
+        let filters: Array<IWhereParams> = [];
+        if (advanced) {
+            filter = {
+                mode: EModeWhere.like,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.prodPrincipal.name, object: String(name) },
+                    { column: Columns.prodPrincipal.subcategory, object: String(brand) },
+                    { column: Columns.prodPrincipal.category, object: String(provider) }
+                ]
+            };
+            filters.push(filter);
+        } else {
+            if (item) {
+
+                const arrayStr = item.split(" ")
+                arrayStr.map(subItem => {
+                    filter = {
+                        mode: EModeWhere.like,
+                        concat: EConcatWhere.or,
+                        items: [
+                            { column: Columns.prodPrincipal.name, object: String(subItem) },
+                            { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                            { column: Columns.prodPrincipal.category, object: String(subItem) },
+                            { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                            { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                        ]
+                    };
+                    filters.push(filter);
+                })
+            }
+        }
+
+        if (costoUpdate) {
+            const updateCol: Array<IWhere> = [
+                {
+                    column: Columns.prodPrincipal.precio_compra,
+                    object: `(ROUND((${costoUpdate}), 2))`
+                }
+            ];
+
+            await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
+        }
+        if (ventaUpdate) {
+            const updateCol: Array<IWhere> = [
+                {
+                    column: Columns.prodPrincipal.vta_price,
+                    object: `(ROUND((${ventaUpdate}), 2))`
+                }
+            ];
+
+            await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
+        }
+        if (marcaUpdate) {
+            const updateCol: Array<IWhere> = [
+                {
+                    column: Columns.prodPrincipal.subcategory,
+                    object: `'${marcaUpdate}'`
+                }
+            ];
+
+            await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
+        }
+        if (proveedorUpdate) {
+            const updateCol: Array<IWhere> = [
+                {
+                    column: Columns.prodPrincipal.category,
+                    object: `'${proveedorUpdate}'`
+                }
+            ];
+
+            await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
+        }
+
+        if (costoUpdate || ventaUpdate) {
+            const compraConIva = `(${Columns.prodPrincipal.precio_compra} * (1 + ${Columns.prodPrincipal.iva}/100))`
+            const ganancia = `(${Columns.prodPrincipal.vta_price} - ${compraConIva})`
+            const porcGanancia = `(${ganancia} / ${compraConIva}) * 100`
+            const updateCol: Array<IWhere> = [
+                {
+                    column: Columns.prodPrincipal.porc_minor,
+                    object: `(ROUND(( ${porcGanancia}), 0))`
+                }
+            ];
+
+            await store.updateWhere(Tables.PRODUCTS_PRINCIPAL, updateCol, filters);
+        }
+
+        return ""
+
+    };
+
     const aplicatePorcGan = async (porc: number, item?: string) => {
         let filter: IWhereParams | undefined = undefined;
         let filters: Array<IWhereParams> = [];
@@ -480,6 +585,7 @@ export = (injectedStore: typeof StoreType) => {
         getPrincipal,
         asignarCodBarra,
         updateCost,
-        printPDF
+        printPDF,
+        updateList
     }
 }
