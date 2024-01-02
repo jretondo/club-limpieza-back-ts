@@ -215,7 +215,7 @@ router.get("/details/:id", secure(EPermissions.productos), get);
 router.get("/getCat", secure(EPermissions.productos), getCategorys);
 router.get("/pdf", secure(EPermissions.productos), PDFList);
 router.get("/getGetSubCat", secure(EPermissions.productos), getSubCategorys);
-router.get("/:page", secure(EPermissions.productos), list);
+router.get("/:page", secure(), list);
 router.put("/updateList", secure(EPermissions.productos), updateList);
 router.post("/varCost", secure(EPermissions.productos), varCost);
 router.post("/changePorc", secure(EPermissions.productos), aplicatePorcGan);
