@@ -69,7 +69,12 @@ export class App {
     }
 
     listenProd(): void {
-        this.app.listen(this.app.get('port'));
-        console.log(`Conectado al puerto ${this.app.get('port')}`)
+        var options = {
+            key: fs.readFileSync(path.join(__dirname, "..", "..", "..", "..", "..", "nekoadmin.key"), 'utf8'),
+            cert: fs.readFileSync(path.join(__dirname, "..", "..", "..", "..", "..", "nekoadmin.crt"), 'utf8')
+        };
+        https.createServer(options, this.app).listen(this.app.get('port'), () => {
+            console.log(`Conectado al puerto ${this.app.get('port')}`)
+        });
     }
 }
