@@ -14,7 +14,7 @@ const list = (
     res: Response,
     next: NextFunction
 ) => {
-    Controller.list(undefined, req.body.query)
+    Controller.list(undefined, String(req.query.search))
         .then((lista: any) => {
             success({
                 req,
