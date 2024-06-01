@@ -8,6 +8,7 @@ services:
       - /etc/letsencrypt/live/nekoadmin.com.ar-0002/fullchain.pem:/etc/letsencrypt/live/nekoadmin.com.ar-0002/fullchain.pem:ro
       - /etc/letsencrypt/live/nekoadmin.com.ar-0002/privkey.pem:/etc/letsencrypt/live/nekoadmin.com.ar-0002/privkey.pem:ro
       - ./public:/app/public
+      - ./views:/app/views
       - ./src:/app/src
       - ./tsconfig.json:/app/tsconfig.json
     ports:
