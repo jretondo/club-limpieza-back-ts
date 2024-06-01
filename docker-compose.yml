@@ -11,6 +11,6 @@ services:
       - ./src:/app/src
       - ./tsconfig.json:/app/tsconfig.json
     ports:
-      - '3008:3008'
+      - '3007:3007'
     env_file:
       - .env
