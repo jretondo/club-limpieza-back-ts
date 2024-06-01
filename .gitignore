@@ -5,6 +5,5 @@ package-lock.json
 public
 *.key
 *.crt
-src/api/ecosystem.config.ts
 public
 .vscode

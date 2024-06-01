@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  club-limpieza-app-prod:
+    image: node-point-sell-prod:1.0
+    working_dir: /app
+    volumes:
+      - /etc/letsencrypt/live/nekoadmin.com.ar-0002/fullchain.pem:/etc/letsencrypt/live/nekoadmin.com.ar-0002/fullchain.pem:ro
+      - /etc/letsencrypt/live/nekoadmin.com.ar-0002/privkey.pem:/etc/letsencrypt/live/nekoadmin.com.ar-0002/privkey.pem:ro
+      - ./public:/app/public
+      - ./src:/app/src
+      - ./tsconfig.json:/app/tsconfig.json
+    ports:
+      - '3008:3008'
+    env_file:
+      - .env
