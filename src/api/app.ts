@@ -72,11 +72,11 @@ export class App {
   listenProd(): void {
     var options = {
       key: fs.readFileSync(
-        path.join(__dirname, '..', '..', '..', '..', '..', 'nekoadmin.key'),
+        path.join('/etc/letsencrypt/live/nekoadmin.com.ar-0002/privkey.pem'),
         'utf8',
       ),
       cert: fs.readFileSync(
-        path.join(__dirname, '..', '..', '..', '..', '..', 'nekoadmin.crt'),
+        path.join('/etc/letsencrypt/live/nekoadmin.com.ar-0002/fullchain.pem'),
         'utf8',
       ),
     };
