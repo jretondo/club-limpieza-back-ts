@@ -566,29 +566,7 @@ export = (injectedStore: typeof StoreType) => {
       fs.unlinkSync(filePath);
     }, 6000);
     const difTime = Number(new Date()) - timer;
-    if (difTime > 5000) {
-      sendAvisoFact(
-        `${newFact.letra} ${zfill(newFact.pv, 5)} - ${zfill(newFact.cbte, 8)}`,
-        newFact.nota_cred,
-        newFact.total_fact,
-        String(userData.email),
-        newFact.forma_pago === 0
-          ? 'Efectivo'
-          : newFact.forma_pago === 1
-          ? 'Mercado Pago'
-          : newFact.forma_pago === 2
-          ? 'Débito'
-          : newFact.forma_pago === 3
-          ? 'Crédito'
-          : newFact.forma_pago === 4
-          ? 'Cuenta Corriente'
-          : 'Varios',
-        userData,
-        newFact.raz_soc_cliente,
-        newFact.tipo_doc_cliente,
-        newFact.n_doc_cliente,
-      );
-    }
+    console.log('difTime :>> ', difTime);
     const dataFact = {
       fileName,
       filePath,
