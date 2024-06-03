@@ -128,7 +128,7 @@ export = (injectedStore: typeof StoreType) => {
     page?: number,
     cantPerPage?: number,
   ): Promise<any> => {
-    const filters: Array<IWhereParams> = [
+    let filters: Array<IWhereParams> = [
       {
         mode: EModeWhere.strict,
         concat: EConcatWhere.and,
@@ -138,6 +138,16 @@ export = (injectedStore: typeof StoreType) => {
         ],
       },
     ];
+
+    if (!userId) {
+      filters = [
+        {
+          mode: EModeWhere.strict,
+          concat: EConcatWhere.and,
+          items: [{ column: Columns.facturas.pv_id, object: String(ptoVtaId) }],
+        },
+      ];
+    }
 
     const filter1: IWhereParams = {
       mode: EModeWhere.higherEqual,
