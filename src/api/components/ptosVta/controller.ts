@@ -134,6 +134,11 @@ export = (injectedStore: typeof StoreType) => {
   };
 
   const getUserPv = async (user: IUser) => {
+    if (!user.pv) {
+      return {
+        data: await store.list(Tables.PUNTOS_VENTA, [ESelectFunct.all]),
+      };
+    }
     return {
       data: await store.query(Tables.PUNTOS_VENTA, { pv: user.pv }),
     };
