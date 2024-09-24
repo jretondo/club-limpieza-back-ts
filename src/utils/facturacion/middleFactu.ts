@@ -46,21 +46,18 @@ const factuMiddel = () => {
         };
       }
       let letra = '';
+
       if (body.fiscal) {
-        if (pvData[0].cond_iva === 1) {
-          if (body.cond_iva === 1) {
-            body.t_fact = 6;
-            letra = 'B';
-          } else {
-            body.t_fact = 6;
-            letra = 'B';
-          }
-        } else if (pvData[0].cond_iva === 4) {
-          body.t_fact = 6;
-          letra = '6';
-        } else {
-          body.t_fact = 11;
+        if (body.t_fact === 51) {
+          letra = 'M';
+        } else if (body.t_fact === 1) {
+          letra = 'A';
+        } else if (body.t_fact === 6) {
+          letra = 'B';
+        } else if (body.t_fact === 11) {
           letra = 'C';
+        } else {
+          letra = 'X';
         }
       } else {
         body.t_fact = 0;
