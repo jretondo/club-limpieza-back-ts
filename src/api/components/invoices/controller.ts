@@ -726,16 +726,32 @@ export = (injectedStore: typeof StoreType) => {
       codigo: codigoSeis,
       vencimiento,
     });
-    await sendCode(
-      total,
-      descuentoPorcentaje,
-      descuento,
-      cliente,
-      codigoSeis,
-      'foy15.95@gmail.com',
-      'Código de aprobación de descuento',
-      false,
-    );
+
+    const enviroment = process.env.ENTORNO;
+
+    if (enviroment === 'TEST') {
+      await sendCode(
+        total,
+        descuentoPorcentaje,
+        descuento,
+        cliente,
+        codigoSeis,
+        'jretondo90@gmail.com',
+        'Código de aprobación de descuento',
+        false,
+      );
+    } else {
+      await sendCode(
+        total,
+        descuentoPorcentaje,
+        descuento,
+        cliente,
+        codigoSeis,
+        'foy15.95@gmail.com',
+        'Código de aprobación de descuento',
+        false,
+      );
+    }
 
     return '';
   };
