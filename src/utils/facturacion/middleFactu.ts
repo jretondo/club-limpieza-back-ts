@@ -75,10 +75,6 @@ const factuMiddel = () => {
       let descuento: number = body.descuentoPerc;
       let descuentoNumber: number = 0;
       let descuentoPer = 0;
-
-      if (descuento === 0 && body.forma_pago === 0) {
-        descuento = 10;        
-      }
       
       if (descuento > 100) {
         throw new Error('Descuento erroneo!');
