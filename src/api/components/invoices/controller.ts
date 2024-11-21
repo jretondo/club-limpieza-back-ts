@@ -1,7 +1,6 @@
 import { Iorder } from './../../../interfaces/Ifunctions';
 import { ETypesJoin } from '../../../enums/EfunctMysql';
 import { MetodosPago } from './../../../enums/EtablesDB';
-import { sendAvisoFact } from './../../../utils/sendEmails/sendAvisoFact';
 import { IFormasPago, IMovCtaCte } from './../../../interfaces/Itables';
 import { createListSellsPDF } from './../../../utils/facturacion/lists/createListSellsPDF';
 import {
@@ -22,9 +21,10 @@ import ControllerClientes from '../clientes';
 import fs from 'fs';
 import { NextFunction } from 'express';
 import controller from '../clientes';
-import { zfill } from '../../../utils/cerosIzq';
 import { sendCode } from '../../../utils/sendEmails/sendCode';
 import moment from 'moment';
+import path from 'path';
+import { staticFolders } from '../../../enums/EStaticFiles';
 
 export = (injectedStore: typeof StoreType) => {
   let store = injectedStore;
@@ -792,6 +792,40 @@ export = (injectedStore: typeof StoreType) => {
     }
   };
 
+  const resetTokenAfip = async () => {
+    const tokenFolder = staticFolders.tokenAfip;
+    fs.readdir(tokenFolder, (err, files) => {
+      if (err) {
+        console.log('err :>> ', err);
+      }
+      for (const file of files) {
+        fs.unlink(path.join(tokenFolder, file), (err) => {
+          if (err) {
+            console.log('err :>> ', err);
+          }
+        });
+      }
+    });
+    return {
+      status: 200,
+      msg: 'Token reseteado',
+    };
+  };
+
+  const deletePayment = async (id: number) => {
+    const paymentDeleted = await store.remove(Tables.FACTURAS, { id });
+    const payment = await store.remove(Tables.FORMAS_PAGO, { id_fact: id });
+    const ctaCte = await store.remove(Tables.CTA_CTE, { id_factura: id });
+    return {
+      status: 200,
+      msg: {
+        paymentDeleted,
+        payment,
+        ctaCte,
+      },
+    };
+  };
+
   return {
     lastInvoice,
     list,
@@ -810,5 +844,7 @@ export = (injectedStore: typeof StoreType) => {
     getDetFact,
     codigoVerificacionDescuento,
     verificaCodigo,
+    resetTokenAfip,
+    deletePayment,
   };
 };

@@ -280,6 +280,20 @@ export = (injectedStore: typeof StoreType) => {
     return dataFact;
   };
 
+  const deletePayment = async (id: number) => {
+    const paymentDeleted = await store.remove(Tables.FACTURAS, { id });
+    const payment = await store.remove(Tables.FORMAS_PAGO, { id_fact: id });
+    const ctaCte = await store.remove(Tables.CTA_CTE, { id_factura: id });
+    return {
+      status: 200,
+      msg: {
+        paymentDeleted,
+        payment,
+        ctaCte,
+      },
+    };
+  };
+
   return {
     list,
     upsert,
@@ -289,5 +303,6 @@ export = (injectedStore: typeof StoreType) => {
     listCtaCteClient,
     registerPayment,
     getDataPayment,
+    deletePayment,
   };
 };
