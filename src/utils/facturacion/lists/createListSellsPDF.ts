@@ -83,6 +83,18 @@ export const createListSellsPDF = async (
         typeNumber: 4,
         typeStr: 'Cuenta Corriente',
       },
+      {
+        typeNumber: 5,
+        typeStr: 'Varios Metodos',
+      },
+      {
+        typeNumber: 6,
+        typeStr: 'Cuenta Corriente',
+      },
+      {
+        typeNumber: 7,
+        typeStr: 'Transferencia',
+      },
     ];
 
     metodos.map((metodo, key) => {
