@@ -212,7 +212,7 @@ export const invoicePDFMiddle = () => {
         totalDesc: formatMoney(newFact.descuento),
       };
       let formapagoStr = '';
-      switch (newFact.forma_pago) {
+      switch (Number(newFact.forma_pago)) {
         case 0:
           formapagoStr = 'EFECTIVO';
           break;
@@ -227,6 +227,9 @@ export const invoicePDFMiddle = () => {
           break;
         case 4:
           formapagoStr = 'CUENTA CORRIENTE';
+          break;
+        case 7:
+          formapagoStr = 'TRANSFERENCIA';
           break;
         default:
           formapagoStr = 'OTROS';

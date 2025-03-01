@@ -135,6 +135,9 @@ export const paymentPDFMiddle = () => {
         case 0:
           formapagoStr = 'CUENTA CORRIENTE';
           break;
+        case 7:
+          formapagoStr = 'TRANSFERENCIA';
+          break;
         default:
           break;
       }

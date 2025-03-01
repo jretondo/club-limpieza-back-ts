@@ -153,6 +153,9 @@ export const createListSellsPDF = async (
         case 5:
           formaPagoStr = 'Varios Metodos';
           break;
+        case 7:
+          formaPagoStr = 'Transferencia';
+          break;
         default:
           formaPagoStr = 'Efectivo';
           break;
