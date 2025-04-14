@@ -718,6 +718,7 @@ export = (injectedStore: typeof StoreType) => {
     descuentoPorcentaje: string,
     descuento: number,
     cliente: string,
+    pvId: number,
   ) => {
     const codigoSeis = Math.floor(Math.random() * 900000) + 100000;
     const vencimiento = moment(
@@ -752,6 +753,19 @@ export = (injectedStore: typeof StoreType) => {
         'Código de aprobación de descuento',
         false,
       );
+
+      if (Number(pvId) === 2) {
+        await sendCode(
+          total,
+          descuentoPorcentaje,
+          descuento,
+          cliente,
+          codigoSeis,
+          'rodriidiarte@gmail.com',
+          'Código de aprobación de descuento',
+          false,
+        );
+      }
     }
 
     return '';

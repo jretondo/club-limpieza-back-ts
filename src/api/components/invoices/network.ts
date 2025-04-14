@@ -218,6 +218,7 @@ const generarCodDescuento = (
     req.body.descuentoPorcentaje,
     req.body.descuento,
     req.body.cliente,
+    req.body.pvId,
   )
     .then((data) => {
       success({ req, res, message: data });
