@@ -730,7 +730,7 @@ export = (injectedStore: typeof StoreType) => {
     });
 
     const enviroment = process.env.ENTORNO;
-
+    console.log('pvId :>> ', pvId);
     if (enviroment === 'TEST') {
       await sendCode(
         total,
@@ -755,6 +755,7 @@ export = (injectedStore: typeof StoreType) => {
       );
 
       if (Number(pvId) === 2) {
+        console.log('Se envia :>> ');
         await sendCode(
           total,
           descuentoPorcentaje,
