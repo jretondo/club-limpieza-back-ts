@@ -49,7 +49,7 @@ export const sendCode = async (
             resolve(false);
           } else {
             try {
-              resolve(await sendEmail('jretondo90@gmail.com', subject, data));
+              resolve(await sendEmail(email, subject, data));
             } catch (error) {
               console.error(error);
               reject(error);
