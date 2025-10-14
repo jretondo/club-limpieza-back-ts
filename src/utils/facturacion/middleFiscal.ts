@@ -52,7 +52,11 @@ export const fiscalMiddle = () => {
           keyDir = pvData.key_file || 'drop.key';
           entornoAlt = true;
         }
-        console.log('newFact.cuit_origen :>> ', newFact.cuit_origen);
+
+        certDir = pvData.cert_file || 'drop_test.crt';
+        keyDir = pvData.key_file || 'drop.key';
+        entornoAlt = true;
+
         const afip = new AfipClass(
           newFact.cuit_origen,
           certDir,
@@ -84,7 +88,7 @@ export const fiscalMiddle = () => {
       console.log('dataFiscal :>> ', req.body.dataFiscal);
       console.log('dataFiscal :>> ', req.body.dataFiscal.Iva);
       console.log('newFact :>> ', req.body.newFact);
-      next(new Error('Faltan datos o hay datos erroneos, controlelo!'));
+      next(new Error(req.body.dataFiscal));
     }
   };
   return middleware;
