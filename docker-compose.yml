@@ -18,3 +18,8 @@ services:
       - '3007:3007'
     env_file:
       - .env
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '400m'
