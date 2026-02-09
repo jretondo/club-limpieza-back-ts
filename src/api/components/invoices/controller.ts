@@ -490,8 +490,8 @@ export = (injectedStore: typeof StoreType) => {
       | FactMonotribServNC
       | any,
     productsList: Array<IDetFactura>,
-    fileName: string,
-    filePath: string,
+    fileName: string | undefined = undefined,
+    filePath: string | undefined = undefined,
     timer: number,
     userData: IUser,
     variosPagos: Array<{
@@ -573,9 +573,11 @@ export = (injectedStore: typeof StoreType) => {
       );
     }
 
-    setTimeout(() => {
-      fs.unlinkSync(filePath);
-    }, 6000);
+    if (filePath) {
+      setTimeout(() => {
+        fs.unlinkSync(filePath);
+      }, 6000);
+    }
     const difTime = Number(new Date()) - timer;
     console.log('difTime :>> ', difTime);
     const dataFact = {

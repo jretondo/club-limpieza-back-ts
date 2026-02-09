@@ -12,6 +12,31 @@ import dataFactMiddle from '../../../utils/facturacion/middleDataFact';
 import devFactMiddle from '../../../utils/facturacion/middleDevFact';
 import factuMiddelDevPart from '../../../utils/facturacion/middleFactuDevPart';
 
+const shouldGeneratePdf = (value: unknown) => {
+  if (value === undefined || value === null) {
+    return true;
+  }
+  if (typeof value === 'string') {
+    return value.toLowerCase() !== 'false';
+  }
+  if (typeof value === 'number') {
+    return value !== 0;
+  }
+  return value !== false;
+};
+
+const maybeGeneratePdf = (req: Request, res: Response, next: NextFunction) => {
+  if (!shouldGeneratePdf(req.body.generar_pdf)) {
+    return next();
+  }
+  return invoicePDFMiddle()(req, res, (err?: unknown) => {
+    if (err) {
+      return next(err);
+    }
+    return sendFactMiddle()(req, res, next);
+  });
+};
+
 const list = (req: Request, res: Response, next: NextFunction) => {
   Controller.list(
     Number(req.query.pvId),
@@ -62,6 +87,7 @@ const getLast = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const newInvoice = (req: Request, res: Response, next: NextFunction) => {
+  const generarPdf = shouldGeneratePdf(req.body.generar_pdf);
   Controller.newInvoice(
     req.body.pvData,
     req.body.newFact,
@@ -75,14 +101,21 @@ const newInvoice = (req: Request, res: Response, next: NextFunction) => {
     next,
   )
     .then((dataFact) => {
-      file(
-        req,
-        res,
-        dataFact.filePath,
-        'application/pdf',
-        dataFact.fileName,
-        dataFact,
-      );
+      if (generarPdf) {
+        if (!dataFact.filePath || !dataFact.fileName) {
+          return next(new Error('No se pudo generar el PDF'));
+        }
+        file(
+          req,
+          res,
+          dataFact.filePath,
+          'application/pdf',
+          dataFact.fileName,
+          dataFact,
+        );
+        return;
+      }
+      success({ req, res, message: dataFact });
     })
     .catch(next);
 };
@@ -289,8 +322,7 @@ router
     secure(EPermissions.ventas),
     factuMiddel(),
     fiscalMiddle(),
-    invoicePDFMiddle(),
-    sendFactMiddle(),
+    maybeGeneratePdf,
     newInvoice,
   )
   .delete('/:id', secure(EPermissions.ventas), remove)
