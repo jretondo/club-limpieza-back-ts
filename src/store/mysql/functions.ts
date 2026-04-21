@@ -236,7 +236,7 @@ export const selectContructor = (
         if (!pages.asc) {
             asc = "DESC"
         }
-        const desdePag = (((pages.currentPage) - 1) * 10);
+        const desdePag = (((pages.currentPage) - 1) * pages.cantPerPage);
 
         if (order) {
             query = ` ${query} ${strOrder} LIMIT ${desdePag}, ${pages.cantPerPage} `;

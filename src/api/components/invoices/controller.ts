@@ -29,6 +29,48 @@ import { staticFolders } from '../../../enums/EStaticFiles';
 export = (injectedStore: typeof StoreType) => {
   let store = injectedStore;
 
+  const normalizeRangeDate = (
+    value: string,
+    bound: 'start' | 'end',
+  ): string => {
+    const parsed = moment(
+      value,
+      ['YYYY-MM-DD', 'YYYY-MM-DD HH:mm:ss', moment.ISO_8601],
+      true,
+    );
+
+    if (!parsed.isValid()) {
+      return value;
+    }
+
+    return bound === 'start'
+      ? parsed.startOf('day').format('YYYY-MM-DD HH:mm:ss')
+      : parsed.endOf('day').format('YYYY-MM-DD HH:mm:ss');
+  };
+
+  const normalizeCajaListCreateTime = (
+    value: string,
+    bound: 'start' | 'end',
+  ): string => {
+    const parsed = moment(
+      value,
+      ['YYYY-MM-DD', 'YYYY-MM-DD HH:mm:ss', moment.ISO_8601],
+      true,
+    );
+
+    if (!parsed.isValid()) {
+      return value;
+    }
+
+    const localDate =
+      bound === 'start' ? parsed.startOf('day') : parsed.endOf('day');
+
+    return localDate
+      .utcOffset('-03:00', true)
+      .utc()
+      .format('YYYY-MM-DD HH:mm:ss');
+  };
+
   const list = async (
     pvId: number,
     fiscal: number,
@@ -37,6 +79,7 @@ export = (injectedStore: typeof StoreType) => {
     item?: string,
     cantPerPage?: number,
   ) => {
+    const pageSize = cantPerPage || 10;
     let filter0: IWhereParams | undefined = undefined;
     let filter1: IWhereParams | undefined = undefined;
     let filter2: IWhereParams | undefined = undefined;
@@ -78,7 +121,7 @@ export = (injectedStore: typeof StoreType) => {
     if (page) {
       pages = {
         currentPage: page,
-        cantPerPage: cantPerPage || 10,
+        cantPerPage: pageSize,
         order: Columns.facturas.create_time,
         asc: false,
       };
@@ -100,7 +143,7 @@ export = (injectedStore: typeof StoreType) => {
         undefined,
         undefined,
       );
-      const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
+      const pagesObj = await getPages(cant[0].COUNT, pageSize, Number(page));
       return {
         data,
         pagesObj,
@@ -128,6 +171,9 @@ export = (injectedStore: typeof StoreType) => {
     page?: number,
     cantPerPage?: number,
   ): Promise<any> => {
+    const pageSize = cantPerPage || 10;
+    const desdeFilter = normalizeCajaListCreateTime(desde, 'start');
+    const hastaFilter = normalizeCajaListCreateTime(hasta, 'end');
     let filters: Array<IWhereParams> = [
       {
         mode: EModeWhere.strict,
@@ -152,13 +198,13 @@ export = (injectedStore: typeof StoreType) => {
     const filter1: IWhereParams = {
       mode: EModeWhere.higherEqual,
       concat: EConcatWhere.none,
-      items: [{ column: Columns.facturas.fecha, object: String(desde) }],
+      items: [{ column: Columns.facturas.create_time, object: desdeFilter }],
     };
 
     const filter2: IWhereParams = {
       mode: EModeWhere.lessEqual,
       concat: EConcatWhere.none,
-      items: [{ column: Columns.facturas.fecha, object: String(hasta) }],
+      items: [{ column: Columns.facturas.create_time, object: hastaFilter }],
     };
 
     filters.push(filter1, filter2);
@@ -175,7 +221,7 @@ export = (injectedStore: typeof StoreType) => {
     if (page) {
       pages = {
         currentPage: page,
-        cantPerPage: cantPerPage || 10,
+        cantPerPage: pageSize,
         order: Columns.facturas.create_time,
         asc: true,
       };
@@ -217,7 +263,7 @@ export = (injectedStore: typeof StoreType) => {
         undefined,
         undefined,
       );
-      const pagesObj = await getPages(cant[0].COUNT, 10, Number(page));
+      const pagesObj = await getPages(cant[0].COUNT, pageSize, Number(page));
       return {
         data,
         pagesObj,

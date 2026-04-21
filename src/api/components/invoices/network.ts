@@ -25,6 +25,34 @@ const shouldGeneratePdf = (value: unknown) => {
   return value !== false;
 };
 
+const parseOptionalNumber = (value: unknown) => {
+  if (value === undefined || value === null) {
+    return 0;
+  }
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (
+      normalized === ''
+      || normalized === 'false'
+      || normalized === 'null'
+      || normalized === 'undefined'
+    ) {
+      return 0;
+    }
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const parseOptionalPage = (value: unknown) => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return undefined;
+  }
+  return parsed;
+};
+
 const maybeGeneratePdf = (req: Request, res: Response, next: NextFunction) => {
   if (!shouldGeneratePdf(req.body.generar_pdf)) {
     return next();
@@ -160,11 +188,11 @@ const getFiscalDataInvoice = (
 const cajaList = (req: Request, res: Response, next: NextFunction) => {
   Controller.cajaList(
     false,
-    Number(req.query.userId),
+    parseOptionalNumber(req.query.userId),
     Number(req.query.ptoVta),
     String(req.query.desde),
     String(req.query.hasta),
-    Number(req.params.page),
+    parseOptionalPage(req.params.page),
     Number(req.query.cantPerPage),
   )
     .then((lista: any) => {
@@ -181,7 +209,7 @@ const cajaList = (req: Request, res: Response, next: NextFunction) => {
 const cajaListPDF = (req: Request, res: Response, next: NextFunction) => {
   Controller.cajaList(
     true,
-    Number(req.query.userId),
+    parseOptionalNumber(req.query.userId),
     Number(req.query.ptoVta),
     String(req.query.desde),
     String(req.query.hasta),
@@ -281,7 +309,7 @@ const resetTokenAfip = (req: Request, res: Response, next: NextFunction) => {
 
 router
   .get('/details/:id', secure(EPermissions.ventas), get)
-  .get('/cajaList/:page', secure(EPermissions.ventas), cajaList)
+  .get('/cajaList/:page?', secure(EPermissions.ventas), cajaList)
   .get('/cajaListPDF', secure(EPermissions.ventas), cajaListPDF)
   .get(
     '/factDataPDF/:id',
