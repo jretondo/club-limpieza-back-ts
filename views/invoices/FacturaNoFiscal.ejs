@@ -110,13 +110,15 @@
             <th class="qty">CANT.</th>
             <th class="desc">DESCRIPCION</th>
             <th class="qty">PRECIO UNIT.</th>
+            <th class="qty">DESC.</th>
             <th class="qty">TOTAL</th>
           </tr>
         </thead>
         <tbody>
           <% listaItems.forEach(function(item){ %>
             <%- include('./ItemFactNoFiscal.ejs', { itemName: item.nombre_prod, itemPrice: item.precio_ind, itemCant:
-              item.cant_prod, itemTotal: item.total_prod, tipoUn: item.unidad_tipo_prod}); %>
+              item.cant_prod, itemTotal: item.total_prod, itemDiscount: item.descuento_porcentaje, tipoUn:
+              item.unidad_tipo_prod}); %>
               <% }); %>
         </tbody>
         <tfoot>

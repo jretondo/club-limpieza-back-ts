@@ -165,6 +165,7 @@ enum DetalleFact {
   total_neto = 'total_neto',
   alicuota_id = 'alicuota_id',
   precio_ind = 'precio_ind',
+  descuento_porcentaje = 'descuento_porcentaje',
   anulada = 'anulada',
 }
 
