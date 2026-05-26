@@ -373,7 +373,6 @@ export = (injectedStore: typeof StoreType) => {
         Columns.detallesFact.total_neto,
         Columns.detallesFact.alicuota_id,
         Columns.detallesFact.precio_ind,
-        Columns.detallesFact.descuento_porcentaje,
       ];
       const rows: Promise<Array<Array<any>>> = new Promise(
         (resolve, reject) => {
@@ -391,7 +390,6 @@ export = (injectedStore: typeof StoreType) => {
             values.push(item.total_neto);
             values.push(item.alicuota_id);
             values.push(item.precio_ind);
-            values.push(item.descuento_porcentaje || 0);
             rowsvalues.push(values);
             if (item.total_prod < 0) {
               await store.update(
