@@ -1,4 +1,5 @@
 import { createProdListPDF } from './../../../utils/facturacion/lists/createListProducts';
+import { createProductsExcel } from '../../../utils/reports/createProductsExcel';
 import { EConcatWhere, EModeWhere, ESelectFunct, ETypesJoin } from '../../../enums/EfunctMysql';
 import { Tables, Columns } from '../../../enums/EtablesDB';
 import StoreType from '../../../store/mysql';
@@ -288,6 +289,69 @@ export = (injectedStore: typeof StoreType) => {
             const data = await store.list(Tables.PRODUCTS_PRINCIPAL, [ESelectFunct.all], filters, undefined, undefined, joinQuery);
             const prodList = await createProdListPDF(data)
             return prodList
+        }
+    }
+
+    const printExcel = async (item?: string, advanced?: boolean, name?: string, provider?: string, brand?: string) => {
+        let filter: IWhereParams | undefined = undefined;
+        let filters: Array<IWhereParams> = [];
+        let conID = false
+        let idProd = 0
+        if (advanced) {
+            filter = {
+                mode: EModeWhere.like,
+                concat: EConcatWhere.and,
+                items: [
+                    { column: Columns.prodPrincipal.name, object: String(name) },
+                    { column: Columns.prodPrincipal.subcategory, object: String(brand) },
+                    { column: Columns.prodPrincipal.category, object: String(provider) }
+                ]
+            };
+            filters.push(filter);
+        } else {
+            if (item && item !== 'undefined') {
+                if (item.includes("id:")) {
+                    conID = true
+                    idProd = Number(item.replace("id:", ""))
+                } else {
+                    const arrayStr = item.split(" ")
+                    arrayStr.map(subItem => {
+                        filter = {
+                            mode: EModeWhere.like,
+                            concat: EConcatWhere.or,
+                            items: [
+                                { column: Columns.prodPrincipal.name, object: String(subItem) },
+                                { column: Columns.prodPrincipal.subcategory, object: String(subItem) },
+                                { column: Columns.prodPrincipal.category, object: String(subItem) },
+                                { column: Columns.prodPrincipal.short_decr, object: String(subItem) },
+                                { column: Columns.prodPrincipal.cod_barra, object: String(subItem) }
+                            ]
+                        };
+                        filters.push(filter);
+                    })
+                }
+            }
+        }
+
+        let products: Array<any>;
+        if (conID) {
+            products = await store.get(Tables.PRODUCTS_PRINCIPAL, idProd)
+        } else {
+            products = await store.list(Tables.PRODUCTS_PRINCIPAL, [ESelectFunct.all], filters);
+        }
+
+        const data = products.sort((a: any, b: any) => {
+            return String(a.category || '').localeCompare(String(b.category || '')) ||
+                String(a.subcategory || '').localeCompare(String(b.subcategory || '')) ||
+                String(a.name || '').localeCompare(String(b.name || '')) ||
+                Number(a.id || 0) - Number(b.id || 0)
+        });
+
+        const dateNow = new Date();
+        const dateFile = dateNow.toISOString().slice(0, 10);
+        return {
+            fileName: `catalogo-productos-${dateFile}.xlsx`,
+            buffer: createProductsExcel({ products: data, generatedAt: dateNow })
         }
     }
 
@@ -586,6 +650,7 @@ export = (injectedStore: typeof StoreType) => {
         asignarCodBarra,
         updateCost,
         printPDF,
+        printExcel,
         updateList
     }
 }

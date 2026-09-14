@@ -51,6 +51,33 @@ const PDFList = (
         .catch(next)
 };
 
+const ExcelList = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    Controller.printExcel(
+        String(req.query.query),
+        String(req.query.advanced) === 'true',
+        String(req.query.name),
+        String(req.query.provider),
+        String(req.query.brand)
+    )
+        .then((dataReport: any) => {
+            res.setHeader(
+                'Content-Type',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            );
+            res.setHeader(
+                'Content-Disposition',
+                'attachment; filename=' + dataReport.fileName
+            );
+            res.setHeader('Content-Length', dataReport.buffer.length);
+            res.send(dataReport.buffer);
+        })
+        .catch(next)
+};
+
 const varCost = (
     req: Request,
     res: Response,
@@ -214,6 +241,7 @@ const updateCost = (
 router.get("/details/:id", secure(EPermissions.productos), get);
 router.get("/getCat", secure(EPermissions.productos), getCategorys);
 router.get("/pdf", secure(EPermissions.productos), PDFList);
+router.get("/excel", secure(EPermissions.productos), ExcelList);
 router.get("/getGetSubCat", secure(EPermissions.productos), getSubCategorys);
 router.get("/:page", secure(), list);
 router.put("/updateList", secure(EPermissions.productos), updateList);
